@@ -50,6 +50,8 @@ void Snake::move() {
     points.reserve(points.size()+1);
     // Add the new position at the first place
     points.insert(points.begin(), n);
+    // The snake is now moved, this must be updated by direction changement
+    moved = true;
 }
 
 void Snake::draw(SDL_Renderer* renderer) {
@@ -118,6 +120,9 @@ void Snake::setSpeed(float speed) {
 
 void Snake::setDirection(Direction dir) {
     direction = dir;
+    
+    // Snake must be changed of direction only when moved
+    moved = false;
 }
 
 Direction Snake::getDirection() {
@@ -131,4 +136,12 @@ SDL_Point Snake::getFirstPoint() {
 
 void Snake::setGrow(bool grow) {
     this->grow = grow;
+}
+
+void Snake::setMoved(bool moved) {
+    this->moved = moved;
+}
+
+bool Snake::isMoved() {
+    return moved;
 }

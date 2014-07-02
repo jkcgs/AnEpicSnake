@@ -101,11 +101,15 @@ public:
      * @return The first SDL_Point of the snake.
      */
     SDL_Point getFirstPoint();
+    
+    bool isMoved();
+    void setMoved(bool moved);
 private:
     Direction direction;
     float speed;
     int size;
     bool grow;
+    bool moved;
     std::vector<SDL_Point> points;
 };
 

@@ -69,6 +69,8 @@ int SnakeGame::mainLoop() {
     Uint32 timeout = SDL_GetTicks() + ((1/snake.getSpeed())*1000);
     
     while(!quit) {
+        // --- START UPDATES ---
+        // --- START EVENTS ---
         while(SDL_PollEvent(&e) != 0) {
             if(e.type == SDL_QUIT) {
                 quit = true;
@@ -77,7 +79,32 @@ int SnakeGame::mainLoop() {
                 updateKeys(&e);
             }
         }
+        // --- END EVENTS ---
         
+        // Move when speed says you can move
+        // TODO: Draw some pause thing
+        if(SDL_TICKS_PASSED(SDL_GetTicks(), timeout) && !paused) {
+            snake.move();
+            timeout = SDL_GetTicks() + ((1/snake.getSpeed())*1000);
+        }
+        
+        // Check if player have crashed to reset the snake
+        if(snake.getFirstPoint().x < 0 || snake.getFirstPoint().y < 0 || 
+                snake.getFirstPoint().x*squareSize >= winWidth || 
+                snake.getFirstPoint().y*squareSize >= winHeight ||
+                snake.selfCrashed()) {
+            reset(); // move the food
+        }
+        
+        // have you touched the food? it's like eat it
+        if(snake.collides(&food)) {
+            genFood();
+            snake.setGrow(true);
+            snake.setSpeed(snake.getSpeed()+1); // moar fun
+        }
+        
+        // --- END UPDATES ---
+        // --- START DRAW ---
         // Clear screen
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
@@ -89,30 +116,8 @@ int SnakeGame::mainLoop() {
         }
         
         drawFood(); // you must have some food or you could die
-        
-        // have you touched the food? it's like eat it
-        if(snake.collides(&food)) {
-            genFood();
-            snake.setGrow(true);
-            snake.setSpeed(snake.getSpeed()+1); // moar fun
-        }
-        
-        // Move when speed says you can move
-        // TODO: Draw some pause thing
-        if(SDL_TICKS_PASSED(SDL_GetTicks(), timeout) && !paused) {
-            snake.move();
-            timeout = SDL_GetTicks() + ((1/snake.getSpeed())*1000);
-        }
-        
-        
-        // Check if player have crashed to reset the snake
-        if(snake.getFirstPoint().x < 0 || snake.getFirstPoint().y < 0 || 
-                snake.getFirstPoint().x*squareSize >= winWidth || 
-                snake.getFirstPoint().y*squareSize >= winHeight ||
-                snake.selfCrashed()) {
-            reset(); // move the food
-        }
         SDL_RenderPresent(renderer);
+        // --- END DRAW ---
     }
     
     return 0;
@@ -166,7 +171,7 @@ void SnakeGame::updateKeys(SDL_Event* e) {
     }
     
     // Moves the snake on the desired direction, but you can't go back.
-    if(!paused)
+    if(!paused && snake.isMoved())
     {
         switch(e->key.keysym.sym) {
             case SDLK_w:
