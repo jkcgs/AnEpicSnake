@@ -3,6 +3,11 @@
  * Author: Jonathan Gutiérrez
  * 
  * Created on 28 de junio de 2014, 09:11 PM
+ * 
+ * AnEpicSnake v0.1
+ * 
+ * This file is part of AnEpicSnake, licenced under the GPLv3 licence.
+ * See the NOTICE.txt file for more information.
  */
 
 #include <stdlib.h>
@@ -82,7 +87,6 @@ int SnakeGame::mainLoop() {
         // --- END EVENTS ---
         
         // Move when speed says you can move
-        // TODO: Draw some pause thing
         if(SDL_TICKS_PASSED(SDL_GetTicks(), timeout) && !paused) {
             snake.move();
             timeout = SDL_GetTicks() + ((1/snake.getSpeed())*1000);
@@ -116,6 +120,10 @@ int SnakeGame::mainLoop() {
         }
         
         drawFood(); // you must have some food or you could die
+        
+        if(paused) {
+            drawPause();
+        }
         SDL_RenderPresent(renderer);
         // --- END DRAW ---
     }
@@ -199,5 +207,29 @@ void SnakeGame::updateKeys(SDL_Event* e) {
     
     if(e->key.keysym.sym == SDLK_RETURN) {
         paused = !paused;
+        // this resets the value of the pause icon fade
+        pauseFade = paused ? 255 : 0;
     }
 }
+
+void SnakeGame::drawPause() {
+    // Pause icon properties
+    Uint16 lwidth = 20;
+    Uint16 lheight = 60;
+    Uint8 sep = 20;
+    SDL_Point pos = {winWidth/2 - lwidth - sep/2, winHeight/2 - lheight};
+    
+    SDL_Rect r1 = {pos.x, pos.y, lwidth, lheight};
+    SDL_Rect r2 = {r1.x + lwidth + sep, r1.y, lwidth, lheight};
+    
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, pauseFade);
+    
+    SDL_RenderFillRect(renderer, &r1);
+    SDL_RenderFillRect(renderer, &r2);
+    
+    pauseFade -= 5;
+    if(pauseFade < 50) {
+        pauseFade = 255;
+    }
+}
+

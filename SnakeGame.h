@@ -3,6 +3,11 @@
  * Author: Jonathan Gutiérrez
  *
  * Created on 28 de junio de 2014, 09:11 PM
+ * 
+ * AnEpicSnake v0.1
+ * 
+ * This file is part of AnEpicSnake, licenced under the GPLv3 licence.
+ * See the NOTICE.txt file for more information.
  */
 
 #include <SDL2/SDL_main.h>
@@ -69,6 +74,11 @@ public:
      */
     void close();
     
+    /**
+     * Draws the pause icon
+     */
+    void drawPause();
+    
 private:
     SDL_Window* window;
     SDL_Renderer* renderer;
@@ -81,6 +91,7 @@ private:
     int winWidth;
     int winHeight;
     int squareSize;
+    Uint8 pauseFade;
     
     bool quit;
 };

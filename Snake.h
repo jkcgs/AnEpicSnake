@@ -3,6 +3,11 @@
  * Author: Jonathan Gutiérrez
  *
  * Created on 28 de junio de 2014, 08:59 PM
+ * 
+ * AnEpicSnake v0.1
+ * 
+ * This file is part of AnEpicSnake, licenced under the GPLv3 licence.
+ * See the NOTICE.txt file for more information.
  */
 
 #include <SDL2/SDL_main.h>
