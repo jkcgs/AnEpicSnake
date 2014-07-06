@@ -28,6 +28,7 @@ SnakeGame::~SnakeGame() {
 
 void SnakeGame::reset() {
     epilepsy = true;
+    started = false;
     
     squareSize = 10;
     snake.reset();
@@ -81,7 +82,7 @@ int SnakeGame::mainLoop() {
                 quit = true;
             }
             if(e.type == SDL_KEYDOWN) {
-                updateKeys(&e);
+                handleKeys(&e);
             }
         }
         // --- END EVENTS ---
@@ -173,15 +174,17 @@ void SnakeGame::genFood() {
     } while(snake.collides(&food));
 }
 
-void SnakeGame::updateKeys(SDL_Event* e) {
+void SnakeGame::handleKeys(SDL_Event* e) {
     if(e->type != SDL_KEYDOWN) {
         return;
     }
     
+    SDL_Keycode key = e->key.keysym.sym;
+    
     // Moves the snake on the desired direction, but you can't go back.
     if(!paused && snake.isMoved())
     {
-        switch(e->key.keysym.sym) {
+        switch(key) {
             case SDLK_w:
                 if(snake.getDirection() != DOWN) {
                     snake.setDirection(UP);
@@ -205,10 +208,17 @@ void SnakeGame::updateKeys(SDL_Event* e) {
         }
     }
     
-    if(e->key.keysym.sym == SDLK_RETURN) {
+    if(key == SDLK_RETURN) {
+        if(!started) {
+            started = true;
+        }
         paused = !paused;
         // this resets the value of the pause icon fade
         pauseFade = paused ? 255 : 0;
+    }
+    
+    if(key == SDLK_e) {
+        epilepsy = !epilepsy;
     }
 }
 

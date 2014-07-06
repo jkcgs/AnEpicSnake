@@ -50,7 +50,7 @@ public:
      * Update the game conditions depending on the keys pressing
      * @param e
      */
-    void updateKeys(SDL_Event* e);
+    void handleKeys(SDL_Event* e);
     /**
      * Draws a beautiful and epilepsic background for you
      */
@@ -93,6 +93,7 @@ private:
     int squareSize;
     Uint8 pauseFade;
     
+    bool started;
     bool quit;
 };
 
