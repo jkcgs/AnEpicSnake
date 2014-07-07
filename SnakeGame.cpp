@@ -237,6 +237,8 @@ void SnakeGame::drawFood() {
 
 // bye bye!
 void SnakeGame::close() {
+    SDL_DestroyTexture(goTexture);
+    SDL_DestroyTexture(titleTexture);
     SDL_DestroyWindow(window);
     SDL_DestroyRenderer(renderer);
     
