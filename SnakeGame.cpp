@@ -166,7 +166,7 @@ int SnakeGame::mainLoop() {
             if(snake.collides(&food)) {
                 genFood();
                 snake.setGrow(true);
-                snake.setSpeed(snake.getSpeed()+1); // moar fun
+                snake.setSpeed(snake.getSpeed()+.3); // moar fun
             }
         }
         
