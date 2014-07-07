@@ -258,12 +258,10 @@ void SnakeGame::handleKeys(SDL_Event* e) {
         return;
     }
     
-    SDL_Keycode key = e->key.keysym.sym;
-    
     // Moves the snake on the desired direction, but you can't go back.
     if(!paused && snake.isMoved())
     {
-        switch(key) {
+        switch(e->key.keysym.sym) {
             case SDLK_w:
                 if(snake.getDirection() != DOWN) {
                     snake.setDirection(UP);
@@ -287,7 +285,7 @@ void SnakeGame::handleKeys(SDL_Event* e) {
         }
     }
     
-    if(key == SDLK_RETURN) {
+    if(e->key.keysym.sym == SDLK_RETURN) {
         // Starts the game if it has not started
         // Like when opened the game, or on game over
         if(!started) {
@@ -302,7 +300,7 @@ void SnakeGame::handleKeys(SDL_Event* e) {
     }
     
     // Not-so-hidden background toggle
-    if(key == SDLK_e && started && !paused) {
+    if(e->key.keysym.sym == SDLK_e && started && !paused) {
         epilepsy = !epilepsy;
     }
 }
