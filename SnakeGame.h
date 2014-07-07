@@ -54,6 +54,10 @@ public:
      */
     void handleKeys(SDL_Event* e);
     /**
+     * Draws all the stuff
+     */
+    void draw();
+    /**
      * Draws a beautiful and epilepsic background for you
      */
     void drawBackground();
@@ -61,6 +65,13 @@ public:
      * Draws the food on the window at its position
      */
     void drawFood();
+    /**
+     * Draws a pixeled-style number 
+     * @param n The number
+     * @param x The X position for the first digit
+     * @param y The Y position for the first digit
+     */
+    void drawNumber(int n, int x, int y, int pixelSize);
     /**
      * Starts the main game process
      * @return A return code, 0 is OK, anything else is bad.
@@ -98,6 +109,7 @@ private:
     int winWidth;
     int winHeight;
     int squareSize;
+    int points;
     Uint8 pauseFade;
     
     bool started;

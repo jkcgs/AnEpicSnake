@@ -12,6 +12,21 @@
 
 #include "SnakeGame.h"
 #include <stdio.h>
+#include <math.h>
+#include <cmath>
+
+unsigned char numbers[] = {
+    0xF0, 0x90, 0x90, 0x90, 0xF0, //0
+    0x20, 0x60, 0x20, 0x20, 0x70, //1
+    0xF0, 0x10, 0xF0, 0x80, 0xF0, //2
+    0xF0, 0x10, 0xF0, 0x10, 0xF0, //3
+    0x90, 0x90, 0xF0, 0x10, 0x10, //4
+    0xF0, 0x80, 0xF0, 0x10, 0xF0, //5
+    0xF0, 0x80, 0xF0, 0x90, 0xF0, //6
+    0xF0, 0x10, 0x20, 0x40, 0x40, //7
+    0xF0, 0x90, 0xF0, 0x90, 0xF0, //8
+    0xF0, 0x90, 0xF0, 0x10, 0xF0, //9
+};
 
 SnakeGame::SnakeGame(int width, int height) {
     winWidth = width;
@@ -30,6 +45,7 @@ void SnakeGame::reset() {
     epilepsy = true;
     
     squareSize = 10;
+    points = 0;
     snake.reset();
     snake.setSize(squareSize);
     snake.setSpeed(10);
@@ -164,6 +180,7 @@ int SnakeGame::mainLoop() {
 
             // have you touched the food? it's like eat it
             if(snake.collides(&food)) {
+                points++;
                 genFood();
                 snake.setGrow(true);
                 snake.setSpeed(snake.getSpeed()+.3); // moar fun
@@ -171,34 +188,8 @@ int SnakeGame::mainLoop() {
         }
         
         // --- END UPDATES ---
-        // --- START DRAW ---
-        // Clear screen
-        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-        SDL_RenderClear(renderer);
         
-        snake.draw(renderer);
-        
-        if(epilepsy && (started || !alive)) {
-            drawBackground(); // don't be epileptic
-        }
-        
-        drawFood(); // you must have some food or you could die
-        
-        if(paused) {
-            drawPause();
-        }
-        
-        if(!started && alive) {
-            SDL_RenderCopy(renderer, titleTexture, NULL, &titleProps);
-        }
-        
-        // game over place
-        if(!alive) {
-            SDL_RenderCopy(renderer, goTexture, NULL, &goProps);
-        }
-        
-        SDL_RenderPresent(renderer);
-        // --- END DRAW ---
+        draw();
     }
     
     return 0;
@@ -222,6 +213,91 @@ void SnakeGame::drawBackground() {
             SDL_RenderFillRect(renderer, &sq);
         }
     }
+}
+
+void SnakeGame::draw() {
+    // Clear screen
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    SDL_RenderClear(renderer);
+
+    snake.draw(renderer);
+
+    if(epilepsy && (started || !alive)) {
+        drawBackground(); // don't be epileptic
+    }
+
+    drawFood(); // you must have some food or you could die
+    
+    // Draw points
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 150);
+    drawNumber(points, squareSize, squareSize, squareSize / 2);
+
+    if(paused) {
+        drawPause();
+    }
+
+    if(!started && alive) {
+        SDL_RenderCopy(renderer, titleTexture, NULL, &titleProps);
+    }
+
+    // game over place
+    if(!alive) {
+        SDL_RenderCopy(renderer, goTexture, NULL, &goProps);
+    }
+
+    SDL_RenderPresent(renderer);
+}
+
+
+void SnakeGame::drawPause() {
+    // Pause icon properties
+    Uint16 lwidth = 20; // bars width
+    Uint16 lheight = 60; // bars height
+    Uint8 sep = 20; // separation between bars
+    // first point for pause icon
+    SDL_Point pos = {winWidth/2 - lwidth - sep/2, winHeight/2 - lheight};
+    
+    SDL_Rect r1 = {pos.x, pos.y, lwidth, lheight}; // rect for bar 1
+    SDL_Rect r2 = {r1.x + lwidth + sep, r1.y, lwidth, lheight}; // rect for bar 2
+    
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, pauseFade);
+    
+    // Draw the bars
+    SDL_RenderFillRect(renderer, &r1);
+    SDL_RenderFillRect(renderer, &r2);
+    
+    // Display pause with a fade
+    pauseFade -= 5;
+    if(pauseFade < 50) {
+        pauseFade = 255;
+    }
+}
+
+void SnakeGame::drawNumber(int n, int x, int y, int pixelSize = 10) {
+    int k = log10(n) + 1;
+    
+    SDL_Rect pixel = {0, 0, pixelSize, pixelSize};
+    int s = 1;
+    
+    do {
+        k--;
+        
+        int digit = n == 0 ? 0 :n % 10;
+        int pos = (s*pixelSize*k + pixelSize*4*k);
+        
+        for(int i = 0; i < 5; i++) {
+            for(int j = 0; j < 8; j++) {
+                if((numbers[digit*5 + i] & (0x80 >> j)) != 0) {
+                    pixel.x = x + (pixelSize * j) + pos;
+                    pixel.y = y + (pixelSize * i);
+                    SDL_RenderFillRect(renderer, &pixel);
+                }
+            }
+        }
+        
+        n /= 10;
+        
+    } while (n > 0);
 }
 
 void SnakeGame::drawFood() {
@@ -304,28 +380,3 @@ void SnakeGame::handleKeys(SDL_Event* e) {
         epilepsy = !epilepsy;
     }
 }
-
-void SnakeGame::drawPause() {
-    // Pause icon properties
-    Uint16 lwidth = 20; // bars width
-    Uint16 lheight = 60; // bars height
-    Uint8 sep = 20; // separation between bars
-    // first point for pause icon
-    SDL_Point pos = {winWidth/2 - lwidth - sep/2, winHeight/2 - lheight};
-    
-    SDL_Rect r1 = {pos.x, pos.y, lwidth, lheight}; // rect for bar 1
-    SDL_Rect r2 = {r1.x + lwidth + sep, r1.y, lwidth, lheight}; // rect for bar 2
-    
-    SDL_SetRenderDrawColor(renderer, 255, 255, 255, pauseFade);
-    
-    // Draw the bars
-    SDL_RenderFillRect(renderer, &r1);
-    SDL_RenderFillRect(renderer, &r2);
-    
-    // Display pause with a fade
-    pauseFade -= 5;
-    if(pauseFade < 50) {
-        pauseFade = 255;
-    }
-}
-
