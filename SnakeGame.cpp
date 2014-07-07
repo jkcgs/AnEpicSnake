@@ -4,20 +4,19 @@
  * 
  * Created on 28 de junio de 2014, 09:11 PM
  * 
- * AnEpicSnake v0.1
+ * AnEpicSnake v0.1.1
  * 
  * This file is part of AnEpicSnake, licenced under the GPLv3 licence.
  * See the NOTICE.txt file for more information.
  */
 
-#include <stdlib.h>
-#include <string>
-
 #include "SnakeGame.h"
+#include <stdio.h>
 
 SnakeGame::SnakeGame(int width, int height) {
     winWidth = width;
     winHeight = height;
+    started = false;
     
     reset();
 }
@@ -28,7 +27,6 @@ SnakeGame::~SnakeGame() {
 
 void SnakeGame::reset() {
     epilepsy = true;
-    started = false;
     
     squareSize = 10;
     snake.reset();
@@ -45,15 +43,45 @@ int SnakeGame::initDisplay() {
         return 1;
     }
     
+    int imgFlags = IMG_INIT_PNG;
+    if(!(IMG_Init( imgFlags ) & imgFlags)) {
+        printf("Unable to init SDL2_image. Error: %s\n", IMG_GetError());
+        return false;
+    }
+    
     window = SDL_CreateWindow("AnEpicSnake", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, winWidth, winHeight, SDL_WINDOW_SHOWN);
     if(window == NULL) {
-        return 2;
+        return 3;
     }
     
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_PRESENTVSYNC);
     if(renderer == NULL) {
-        return 3;
+        return 4;
     }
+    
+    
+    // Start image background
+    std::string bgpath = "titlebg.png";
+    SDL_Surface* loadedSurface = IMG_Load(bgpath.c_str());
+    int titleWidth = 0, titleHeight = 0;
+    
+    if(loadedSurface == NULL) {
+        printf("Unable to load title image. Error: %s", IMG_GetError());
+    } else {
+        titleTexture = SDL_CreateTextureFromSurface(renderer, loadedSurface);
+        if(titleTexture == NULL) {
+            printf("Unable to create texture from '%s'. Error: %s", bgpath.c_str(), SDL_GetError());
+            return 5;
+        } else {
+            titleWidth = loadedSurface->w;
+            titleHeight = loadedSurface->h;
+        }
+        
+        SDL_FreeSurface(loadedSurface);
+    }
+    
+    SDL_Rect trect = {winWidth/2 - titleWidth/2, winHeight/2 - titleHeight/2, titleWidth, titleHeight};
+    titleProps = trect;
     
     return 0;
 }
@@ -74,6 +102,7 @@ int SnakeGame::mainLoop() {
     // creates a timer to check when to move the snake
     Uint32 timeout = SDL_GetTicks() + ((1/snake.getSpeed())*1000);
     
+    
     while(!quit) {
         // --- START UPDATES ---
         // --- START EVENTS ---
@@ -87,25 +116,27 @@ int SnakeGame::mainLoop() {
         }
         // --- END EVENTS ---
         
-        // Move when speed says you can move
-        if(SDL_TICKS_PASSED(SDL_GetTicks(), timeout) && !paused) {
-            snake.move();
-            timeout = SDL_GetTicks() + ((1/snake.getSpeed())*1000);
-        }
-        
-        // Check if player have crashed to reset the snake
-        if(snake.getFirstPoint().x < 0 || snake.getFirstPoint().y < 0 || 
-                snake.getFirstPoint().x*squareSize >= winWidth || 
-                snake.getFirstPoint().y*squareSize >= winHeight ||
-                snake.selfCrashed()) {
-            reset(); // move the food
-        }
-        
-        // have you touched the food? it's like eat it
-        if(snake.collides(&food)) {
-            genFood();
-            snake.setGrow(true);
-            snake.setSpeed(snake.getSpeed()+1); // moar fun
+        if(started) {
+            // Move when speed says you can move
+            if(SDL_TICKS_PASSED(SDL_GetTicks(), timeout) && !paused) {
+                snake.move();
+                timeout = SDL_GetTicks() + ((1/snake.getSpeed())*1000);
+            }
+
+            // Check if player have crashed to reset the snake
+            if(snake.getFirstPoint().x < 0 || snake.getFirstPoint().y < 0 || 
+                    snake.getFirstPoint().x*squareSize >= winWidth || 
+                    snake.getFirstPoint().y*squareSize >= winHeight ||
+                    snake.selfCrashed()) {
+                reset(); // move the food
+            }
+
+            // have you touched the food? it's like eat it
+            if(snake.collides(&food)) {
+                genFood();
+                snake.setGrow(true);
+                snake.setSpeed(snake.getSpeed()+1); // moar fun
+            }
         }
         
         // --- END UPDATES ---
@@ -125,6 +156,10 @@ int SnakeGame::mainLoop() {
         if(paused) {
             drawPause();
         }
+        
+        if(!started) {
+            SDL_RenderCopy(renderer, titleTexture, NULL, &titleProps);
+        }
         SDL_RenderPresent(renderer);
         // --- END DRAW ---
     }
@@ -139,6 +174,7 @@ void SnakeGame::drawBackground() {
     }
     
     // how much pretty squares can fit the window? c:
+    // ps: this will take too much cpu (by now)
     for(int i = 0; i < winHeight/squareSize; i++) {
         for(int j = 0; j < winWidth/squareSize; j++) {
             SDL_SetRenderDrawColor(renderer, rand()%256, rand()%256, rand()%256, 180);
@@ -211,10 +247,11 @@ void SnakeGame::handleKeys(SDL_Event* e) {
     if(key == SDLK_RETURN) {
         if(!started) {
             started = true;
+        } else {
+            paused = !paused;
+            // this resets the value of the pause icon fade
+            pauseFade = paused ? 255 : 0;
         }
-        paused = !paused;
-        // this resets the value of the pause icon fade
-        pauseFade = paused ? 255 : 0;
     }
     
     if(key == SDLK_e) {

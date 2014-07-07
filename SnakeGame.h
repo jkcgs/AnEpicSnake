@@ -4,14 +4,16 @@
  *
  * Created on 28 de junio de 2014, 09:11 PM
  * 
- * AnEpicSnake v0.1
+ * AnEpicSnake v0.1.1
  * 
  * This file is part of AnEpicSnake, licenced under the GPLv3 licence.
  * See the NOTICE.txt file for more information.
  */
 
-#include <SDL2/SDL_main.h>
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
+#include <stdlib.h>
+#include <string>
 
 #include "Snake.h"
 
@@ -82,6 +84,9 @@ public:
 private:
     SDL_Window* window;
     SDL_Renderer* renderer;
+    
+    SDL_Texture* titleTexture;
+    SDL_Rect titleProps;
     
     Snake snake;
     SDL_Point food;
