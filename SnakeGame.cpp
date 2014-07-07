@@ -17,6 +17,7 @@ SnakeGame::SnakeGame(int width, int height) {
     winWidth = width;
     winHeight = height;
     started = false;
+    alive = true;
     
     reset();
 }
@@ -46,42 +47,67 @@ int SnakeGame::initDisplay() {
     int imgFlags = IMG_INIT_PNG;
     if(!(IMG_Init( imgFlags ) & imgFlags)) {
         printf("Unable to init SDL2_image. Error: %s\n", IMG_GetError());
-        return false;
+        return 2;
     }
     
     window = SDL_CreateWindow("AnEpicSnake", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, winWidth, winHeight, SDL_WINDOW_SHOWN);
     if(window == NULL) {
+        printf("Unable to create window. Error: %s", SDL_GetError());
         return 3;
     }
     
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_PRESENTVSYNC);
     if(renderer == NULL) {
+        printf("Unable to create renderer. Error: %s", SDL_GetError());
         return 4;
     }
-    
     
     // Start image background
     std::string bgpath = "titlebg.png";
     SDL_Surface* loadedSurface = IMG_Load(bgpath.c_str());
-    int titleWidth = 0, titleHeight = 0;
+    int bgWidth = 0, bgHeight = 0;
     
     if(loadedSurface == NULL) {
         printf("Unable to load title image. Error: %s", IMG_GetError());
+        return 5;
     } else {
         titleTexture = SDL_CreateTextureFromSurface(renderer, loadedSurface);
         if(titleTexture == NULL) {
             printf("Unable to create texture from '%s'. Error: %s", bgpath.c_str(), SDL_GetError());
-            return 5;
+            return 6;
         } else {
-            titleWidth = loadedSurface->w;
-            titleHeight = loadedSurface->h;
+            bgWidth = loadedSurface->w;
+            bgHeight = loadedSurface->h;
         }
         
         SDL_FreeSurface(loadedSurface);
     }
     
-    SDL_Rect trect = {winWidth/2 - titleWidth/2, winHeight/2 - titleHeight/2, titleWidth, titleHeight};
+    SDL_Rect trect = {winWidth/2 - bgWidth/2, winHeight/2 - bgHeight/2, bgWidth, bgHeight};
     titleProps = trect;
+    
+    // Game over background
+    bgpath = "gameover.png";
+    loadedSurface = IMG_Load(bgpath.c_str());
+    
+    if(loadedSurface == NULL) {
+        printf("Unable to load game over image. Error: %s", IMG_GetError());
+        return 7;
+    } else {
+        goTexture = SDL_CreateTextureFromSurface(renderer, loadedSurface);
+        if(goTexture == NULL) {
+            printf("Unable to create texture from '%s'. Error: %s", bgpath.c_str(), SDL_GetError());
+            return 8;
+        } else {
+            bgWidth = loadedSurface->w;
+            bgHeight = loadedSurface->h;
+        }
+        
+        SDL_FreeSurface(loadedSurface);
+    }
+    
+    SDL_Rect drect = {winWidth/2 - bgWidth/2, winHeight/2 - bgHeight/2, bgWidth, bgHeight};
+    goProps = drect;
     
     return 0;
 }
@@ -98,6 +124,9 @@ int SnakeGame::mainLoop() {
     
     // used to draw with transparency
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+    
+    // Placeholder for gameover feature
+    SDL_Rect gameover = {winWidth/2 - 200, winHeight/2 - 150, 400, 300};
     
     // creates a timer to check when to move the snake
     Uint32 timeout = SDL_GetTicks() + ((1/snake.getSpeed())*1000);
@@ -128,7 +157,9 @@ int SnakeGame::mainLoop() {
                     snake.getFirstPoint().x*squareSize >= winWidth || 
                     snake.getFirstPoint().y*squareSize >= winHeight ||
                     snake.selfCrashed()) {
-                reset(); // move the food
+                started = false; // set that game has not started to stop moving
+                alive = false;
+                // player will continue the game if he press ENTER
             }
 
             // have you touched the food? it's like eat it
@@ -147,7 +178,7 @@ int SnakeGame::mainLoop() {
         
         snake.draw(renderer);
         
-        if(epilepsy) {
+        if(epilepsy && (started || !alive)) {
             drawBackground(); // don't be epileptic
         }
         
@@ -157,9 +188,15 @@ int SnakeGame::mainLoop() {
             drawPause();
         }
         
-        if(!started) {
+        if(!started && alive) {
             SDL_RenderCopy(renderer, titleTexture, NULL, &titleProps);
         }
+        
+        // game over place
+        if(!alive) {
+            SDL_RenderCopy(renderer, goTexture, NULL, &goProps);
+        }
+        
         SDL_RenderPresent(renderer);
         // --- END DRAW ---
     }
@@ -173,12 +210,15 @@ void SnakeGame::drawBackground() {
         return;
     }
     
+    SDL_Rect sq = {0, 0, squareSize, squareSize};
+    
     // how much pretty squares can fit the window? c:
-    // ps: this will take too much cpu (by now)
+    // ps: this is still take too much cpu (by now)
     for(int i = 0; i < winHeight/squareSize; i++) {
         for(int j = 0; j < winWidth/squareSize; j++) {
             SDL_SetRenderDrawColor(renderer, rand()%256, rand()%256, rand()%256, 180);
-            SDL_Rect sq = {j*squareSize, i*squareSize, squareSize, squareSize};
+            sq.x = j*squareSize;
+            sq.y = i*squareSize;
             SDL_RenderFillRect(renderer, &sq);
         }
     }
@@ -211,6 +251,7 @@ void SnakeGame::genFood() {
 }
 
 void SnakeGame::handleKeys(SDL_Event* e) {
+    // Only handle keys
     if(e->type != SDL_KEYDOWN) {
         return;
     }
@@ -245,8 +286,12 @@ void SnakeGame::handleKeys(SDL_Event* e) {
     }
     
     if(key == SDLK_RETURN) {
+        // Starts the game if it has not started
+        // Like when opened the game, or on game over
         if(!started) {
             started = true;
+            alive = true;
+            reset(); // move the food
         } else {
             paused = !paused;
             // this resets the value of the pause icon fade
@@ -254,26 +299,30 @@ void SnakeGame::handleKeys(SDL_Event* e) {
         }
     }
     
-    if(key == SDLK_e) {
+    // Not-so-hidden background toggle
+    if(key == SDLK_e && started && !paused) {
         epilepsy = !epilepsy;
     }
 }
 
 void SnakeGame::drawPause() {
     // Pause icon properties
-    Uint16 lwidth = 20;
-    Uint16 lheight = 60;
-    Uint8 sep = 20;
+    Uint16 lwidth = 20; // bars width
+    Uint16 lheight = 60; // bars height
+    Uint8 sep = 20; // separation between bars
+    // first point for pause icon
     SDL_Point pos = {winWidth/2 - lwidth - sep/2, winHeight/2 - lheight};
     
-    SDL_Rect r1 = {pos.x, pos.y, lwidth, lheight};
-    SDL_Rect r2 = {r1.x + lwidth + sep, r1.y, lwidth, lheight};
+    SDL_Rect r1 = {pos.x, pos.y, lwidth, lheight}; // rect for bar 1
+    SDL_Rect r2 = {r1.x + lwidth + sep, r1.y, lwidth, lheight}; // rect for bar 2
     
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, pauseFade);
     
+    // Draw the bars
     SDL_RenderFillRect(renderer, &r1);
     SDL_RenderFillRect(renderer, &r2);
     
+    // Display pause with a fade
     pauseFade -= 5;
     if(pauseFade < 50) {
         pauseFade = 255;

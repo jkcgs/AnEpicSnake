@@ -62,7 +62,6 @@ void Snake::move() {
 void Snake::draw(SDL_Renderer* renderer) {
     // Draw each point of the square
     for(int i = 0; i < points.size(); i++) {
-        SDL_Rect r = {points[i].x*size, points[i].y*size, size, size};
         SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
         SDL_RenderFillRect(renderer, &r);
     }

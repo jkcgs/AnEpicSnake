@@ -87,6 +87,8 @@ private:
     
     SDL_Texture* titleTexture;
     SDL_Rect titleProps;
+    SDL_Texture* goTexture;
+    SDL_Rect goProps;
     
     Snake snake;
     SDL_Point food;
