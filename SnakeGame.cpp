@@ -4,7 +4,7 @@
  * 
  * Created on 28 de junio de 2014, 09:11 PM
  * 
- * AnEpicSnake v0.2
+ * AnEpicSnake v0.3
  * 
  * This file is part of AnEpicSnake, licenced under the GPLv3 licence.
  * See the NOTICE.txt file for more information.
@@ -33,6 +33,7 @@ SnakeGame::SnakeGame(int width, int height) {
     winHeight = height;
     started = false;
     alive = true;
+    turbo = false;
     
     reset();
 }
@@ -143,6 +144,7 @@ int SnakeGame::mainLoop() {
     
     // creates a timer to check when to move the snake
     Uint32 timeout = SDL_GetTicks() + ((1/snake.getSpeed())*1000);
+    int turboup = 1; // turbo up speed, reduce timeout to move snake faster
     
     while(!quit) {
         // --- START UPDATES ---
@@ -151,7 +153,7 @@ int SnakeGame::mainLoop() {
             if(e.type == SDL_QUIT) {
                 quit = true;
             }
-            if(e.type == SDL_KEYDOWN) {
+            if(e.type == SDL_KEYDOWN || e.type == SDL_KEYUP) {
                 handleKeys(&e);
             }
         }
@@ -161,7 +163,8 @@ int SnakeGame::mainLoop() {
             // Move when speed says you can move
             if(SDL_TICKS_PASSED(SDL_GetTicks(), timeout) && !paused) {
                 snake.move();
-                timeout = SDL_GetTicks() + ((1/snake.getSpeed())*1000);
+                turboup = turbo ? 2 : 1;
+                timeout = SDL_GetTicks() + ((1/snake.getSpeed())*(1000/turboup));
             }
 
             // Check if player have crashed to reset the snake
@@ -225,7 +228,7 @@ void SnakeGame::draw() {
     drawFood(); // you must have some food or you could die
     
     // Draw points
-    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 150);
+    SDL_SetRenderDrawColor(renderer, turbo ? 100 : 255, 255, 255, 150);
     drawNumber(points, squareSize, squareSize, squareSize / 2, 0);
 
     if(paused) {
@@ -323,54 +326,61 @@ void SnakeGame::genFood() {
 }
 
 void SnakeGame::handleKeys(SDL_Event* e) {
-    // Only handle keys
-    if(e->type != SDL_KEYDOWN) {
-        return;
-    }
-    
-    // Moves the snake on the desired direction, but you can't go back.
-    if(!paused && snake.isMoved())
-    {
-        switch(e->key.keysym.sym) {
-            case SDLK_w:
-                if(snake.getDirection() != DOWN) {
-                    snake.setDirection(UP);
-                }
-                break;
-            case SDLK_a:
-                if(snake.getDirection() != RIGHT) {
-                    snake.setDirection(LEFT);
-                }
-                break;
-            case SDLK_s:
-                if(snake.getDirection() != UP) {
-                    snake.setDirection(DOWN);
-                }
-                break;
-            case SDLK_d:
-                if(snake.getDirection() != LEFT) {
-                    snake.setDirection(RIGHT);
-                }
-                break;
+    // Keydown-only handling
+    if(e->type == SDL_KEYDOWN) {
+        // Moves the snake on the desired direction, but you can't go back.
+        if(!paused && snake.isMoved())
+        {
+            switch(e->key.keysym.sym) {
+                case SDLK_w:
+                    if(snake.getDirection() != DOWN) {
+                        snake.setDirection(UP);
+                    }
+                    break;
+                case SDLK_a:
+                    if(snake.getDirection() != RIGHT) {
+                        snake.setDirection(LEFT);
+                    }
+                    break;
+                case SDLK_s:
+                    if(snake.getDirection() != UP) {
+                        snake.setDirection(DOWN);
+                    }
+                    break;
+                case SDLK_d:
+                    if(snake.getDirection() != LEFT) {
+                        snake.setDirection(RIGHT);
+                    }
+                    break;
+            }
+        }
+
+        if(e->key.keysym.sym == SDLK_RETURN) {
+            // Starts the game if it has not started
+            // Like when opened the game, or on game over
+            if(!started) {
+                started = true;
+                alive = true;
+                reset(); // move the food
+            } else {
+                paused = !paused;
+                // this resets the value of the pause icon fade
+                pauseFade = paused ? 255 : 0;
+            }
+        }
+
+        // Not-so-hidden background toggle
+        if(e->key.keysym.sym == SDLK_e && started && !paused) {
+            epilepsy = !epilepsy;
         }
     }
     
-    if(e->key.keysym.sym == SDLK_RETURN) {
-        // Starts the game if it has not started
-        // Like when opened the game, or on game over
-        if(!started) {
-            started = true;
-            alive = true;
-            reset(); // move the food
-        } else {
-            paused = !paused;
-            // this resets the value of the pause icon fade
-            pauseFade = paused ? 255 : 0;
+    // Both Keyup-down events handling
+    // Only one by now but there could be more soon
+    if(e->type == SDL_KEYDOWN || e->type == SDL_KEYUP) {
+        // Turbo mode, enabled only when space is pressed down
+        if(e->key.keysym.sym == SDLK_SPACE && started) {
+            turbo = e->type == SDL_KEYDOWN;
         }
-    }
-    
-    // Not-so-hidden background toggle
-    if(e->key.keysym.sym == SDLK_e && started && !paused) {
-        epilepsy = !epilepsy;
     }
 }

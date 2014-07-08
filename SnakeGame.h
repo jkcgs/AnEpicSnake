@@ -4,7 +4,7 @@
  *
  * Created on 28 de junio de 2014, 09:11 PM
  * 
- * AnEpicSnake v0.2
+ * AnEpicSnake v0.3
  * 
  * This file is part of AnEpicSnake, licenced under the GPLv3 licence.
  * See the NOTICE.txt file for more information.
@@ -106,6 +106,7 @@ private:
     bool paused;
     bool alive;
     bool epilepsy;
+    bool turbo;
     int winWidth;
     int winHeight;
     int squareSize;
