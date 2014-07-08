@@ -291,7 +291,6 @@ void SnakeGame::drawNumber(int n, int x, int y, int pixelSize = 10, int separati
         
         n /= 10; // =/
         k--;
-        
     } while (n > 0);
 }
 
