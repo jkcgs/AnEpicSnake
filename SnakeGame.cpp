@@ -144,7 +144,6 @@ int SnakeGame::mainLoop() {
     
     // creates a timer to check when to move the snake
     Uint32 timeout = SDL_GetTicks() + ((1/snake.getSpeed())*1000);
-    int turboup = 1; // turbo up speed, reduce timeout to move snake faster
     
     while(!quit) {
         // --- START UPDATES ---
@@ -163,8 +162,8 @@ int SnakeGame::mainLoop() {
             // Move when speed says you can move
             if(SDL_TICKS_PASSED(SDL_GetTicks(), timeout) && !paused) {
                 snake.move();
-                turboup = turbo ? 2 : 1;
-                timeout = SDL_GetTicks() + ((1/snake.getSpeed())*(1000/turboup));
+                // with turbo, speed is x 2
+                timeout = SDL_GetTicks() + ((1/(snake.getSpeed()*(turbo ? 2 : 1)))*1000);
             }
 
             // Check if player have crashed to reset the snake
