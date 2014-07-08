@@ -68,6 +68,14 @@ void Snake::draw(SDL_Renderer* renderer) {
         SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
         SDL_RenderFillRect(renderer, &r);
     }
+    
+    // Draw a thing on the head
+    r.x = points[0].x*size + (size * .2);
+    r.y = points[0].y*size + (size * .2);
+    r.w = size - (size * .4);
+    r.h = size - (size * .4);
+    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+    SDL_RenderFillRect(renderer, &r);
 }
 
 void Snake::reset() {
