@@ -71,7 +71,7 @@ public:
      * @param x The X position for the first digit
      * @param y The Y position for the first digit
      */
-    void drawNumber(int n, int x, int y, int pixelSize);
+    void drawNumber(int n, int x, int y, int pixelSize, int separation);
     /**
      * Starts the main game process
      * @return A return code, 0 is OK, anything else is bad.

@@ -141,12 +141,8 @@ int SnakeGame::mainLoop() {
     // used to draw with transparency
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
     
-    // Placeholder for gameover feature
-    SDL_Rect gameover = {winWidth/2 - 200, winHeight/2 - 150, 400, 300};
-    
     // creates a timer to check when to move the snake
     Uint32 timeout = SDL_GetTicks() + ((1/snake.getSpeed())*1000);
-    
     
     while(!quit) {
         // --- START UPDATES ---
@@ -230,7 +226,7 @@ void SnakeGame::draw() {
     
     // Draw points
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 150);
-    drawNumber(points, squareSize, squareSize, squareSize / 2);
+    drawNumber(points, squareSize, squareSize, squareSize / 2, 0);
 
     if(paused) {
         drawPause();
@@ -273,29 +269,28 @@ void SnakeGame::drawPause() {
     }
 }
 
-void SnakeGame::drawNumber(int n, int x, int y, int pixelSize = 10) {
-    int k = log10(n) + 1;
-    
+void SnakeGame::drawNumber(int n, int x, int y, int pixelSize = 10, int separation = 10) {
+    // log10(0) = -Infinity, so I give k an Snickers
+    int k = n == 0 ? 0 : log10(n); // better?
     SDL_Rect pixel = {0, 0, pixelSize, pixelSize};
-    int s = 1;
     
     do {
-        k--;
-        
-        int digit = n == 0 ? 0 :n % 10;
-        int pos = (s*pixelSize*k + pixelSize*4*k);
+        int digit = n % 10;
+        // Numbers are drawn rtl (if the number is 123, 3 is drawn first, then 2, and finnaly 1)
+        int pos = (separation*pixelSize*k + pixelSize*5*k);
         
         for(int i = 0; i < 5; i++) {
             for(int j = 0; j < 8; j++) {
                 if((numbers[digit*5 + i] & (0x80 >> j)) != 0) {
-                    pixel.x = x + (pixelSize * j) + pos;
-                    pixel.y = y + (pixelSize * i);
+                    pixel.x = (pixelSize * j) + x + pos;
+                    pixel.y = (pixelSize * i) + y;
                     SDL_RenderFillRect(renderer, &pixel);
                 }
             }
         }
         
-        n /= 10;
+        n /= 10; // =/
+        k--;
         
     } while (n > 0);
 }
