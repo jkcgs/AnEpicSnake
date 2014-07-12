@@ -16,7 +16,6 @@
 #include <string>
 
 #include "Snake.h"
-#include "Button.h"
 
 #ifndef SNAKEGAME_H
 #define	SNAKEGAME_H

@@ -11,7 +11,6 @@
  */
 
 #include "SnakeGame.h"
-#include "Button.h"
 #include <stdio.h>
 #include <math.h>
 #include <cmath>
@@ -355,7 +354,7 @@ void SnakeGame::handleEvents(SDL_Event* e) {
             }
         }
 
-        // Check if ENTER key was pressed or button to start was pressed
+        // Check if ENTER key was pressed
         if(e->key.keysym.sym == SDLK_RETURN) {
             // Starts the game if it has not started
             // Like when opened the game, or on game over
