@@ -18,7 +18,7 @@
 #include "Snake.h"
 
 #ifndef SNAKEGAME_H
-#define	SNAKEGAME_H
+#define SNAKEGAME_H
 
 /**
  * This controls the main game system for teh win (no, not Windows only).
