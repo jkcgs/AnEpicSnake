@@ -11,6 +11,7 @@
  */
 
 #include "SnakeGame.h"
+#include "Button.h"
 #include <stdio.h>
 #include <math.h>
 #include <cmath>
@@ -152,9 +153,8 @@ int SnakeGame::mainLoop() {
             if(e.type == SDL_QUIT) {
                 quit = true;
             }
-            if(e.type == SDL_KEYDOWN || e.type == SDL_KEYUP) {
-                handleKeys(&e);
-            }
+            
+            handleEvents(&e);
         }
         // --- END EVENTS ---
         
@@ -188,6 +188,7 @@ int SnakeGame::mainLoop() {
         // --- END UPDATES ---
         
         draw();
+        
     }
     
     return 0;
@@ -242,7 +243,7 @@ void SnakeGame::draw() {
     if(!alive) {
         SDL_RenderCopy(renderer, goTexture, NULL, &goProps);
     }
-
+    
     SDL_RenderPresent(renderer);
 }
 
@@ -324,7 +325,7 @@ void SnakeGame::genFood() {
     } while(snake.collides(&food));
 }
 
-void SnakeGame::handleKeys(SDL_Event* e) {
+void SnakeGame::handleEvents(SDL_Event* e) {
     // Keydown-only handling
     if(e->type == SDL_KEYDOWN) {
         // Moves the snake on the desired direction, but you can't go back.
@@ -354,6 +355,7 @@ void SnakeGame::handleKeys(SDL_Event* e) {
             }
         }
 
+        // Check if ENTER key was pressed or button to start was pressed
         if(e->key.keysym.sym == SDLK_RETURN) {
             // Starts the game if it has not started
             // Like when opened the game, or on game over

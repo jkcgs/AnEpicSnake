@@ -16,6 +16,7 @@
 #include <string>
 
 #include "Snake.h"
+#include "Button.h"
 
 #ifndef SNAKEGAME_H
 #define	SNAKEGAME_H
@@ -52,7 +53,7 @@ public:
      * Update the game conditions depending on the keys pressing
      * @param e
      */
-    void handleKeys(SDL_Event* e);
+    void handleEvents(SDL_Event* e);
     /**
      * Draws all the stuff
      */
