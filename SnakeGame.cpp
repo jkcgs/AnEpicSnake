@@ -11,7 +11,6 @@
  */
 
 #include "SnakeGame.h"
-#include "Button.h"
 #include <stdio.h>
 #include <math.h>
 #include <cmath>
@@ -81,91 +80,18 @@ int SnakeGame::initDisplay() {
     }
     
     // Start image background
-    std::string bgpath = "titlebg.png";
-    SDL_Surface* loadedSurface = IMG_Load(bgpath.c_str());
-    int bgWidth = 0, bgHeight = 0;
-    
-    if(loadedSurface == NULL) {
-        printf("Unable to load title image. Error: %s", IMG_GetError());
+    if(!titleTex.loadFromFile(renderer, "titlebg.png")) {
         return 5;
-    } else {
-        titleTexture = SDL_CreateTextureFromSurface(renderer, loadedSurface);
-        if(titleTexture == NULL) {
-            printf("Unable to create texture from '%s'. Error: %s", bgpath.c_str(), SDL_GetError());
-            return 6;
-        } else {
-            bgWidth = loadedSurface->w;
-            bgHeight = loadedSurface->h;
-        }
-        
-        SDL_FreeSurface(loadedSurface);
     }
     
-    SDL_Rect trect = {winWidth/2 - bgWidth/2, winHeight/2 - bgHeight/2, bgWidth, bgHeight};
-    titleProps = trect;
+    titleTex.setPos(winWidth/2 - titleTex.getRect().w/2, winHeight/2 - titleTex.getRect().h/2);
     
     // Game over background
-    bgpath = "gameover.png";
-    loadedSurface = IMG_Load(bgpath.c_str());
-    
-    if(loadedSurface == NULL) {
-        printf("Unable to load game over image. Error: %s", IMG_GetError());
-        return 7;
-    } else {
-        goTexture = SDL_CreateTextureFromSurface(renderer, loadedSurface);
-        if(goTexture == NULL) {
-            printf("Unable to create texture from '%s'. Error: %s", bgpath.c_str(), SDL_GetError());
-            return 8;
-        } else {
-            bgWidth = loadedSurface->w;
-            bgHeight = loadedSurface->h;
-        }
-        
-        SDL_FreeSurface(loadedSurface);
+    if(!gameoverTex.loadFromFile(renderer, "gameover.png")) {
+        return 6;
     }
     
-    SDL_Rect drect = {winWidth/2 - bgWidth/2, winHeight/2 - bgHeight/2, bgWidth, bgHeight};
-    goProps = drect;
-    
-    // BUTTON TEST START
-    // Start Button background
-    bgpath = "button.png";
-    loadedSurface = IMG_Load(bgpath.c_str());
-    
-    SDL_Texture* startBtnTexture = NULL;
-    
-    if(loadedSurface == NULL) {
-        printf("Unable to load start image. Error: %s", IMG_GetError());
-        return 9;
-    } else {
-        startBtnTexture = SDL_CreateTextureFromSurface(renderer, loadedSurface);
-        if(startBtnTexture == NULL) {
-            printf("Unable to create texture from '%s'. Error: %s", bgpath.c_str(), SDL_GetError());
-            return 10;
-        } else {
-            bgWidth = loadedSurface->w;
-            bgHeight = loadedSurface->h;
-        }
-        
-        SDL_FreeSurface(loadedSurface);
-    }
-    
-    // Where to display the button? Here:
-    SDL_Rect brect = {winWidth/2 - bgWidth/2, winHeight/2 + 85, bgWidth, bgHeight/3};
-    SDL_Rect bclip = {0, 0, bgWidth, bgHeight/3};
-    
-    startButton.setTexture(startBtnTexture);
-    startButton.setRect(brect);
-    
-    startButton.setTextureClip(Button::BTN_STATE_NORMAL, bclip);
-    bclip.y = bgHeight/3;
-    startButton.setTextureClip(Button::BTN_STATE_HOVER, bclip);
-    bclip.y = bgHeight/3*2;
-    startButton.setTextureClip(Button::BTN_STATE_DOWN, bclip);
-    bclip.y = bgHeight/3;
-    startButton.setTextureClip(Button::BTN_STATE_UP, bclip);
-    
-    // BUTTON TEST END
+    gameoverTex.setPos(winWidth/2 - gameoverTex.getRect().w/2, winHeight/2 - gameoverTex.getRect().h/2);
     
     return 0;
 }
@@ -195,10 +121,6 @@ int SnakeGame::mainLoop() {
             }
             
             handleEvents(&e);
-            
-            // BUTTON TEST START
-            startButton.handleEvent(&e);
-            // BUTTON TEST END
         }
         // --- END EVENTS ---
         
@@ -227,12 +149,6 @@ int SnakeGame::mainLoop() {
                 snake.setGrow(true);
                 snake.setSpeed(snake.getSpeed()+.3); // moar fun
             }
-        } else if(startButton.getState() == Button::BTN_STATE_UP) {
-            started = true;
-            alive = true;
-            reset();
-            startButton.setDisplayed(false);
-            startButton.setState(Button::BTN_STATE_NORMAL);
         }
         
         // --- END UPDATES ---
@@ -284,19 +200,12 @@ void SnakeGame::draw() {
     }
 
     if(!started && alive) {
-        if(!startButton.isDisplayed()) {
-            startButton.setDisplayed(true);
-        }
-        
-        SDL_RenderCopy(renderer, titleTexture, NULL, &titleProps);
-        startButton.draw(renderer);
-    } else if(startButton.isDisplayed()) {
-        startButton.setDisplayed(false);
+        titleTex.draw(renderer);
     }
 
     // game over place
     if(!alive) {
-        SDL_RenderCopy(renderer, goTexture, NULL, &goProps);
+        gameoverTex.draw(renderer);
     }
     
     SDL_RenderPresent(renderer);
@@ -365,8 +274,8 @@ void SnakeGame::drawFood() {
 
 // bye bye!
 void SnakeGame::close() {
-    SDL_DestroyTexture(goTexture);
-    SDL_DestroyTexture(titleTexture);
+    titleTex.free();
+    gameoverTex.free();
     SDL_DestroyWindow(window);
     SDL_DestroyRenderer(renderer);
     
