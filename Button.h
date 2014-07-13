@@ -13,48 +13,46 @@
 #ifndef BUTTON_H
 #define BUTTON_H
 
-enum ButtonState {
-    BTN_STATE_HOVER,
-    BTN_STATE_DOWN,
-    BTN_STATE_UP,
-    BTN_STATE_NORMAL
-};
-
 class Button {
 public:
+    enum State {
+        BTN_STATE_NORMAL = 0,
+        BTN_STATE_HOVER,
+        BTN_STATE_DOWN,
+        BTN_STATE_UP,
+        BTN_STATE_TOTAL
+    };
+    
     Button();
     ~Button();
     
     void draw(SDL_Renderer* renderer);
     void handleEvent(SDL_Event* event);
-    void setState(ButtonState state);
-    void setColorUp(SDL_Color colorUp);
-    SDL_Color getColorUp();
-    void setColorDown(SDL_Color colorDown);
-    SDL_Color getColorDown();
-    void setColorHover(SDL_Color colorHover);
-    SDL_Color getColorHover();
-    void setColorNormal(SDL_Color colorNormal);
-    SDL_Color getColorNormal();
+    
     SDL_Rect getRect();
     void setRect(SDL_Rect rect);
     bool isDisplayed();
     void setDisplayed(bool displayed);
     
-    ButtonState getState();
+    void setState(State state);
+    State getState();
+
+    // UNIMPLEMENTED
+    void setTexture(SDL_Texture* texture);
+    void setTextureClip(State state, SDL_Rect clip);
+    void setColorState(State state, SDL_Color color);
+    
 private:
     // Button style
-    ButtonState state;
+    State state;
     
     bool displayed; //< This sets if the button is displayed
     
     // Button styles
     SDL_Rect rect;
-    SDL_Color colorNormal;
-    SDL_Color colorHover;
-    SDL_Color colorDown;
-    SDL_Color colorUp;
+    SDL_Color colorStates[BTN_STATE_TOTAL];
+    SDL_Rect stateTextureClips[BTN_STATE_TOTAL];
+    SDL_Texture* stateTexture;
 };
 
 #endif	/* BUTTON_H */
-
