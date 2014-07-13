@@ -84,6 +84,13 @@ bool Button::isDisplayed() {
     return this->displayed;
 }
 
+Button::State Button::getState() {
+    return state;
+}
+
+void Button::setState(State state) {
+    this->state = state;
+}
 
 void Button::setDisplayed(bool displayed) {
     this->displayed = displayed;

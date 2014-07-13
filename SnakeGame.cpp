@@ -150,18 +150,19 @@ int SnakeGame::initDisplay() {
         SDL_FreeSurface(loadedSurface);
     }
     
-    SDL_Rect brect = {winWidth/2 - bgWidth/2, winHeight/2 + 150, bgWidth, bgHeight/3};
+    // Where to display the button? Here:
+    SDL_Rect brect = {winWidth/2 - bgWidth/2, winHeight/2 + 85, bgWidth, bgHeight/3};
     SDL_Rect bclip = {0, 0, bgWidth, bgHeight/3};
     
     startButton.setTexture(startBtnTexture);
     startButton.setRect(brect);
     
     startButton.setTextureClip(Button::BTN_STATE_NORMAL, bclip);
-    bclip.y = 28;
+    bclip.y = bgHeight/3;
     startButton.setTextureClip(Button::BTN_STATE_HOVER, bclip);
-    bclip.y = 56;
+    bclip.y = bgHeight/3*2;
     startButton.setTextureClip(Button::BTN_STATE_DOWN, bclip);
-    bclip.y = 28;
+    bclip.y = bgHeight/3;
     startButton.setTextureClip(Button::BTN_STATE_UP, bclip);
     
     // BUTTON TEST END
@@ -226,12 +227,16 @@ int SnakeGame::mainLoop() {
                 snake.setGrow(true);
                 snake.setSpeed(snake.getSpeed()+.3); // moar fun
             }
+        } else if(startButton.getState() == Button::BTN_STATE_UP) {
+            started = true;
+            alive = true;
+            reset();
+            startButton.setDisplayed(false);
+            startButton.setState(Button::BTN_STATE_NORMAL);
         }
         
         // --- END UPDATES ---
-        
         draw();
-        
     }
     
     return 0;
