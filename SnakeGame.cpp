@@ -11,6 +11,7 @@
  */
 
 #include "SnakeGame.h"
+#include "Button.h"
 #include <stdio.h>
 #include <math.h>
 #include <cmath>
@@ -67,7 +68,7 @@ int SnakeGame::initDisplay() {
         return 2;
     }
     
-    window = SDL_CreateWindow("AnEpicSnake", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, winWidth, winHeight, SDL_WINDOW_SHOWN);
+    window = SDL_CreateWindow("KairosDev - AnEpicSnake v0.3", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, winWidth, winHeight, SDL_WINDOW_SHOWN);
     if(window == NULL) {
         printf("Unable to create window. Error: %s", SDL_GetError());
         return 3;
@@ -126,6 +127,45 @@ int SnakeGame::initDisplay() {
     SDL_Rect drect = {winWidth/2 - bgWidth/2, winHeight/2 - bgHeight/2, bgWidth, bgHeight};
     goProps = drect;
     
+    // BUTTON TEST START
+    // Start Button background
+    bgpath = "button.png";
+    loadedSurface = IMG_Load(bgpath.c_str());
+    
+    SDL_Texture* startBtnTexture = NULL;
+    
+    if(loadedSurface == NULL) {
+        printf("Unable to load start image. Error: %s", IMG_GetError());
+        return 9;
+    } else {
+        startBtnTexture = SDL_CreateTextureFromSurface(renderer, loadedSurface);
+        if(startBtnTexture == NULL) {
+            printf("Unable to create texture from '%s'. Error: %s", bgpath.c_str(), SDL_GetError());
+            return 10;
+        } else {
+            bgWidth = loadedSurface->w;
+            bgHeight = loadedSurface->h;
+        }
+        
+        SDL_FreeSurface(loadedSurface);
+    }
+    
+    SDL_Rect brect = {winWidth/2 - bgWidth/2, winHeight/2 + 150, bgWidth, bgHeight/3};
+    SDL_Rect bclip = {0, 0, bgWidth, bgHeight/3};
+    
+    startButton.setTexture(startBtnTexture);
+    startButton.setRect(brect);
+    
+    startButton.setTextureClip(Button::BTN_STATE_NORMAL, bclip);
+    bclip.y = 28;
+    startButton.setTextureClip(Button::BTN_STATE_HOVER, bclip);
+    bclip.y = 56;
+    startButton.setTextureClip(Button::BTN_STATE_DOWN, bclip);
+    bclip.y = 28;
+    startButton.setTextureClip(Button::BTN_STATE_UP, bclip);
+    
+    // BUTTON TEST END
+    
     return 0;
 }
 
@@ -154,6 +194,10 @@ int SnakeGame::mainLoop() {
             }
             
             handleEvents(&e);
+            
+            // BUTTON TEST START
+            startButton.handleEvent(&e);
+            // BUTTON TEST END
         }
         // --- END EVENTS ---
         
@@ -235,7 +279,14 @@ void SnakeGame::draw() {
     }
 
     if(!started && alive) {
+        if(!startButton.isDisplayed()) {
+            startButton.setDisplayed(true);
+        }
+        
         SDL_RenderCopy(renderer, titleTexture, NULL, &titleProps);
+        startButton.draw(renderer);
+    } else if(startButton.isDisplayed()) {
+        startButton.setDisplayed(false);
     }
 
     // game over place

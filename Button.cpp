@@ -80,6 +80,27 @@ void Button::setRect(SDL_Rect rect) {
     this->rect = rect;
 }
 
+bool Button::isDisplayed() {
+    return this->displayed;
+}
+
+
 void Button::setDisplayed(bool displayed) {
     this->displayed = displayed;
+}
+
+void Button::setTexture(SDL_Texture* texture) {
+    this->stateTexture = texture;
+}
+
+void Button::setTextureClip(State state, SDL_Rect clip) {
+    if(state < BTN_STATE_TOTAL) {
+        this->stateTextureClips[state] = clip;
+    }
+}
+
+void Button::setColorState(State state, SDL_Color color) {
+    if(state < BTN_STATE_TOTAL) {
+        this->colorStates[state] = color;
+    }
 }

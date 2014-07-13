@@ -13,6 +13,13 @@
 #ifndef BUTTON_H
 #define BUTTON_H
 
+
+/**
+ * This allows to display a button on screen and get its status.
+ * 
+ * @author Jonathan Gutiérrez
+ * @version 1.0
+ */
 class Button {
 public:
     enum State {
@@ -26,8 +33,20 @@ public:
     Button();
     ~Button();
     
+    /**
+     * Draws the button to the renderer, depending on the state. If a texture
+     * is set, then the texture is drawn on the renderer. If not, it draws a
+     * filled rectangle of certain colors.
+     * 
+     * @param renderer The render destination
+     */
     void draw(SDL_Renderer* renderer);
+    /**
+     * Handles the mouse events to update the button status
+     * @param event The SDL_Event object that captures the environment status
+     */
     void handleEvent(SDL_Event* event);
+    
     
     SDL_Rect getRect();
     void setRect(SDL_Rect rect);
@@ -36,10 +55,20 @@ public:
     
     void setState(State state);
     State getState();
-
-    // UNIMPLEMENTED
+    
     void setTexture(SDL_Texture* texture);
+    /**
+     * Sets a texture clip to a determined status
+     * @param state The status of the button to set a clip
+     * @param clip The clip to be set
+     */
     void setTextureClip(State state, SDL_Rect clip);
+
+    /**
+     * Set a background color to a determined status
+     * @param state The status of the button to set a color
+     * @param color The color to be set.
+     */
     void setColorState(State state, SDL_Color color);
     
 private:

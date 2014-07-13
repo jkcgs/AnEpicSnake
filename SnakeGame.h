@@ -16,6 +16,7 @@
 #include <string>
 
 #include "Snake.h"
+#include "Button.h"
 
 #ifndef SNAKEGAME_H
 #define SNAKEGAME_H
@@ -100,6 +101,8 @@ private:
     SDL_Rect titleProps;
     SDL_Texture* goTexture;
     SDL_Rect goProps;
+    
+    Button startButton;
     
     Snake snake;
     SDL_Point food;
