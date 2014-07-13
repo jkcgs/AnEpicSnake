@@ -46,6 +46,8 @@ void SnakeGame::reset() {
     epilepsy = true;
     
     squareSize = 10;
+    food.w = squareSize;
+    food.h = squareSize;
     points = 0;
     snake.reset();
     snake.setSize(squareSize);
@@ -189,7 +191,9 @@ void SnakeGame::draw() {
         drawBackground(); // don't be epileptic
     }
 
-    drawFood(); // you must have some food or you could die
+    // you must have some food or you could die
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+    SDL_RenderFillRect(renderer, &food);
     
     // Draw points
     SDL_SetRenderDrawColor(renderer, turbo ? 100 : 255, 255, 255, 150);
@@ -261,17 +265,6 @@ void SnakeGame::drawNumber(int n, int x, int y, int pixelSize = 10, int separati
     } while (n > 0);
 }
 
-void SnakeGame::drawFood() {
-    if(renderer == NULL) {
-        return;
-    }
-    
-    // yes, this is a copypaste from the background
-    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-    SDL_Rect sq = {food.x*squareSize, food.y*squareSize, squareSize, squareSize};
-    SDL_RenderFillRect(renderer, &sq);
-}
-
 // bye bye!
 void SnakeGame::close() {
     titleTex.free();
@@ -284,8 +277,8 @@ void SnakeGame::close() {
 
 void SnakeGame::genFood() {
     do {
-        food.x = rand()%(winWidth/squareSize);
-        food.y = rand()%(winHeight/squareSize);
+        food.x = (rand()%(winWidth/squareSize)) * squareSize;
+        food.y = (rand()%(winHeight/squareSize)) * squareSize;
     } while(snake.collides(&food));
 }
 

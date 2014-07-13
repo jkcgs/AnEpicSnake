@@ -63,10 +63,6 @@ public:
      */
     void drawBackground();
     /**
-     * Draws the food on the window at its position
-     */
-    void drawFood();
-    /**
      * Draws a pixeled-style number 
      * @param n The number
      * @param x The X position for the first digit
@@ -106,7 +102,7 @@ private:
     Texture gameoverTex;
     
     Snake snake;
-    SDL_Point food;
+    SDL_Rect food;
     bool paused;
     bool alive;
     bool epilepsy;

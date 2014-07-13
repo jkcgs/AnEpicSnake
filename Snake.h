@@ -84,7 +84,7 @@ public:
      * @param point The point to verify if collides with the snake
      * @return A boolean that checks the collition state
      */
-    bool collides(SDL_Point* point);
+    bool collides(SDL_Rect* rect);
     /**
      * Returns the actual speed of the snake
      * @return The actual speed of the snake

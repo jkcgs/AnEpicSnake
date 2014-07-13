@@ -114,10 +114,10 @@ int Snake::length() {
     return points.size();
 }
 
-bool Snake::collides(SDL_Point* point) {
+bool Snake::collides(SDL_Rect* rect) {
     // checks if some point is at the same place of some point of the snake
     for(int i = 0; i < points.size(); i++) {
-        if(points[i].x == point->x && points[i].y == point->y) {
+        if(points[i].x*size == rect->x && points[i].y*size == rect->y) {
             return true;
         }
     }
