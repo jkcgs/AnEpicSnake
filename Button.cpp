@@ -26,10 +26,7 @@ Button::Button() {
     this->colorStates[BTN_STATE_DOWN] = black;
     this->colorStates[BTN_STATE_UP] = black;
     
-    for(int i = 0; i < BTN_STATE_TOTAL; i++) {
-        this->stateTextureClips[i] = NULL;
-    }
-    
+    this->stateTexture = NULL;
     this->displayed = true;
 }
 
@@ -48,7 +45,7 @@ void Button::draw(SDL_Renderer* renderer) {
         SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
         SDL_RenderFillRect(renderer, &rect);
     } else {
-        SDL_RenderCopy(renderer, this->stateTexture, this->stateTextureClips[state], rect);
+        SDL_RenderCopy(renderer, this->stateTexture, &this->stateTextureClips[state], &rect);
     }
 }
 
@@ -60,11 +57,9 @@ void Button::handleEvent(SDL_Event* event) {
             event->type != SDL_MOUSEMOTION) {
         return;
     }
-    int x, y;
-    SDL_GetMouseState(&x, &y);
     
     // Check if mouse is hovering button. If not, button is normal
-    if(x >= rect.x && x < (rect.x + rect.w) && y >= rect.y && y < (rect.y + rect.h)) {
+    if(event->motion.x >= rect.x && event->motion.x < (rect.x + rect.w) && event->motion.y >= rect.y && event->motion.y < (rect.y + rect.h)) {
         if(event->type == SDL_MOUSEBUTTONDOWN) {
             state = BTN_STATE_DOWN;
         } else if(event->type == SDL_MOUSEBUTTONUP) {
