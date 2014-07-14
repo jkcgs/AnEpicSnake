@@ -20,10 +20,14 @@ Button::Button() {
     this->displayed = true;
 }
 
-
 Button::~Button() {
+    free();
+}
+
+void Button::free() {
     texture.free();
 }
+
 
 void Button::draw(SDL_Renderer* renderer) {
     if(!displayed || this->texture.getTexture() == NULL) {
@@ -64,7 +68,19 @@ bool Button::loadImage(SDL_Renderer* renderer, std::string path) {
     if(!texture.loadFromFile(renderer, path)) {
         return false;
     }
+    
+    SDL_Rect r = {0, 0, texture.getRect().w, texture.getRect().h};
+    for(int i = 0; i < BTN_STATE_TOTAL; i++) {
+        stateTextureClips[i] = r;
+    }
+    
     return true;
+}
+
+void Button::setTextureClip(State state, SDL_Rect clip) {
+    if(state < BTN_STATE_TOTAL) {
+        this->stateTextureClips[state] = clip;
+    }
 }
 
 bool Button::isDisplayed() {
@@ -83,16 +99,18 @@ void Button::setDisplayed(bool displayed) {
     this->displayed = displayed;
 }
 
-void Button::setTextureClip(State state, SDL_Rect clip) {
-    if(state < BTN_STATE_TOTAL) {
-        this->stateTextureClips[state] = clip;
-    }
-}
-
 void Button::setPos(int x, int y) {
     texture.setPos(x, y);
 }
 
 SDL_Rect Button::getRect() {
     return texture.getRect();
+}
+
+void Button::setTexture(Texture texture) {
+    this->texture = texture;
+}
+
+void Button::setSize(int w, int h) {
+    this->texture.setSize(w, h);
 }

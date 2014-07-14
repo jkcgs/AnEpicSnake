@@ -93,13 +93,10 @@ private:
     SDL_Window* window;
     SDL_Renderer* renderer;
     
-    //SDL_Texture* titleTexture;
-    //SDL_Rect titleProps;
-    //SDL_Texture* goTexture;
-    //SDL_Rect goProps;
-    
     Texture titleTex;
     Texture gameoverTex;
+    
+    Button startBtn;
     
     Snake snake;
     SDL_Rect food;

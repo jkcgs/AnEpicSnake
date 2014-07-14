@@ -21,6 +21,7 @@ public:
      void free();
      void draw(SDL_Renderer* renderer);
      void setPos(int x, int y);
+     void setSize(int w, int h);
      SDL_Rect getClip();
      void setClip(SDL_Rect clip);
      SDL_Rect getRect();

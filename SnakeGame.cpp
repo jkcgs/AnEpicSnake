@@ -85,15 +85,30 @@ int SnakeGame::initDisplay() {
     if(!titleTex.loadFromFile(renderer, "titlebg.png")) {
         return 5;
     }
-    
     titleTex.setPos(winWidth/2 - titleTex.getRect().w/2, winHeight/2 - titleTex.getRect().h/2);
     
     // Game over background
     if(!gameoverTex.loadFromFile(renderer, "gameover.png")) {
         return 6;
     }
-    
     gameoverTex.setPos(winWidth/2 - gameoverTex.getRect().w/2, winHeight/2 - gameoverTex.getRect().h/2);
+    
+    // Start button
+    if(!startBtn.loadImage(renderer, "button.png")) {
+        return 7;
+    }
+    startBtn.setPos(winWidth/2 - startBtn.getRect().w/2, winHeight/2 + 80);
+    
+    // Hover and mouse buttons effects
+    SDL_Rect r = {0, 0, startBtn.getRect().w, startBtn.getRect().h/3};
+    startBtn.setSize(startBtn.getRect().w, startBtn.getRect().h/3);
+    startBtn.setTextureClip(Button::BTN_STATE_NORMAL, r);
+    r.y = startBtn.getRect().h;
+    startBtn.setTextureClip(Button::BTN_STATE_HOVER, r);
+    r.y = startBtn.getRect().h * 2;
+    startBtn.setTextureClip(Button::BTN_STATE_DOWN, r);
+    r.y = startBtn.getRect().h;
+    startBtn.setTextureClip(Button::BTN_STATE_UP, r);
     
     return 0;
 }
@@ -121,8 +136,8 @@ int SnakeGame::mainLoop() {
             if(e.type == SDL_QUIT) {
                 quit = true;
             }
-            
             handleEvents(&e);
+            startBtn.handleEvent(&e);
         }
         // --- END EVENTS ---
         
@@ -151,6 +166,9 @@ int SnakeGame::mainLoop() {
                 snake.setGrow(true);
                 snake.setSpeed(snake.getSpeed()+.3); // moar fun
             }
+        } else if(startBtn.getState() == Button::BTN_STATE_UP) {
+            startBtn.setState(Button::BTN_STATE_NORMAL);
+            started = true;
         }
         
         // --- END UPDATES ---
@@ -204,13 +222,20 @@ void SnakeGame::draw() {
     }
 
     if(!started && alive) {
+        if(!startBtn.isDisplayed()) {
+            startBtn.setDisplayed(true);
+        }
         titleTex.draw(renderer);
+        startBtn.draw(renderer);
+    } else if(startBtn.isDisplayed()) {
+        startBtn.setDisplayed(false);
     }
 
     // game over place
     if(!alive) {
         gameoverTex.draw(renderer);
     }
+    
     
     SDL_RenderPresent(renderer);
 }
@@ -269,6 +294,7 @@ void SnakeGame::drawNumber(int n, int x, int y, int pixelSize = 10, int separati
 void SnakeGame::close() {
     titleTex.free();
     gameoverTex.free();
+    startBtn.free();
     SDL_DestroyWindow(window);
     SDL_DestroyRenderer(renderer);
     

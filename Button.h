@@ -47,6 +47,21 @@ public:
      * @param event The SDL_Event object that captures the environment status
      */
     void handleEvent(SDL_Event* event);
+    /**
+     * Sets a texture clip to a determined status
+     * @param state The status of the button to set a clip
+     * @param clip The clip to be set
+     */
+    void setTextureClip(State state, SDL_Rect clip);
+    /**
+     * Loads a texture from a file
+     * @param renderer The renderer used to load the image
+     * @param path The file image to load
+     * @return A boolean that 
+     */
+    bool loadImage(SDL_Renderer* renderer, std::string path);
+    
+    void free();
     
     bool isDisplayed();
     void setDisplayed(bool displayed);
@@ -55,16 +70,9 @@ public:
     State getState();
     
     void setTexture(Texture texture);
-    /**
-     * Sets a texture clip to a determined status
-     * @param state The status of the button to set a clip
-     * @param clip The clip to be set
-     */
-    void setTextureClip(State state, SDL_Rect clip);
-    
-    bool loadImage(SDL_Renderer* renderer, std::string path);
     
     void setPos(int x, int y);
+    void setSize(int w, int h);
     SDL_Rect getRect();
     
 private:

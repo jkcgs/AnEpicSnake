@@ -88,3 +88,7 @@ void Texture::setTexture(SDL_Texture* texture) {
     this->texture = texture;
 }
 
+void Texture::setSize(int w, int h) {
+    this->rect.w = w;
+    this->rect.h = h;
+}
