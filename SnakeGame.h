@@ -112,6 +112,8 @@ private:
     
     bool started;
     bool quit;
+    
+    SDL_Rect bgp; //< Used to draw background pixels
 };
 
 #endif	/* SNAKEGAME_H */

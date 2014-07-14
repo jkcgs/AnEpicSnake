@@ -48,6 +48,8 @@ void SnakeGame::reset() {
     squareSize = 10;
     food.w = squareSize;
     food.h = squareSize;
+    bgp.w = squareSize;
+    bgp.h = squareSize;
     points = 0;
     snake.reset();
     snake.setSize(squareSize);
@@ -184,16 +186,14 @@ void SnakeGame::drawBackground() {
         return;
     }
     
-    SDL_Rect sq = {0, 0, squareSize, squareSize};
-    
     // how much pretty squares can fit the window? c:
-    // ps: this is still take too much cpu (by now)
+    // ps: this is still taking too much cpu (by now)
     for(int i = 0; i < winHeight/squareSize; i++) {
         for(int j = 0; j < winWidth/squareSize; j++) {
             SDL_SetRenderDrawColor(renderer, rand()%256, rand()%256, rand()%256, 180);
-            sq.x = j*squareSize;
-            sq.y = i*squareSize;
-            SDL_RenderFillRect(renderer, &sq);
+            bgp.x = j*squareSize;
+            bgp.y = i*squareSize;
+            SDL_RenderFillRect(renderer, &bgp);
         }
     }
 }
@@ -271,14 +271,11 @@ void SnakeGame::drawNumber(int n, int x, int y, int pixelSize = 10, int separati
     SDL_Rect pixel = {0, 0, pixelSize, pixelSize};
     
     do {
-        int digit = n % 10;
-        // Numbers are drawn rtl (if the number is 123, 3 is drawn first, then 2, and finnaly 1)
-        int pos = (separation*pixelSize*k + pixelSize*5*k);
-        
+        // Numbers are drawn rtl (if the number is 123, 3 is drawn first, then 2, and finnaly 1)        
         for(int i = 0; i < 5; i++) {
             for(int j = 0; j < 8; j++) {
-                if((numbers[digit*5 + i] & (0x80 >> j)) != 0) {
-                    pixel.x = (pixelSize * j) + x + pos;
+                if((numbers[(n % 10)*5 + i] & (0x80 >> j)) != 0) {
+                    pixel.x = (pixelSize * j) + x + (separation*pixelSize*k + pixelSize*5*k);
                     pixel.y = (pixelSize * i) + y;
                     SDL_RenderFillRect(renderer, &pixel);
                 }
