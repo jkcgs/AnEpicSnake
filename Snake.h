@@ -32,6 +32,7 @@ enum Direction {
  */
 class Snake {
 public:
+    
     Snake();
     ~Snake();
     
@@ -116,6 +117,9 @@ private:
     bool grow;
     bool moved;
     std::vector<SDL_Point> points;
+    
+    SDL_Rect a, b; //< Used for eyes
+    SDL_Rect p; //< Used when drawing the snake points
 };
 
 #endif	/* SNAKE_H */

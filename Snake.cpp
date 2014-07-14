@@ -17,7 +17,6 @@ Snake::Snake() {
 }
 
 Snake::~Snake() {
-    
 }
 
 void Snake::move() {
@@ -61,21 +60,37 @@ void Snake::move() {
 
 void Snake::draw(SDL_Renderer* renderer) {
     // Draw each point of the square
-    SDL_Rect r = {0, 0, size, size};
     for(int i = 0; i < points.size(); i++) {
-        r.x = points[i].x*size;
-        r.y = points[i].y*size;
+        p.x = points[i].x*size;
+        p.y = points[i].y*size;
         SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-        SDL_RenderFillRect(renderer, &r);
+        SDL_RenderFillRect(renderer, &p);
     }
     
-    // Draw a thing on the head
-    r.x = points[0].x*size + (size * .2);
-    r.y = points[0].y*size + (size * .2);
-    r.w = size - (size * .4);
-    r.h = size - (size * .4);
+    // Draw eyes
+    if(direction == UP || direction == LEFT) {
+        // Sets a square in the up-left first point corner
+        a.x = points[0].x * size + a.w;
+        a.y = points[0].y * size + a.h;
+    } else {
+        // Sets a square in the down-right first point corner
+        a.x = points[0].x * size + size - a.w * 2;
+        a.y = points[0].y * size + size - a.h * 2;
+    }
+    
+    if(direction == UP || direction == RIGHT) {
+        // Sets a square in the up-right first point corner
+        b.x = points[0].x * size + size - b.w * 2;
+        b.y = points[0].y * size + b.h;
+    } else {
+        // Sets a quare in the down-left first point corner
+        b.x = points[0].x * size + b.w;
+        b.y = points[0].y * size + size - b.h * 2;
+    }
+    
     SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
-    SDL_RenderFillRect(renderer, &r);
+    SDL_RenderFillRect(renderer, &a);
+    SDL_RenderFillRect(renderer, &b);
 }
 
 void Snake::reset() {
@@ -85,6 +100,13 @@ void Snake::reset() {
     speed = 10;
     size = 10;
     grow = false;
+    
+    p.w = size;
+    p.h = size;
+    a.w = size * .2;
+    a.h = a.w;
+    b.w = a.w;
+    b.h = a.w;
     
     points.resize(5);
     points[0].x = 5; points[0].y = 5;
@@ -96,6 +118,8 @@ void Snake::reset() {
 
 void Snake::setSize(int size) {
     this->size = size;
+    p.w = size;
+    p.h = size;
 }
 
 bool Snake::selfCrashed() {
