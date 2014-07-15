@@ -100,36 +100,22 @@ int SnakeGame::initDisplay() {
         return 7;
     }
     startBtn.setPos(winWidth/2 - startBtn.getRect().w/2, winHeight/2 + 80);
-    
-    // Hover and mouse buttons effects
-    SDL_Rect r = {0, 0, startBtn.getRect().w, startBtn.getRect().h/3};
-    startBtn.setSize(startBtn.getRect().w, startBtn.getRect().h/3);
-    startBtn.setTextureClip(Button::BTN_STATE_NORMAL, r);
-    r.y = startBtn.getRect().h;
-    startBtn.setTextureClip(Button::BTN_STATE_HOVER, r);
-    r.y = startBtn.getRect().h * 2;
-    startBtn.setTextureClip(Button::BTN_STATE_DOWN, r);
-    r.y = startBtn.getRect().h;
-    startBtn.setTextureClip(Button::BTN_STATE_UP, r);
+    startBtn.setupClipStates(3);
+    startBtn.setClipState(Button::BTN_STATE_NORMAL, 0);
+    startBtn.setClipState(Button::BTN_STATE_HOVER, 1);
+    startBtn.setClipState(Button::BTN_STATE_DOWN, 2);
+    startBtn.setClipState(Button::BTN_STATE_UP, 1);
     
     // Restart button
     if(!restartBtn.loadImage(renderer, "restart.png")) {
         return 8;
     }
     restartBtn.setPos(winWidth/2 - restartBtn.getRect().w/2, winHeight/2 + 112);
-    
-    // Hover and mouse buttons effects
-    r.x = 0; r.y = 0; 
-    r.w = restartBtn.getRect().w;
-    r.h = restartBtn.getRect().h/3;
-    restartBtn.setSize(restartBtn.getRect().w, restartBtn.getRect().h/3);
-    restartBtn.setTextureClip(Button::BTN_STATE_NORMAL, r);
-    r.y = restartBtn.getRect().h;
-    restartBtn.setTextureClip(Button::BTN_STATE_HOVER, r);
-    r.y = restartBtn.getRect().h * 2;
-    restartBtn.setTextureClip(Button::BTN_STATE_DOWN, r);
-    r.y = restartBtn.getRect().h;
-    restartBtn.setTextureClip(Button::BTN_STATE_UP, r);
+    restartBtn.setupClipStates(3);
+    restartBtn.setClipState(Button::BTN_STATE_NORMAL, 0);
+    restartBtn.setClipState(Button::BTN_STATE_HOVER, 1);
+    restartBtn.setClipState(Button::BTN_STATE_DOWN, 2);
+    restartBtn.setClipState(Button::BTN_STATE_UP, 1);
     
     return 0;
 }

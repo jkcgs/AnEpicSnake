@@ -83,6 +83,26 @@ void Button::setTextureClip(State state, SDL_Rect clip) {
     }
 }
 
+void Button::setupClipStates(int positions) {
+    // Set new size for texture, cutting it by all the positions
+    this->texture.setSize(this->texture.getRect().w, this->texture.getRect().h/positions);
+    
+    // Setup all the texture clips to the new size
+    for(int i = 0; i < BTN_STATE_TOTAL; i++) {
+        // This method uses the full width
+        this->stateTextureClips[i].w = this->texture.getRect().w;
+        // This uses the new divided height
+        this->stateTextureClips[i].h = this->texture.getRect().h;
+        // All the clips start from the left border
+        this->stateTextureClips[i].x = 0;
+    }
+}
+
+void Button::setClipState(State state, int position) {
+    // "Move" the clip (up-down) to the desired position
+    this->stateTextureClips[state].y = this->texture.getRect().h * position;
+}
+
 bool Button::isDisplayed() {
     return this->displayed;
 }

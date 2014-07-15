@@ -61,7 +61,27 @@ public:
      */
     bool loadImage(SDL_Renderer* renderer, std::string path);
     
+    /**
+     * Frees the memory from the button texture
+     */
     void free();
+    
+    /**
+     * Initial setup for clip states, based on number of positions, that
+     * divides the height of the button texture by this number of positions.
+     * @param positions The number of positions available.
+     */
+    void setupClipStates(int positions);
+    
+    /**
+     * Sets a position for a state clip, by moving the clip up-down, based on
+     * the division from the amount of positions available on the texture.
+     * As the available positions are not stored from setup, the passed value
+     * for position is not checked. The positions start from zero.
+     * @param state The state to be set
+     * @param position The position of the state clip, based on previous setup.
+     */
+    void setClipState(State state, int position);
     
     bool isDisplayed();
     void setDisplayed(bool displayed);
