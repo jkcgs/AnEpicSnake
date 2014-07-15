@@ -366,7 +366,7 @@ void SnakeGame::handleEvents(SDL_Event* e) {
             } else {
                 paused = !paused;
                 // this resets the value of the pause icon fade
-                pauseFade = paused ? 255 : 0;
+                pauseFade = 0;
             }
         }
 
