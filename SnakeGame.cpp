@@ -96,7 +96,7 @@ int SnakeGame::initDisplay() {
     gameoverTex.setPos(winWidth/2 - gameoverTex.getRect().w/2, winHeight/2 - gameoverTex.getRect().h/2);
     
     // Start button
-    if(!startBtn.loadImage(renderer, "button.png")) {
+    if(!startBtn.loadImage(renderer, "start.png")) {
         return 7;
     }
     startBtn.setPos(winWidth/2 - startBtn.getRect().w/2, winHeight/2 + 80);
@@ -111,6 +111,25 @@ int SnakeGame::initDisplay() {
     startBtn.setTextureClip(Button::BTN_STATE_DOWN, r);
     r.y = startBtn.getRect().h;
     startBtn.setTextureClip(Button::BTN_STATE_UP, r);
+    
+    // Restart button
+    if(!restartBtn.loadImage(renderer, "restart.png")) {
+        return 8;
+    }
+    restartBtn.setPos(winWidth/2 - restartBtn.getRect().w/2, winHeight/2 + 112);
+    
+    // Hover and mouse buttons effects
+    r.x = 0; r.y = 0; 
+    r.w = restartBtn.getRect().w;
+    r.h = restartBtn.getRect().h/3;
+    restartBtn.setSize(restartBtn.getRect().w, restartBtn.getRect().h/3);
+    restartBtn.setTextureClip(Button::BTN_STATE_NORMAL, r);
+    r.y = restartBtn.getRect().h;
+    restartBtn.setTextureClip(Button::BTN_STATE_HOVER, r);
+    r.y = restartBtn.getRect().h * 2;
+    restartBtn.setTextureClip(Button::BTN_STATE_DOWN, r);
+    r.y = restartBtn.getRect().h;
+    restartBtn.setTextureClip(Button::BTN_STATE_UP, r);
     
     return 0;
 }
@@ -140,6 +159,7 @@ int SnakeGame::mainLoop() {
             }
             handleEvents(&e);
             startBtn.handleEvent(&e);
+            restartBtn.handleEvent(&e);
         }
         // --- END EVENTS ---
         
@@ -152,14 +172,15 @@ int SnakeGame::mainLoop() {
             }
 
             // Check if player have crashed to reset the snake
-            if(snake.getFirstPoint().x < 0 || snake.getFirstPoint().y < 0 || 
+            if(alive && started &&
+                    snake.getFirstPoint().x < 0 || snake.getFirstPoint().y < 0 || 
                     snake.getFirstPoint().x*squareSize >= winWidth || 
                     snake.getFirstPoint().y*squareSize >= winHeight ||
                     snake.selfCrashed()) {
                 started = false; // set that game has not started to stop moving
                 alive = false;
                 // player will continue the game if he press ENTER
-            }
+            } 
 
             // have you touched the food? it's like eat it
             if(snake.collides(&food)) {
@@ -168,9 +189,14 @@ int SnakeGame::mainLoop() {
                 snake.setGrow(true);
                 snake.setSpeed(snake.getSpeed()+.3); // moar fun
             }
-        } else if(startBtn.getState() == Button::BTN_STATE_UP) {
+        } else if(alive && startBtn.getState() == Button::BTN_STATE_UP) {
             startBtn.setState(Button::BTN_STATE_NORMAL);
             started = true;
+        } else if(!alive && restartBtn.getState() == Button::BTN_STATE_UP) {
+            restartBtn.setState(Button::BTN_STATE_NORMAL);
+            started = true;
+            alive = true;
+            reset(); // move the food
         }
         
         // --- END UPDATES ---
@@ -233,9 +259,14 @@ void SnakeGame::draw() {
 
     // game over place
     if(!alive) {
+        if(!restartBtn.isDisplayed()) {
+            restartBtn.setDisplayed(true);
+        }
         gameoverTex.draw(renderer);
+        restartBtn.draw(renderer);
+    } else if(restartBtn.isDisplayed()) {
+        restartBtn.setDisplayed(false);
     }
-    
     
     SDL_RenderPresent(renderer);
 }
@@ -292,6 +323,7 @@ void SnakeGame::close() {
     titleTex.free();
     gameoverTex.free();
     startBtn.free();
+    restartBtn.free();
     SDL_DestroyWindow(window);
     SDL_DestroyRenderer(renderer);
     
@@ -343,6 +375,8 @@ void SnakeGame::handleEvents(SDL_Event* e) {
                 started = true;
                 alive = true;
                 reset(); // move the food
+                startBtn.setDisplayed(false);
+                restartBtn.setDisplayed(false);
             } else {
                 paused = !paused;
                 // this resets the value of the pause icon fade

@@ -97,6 +97,7 @@ private:
     Texture gameoverTex;
     
     Button startBtn;
+    Button restartBtn;
     
     Snake snake;
     SDL_Rect food;
