@@ -6,5 +6,5 @@ To pause the game use RETURN key (a.k.a ENTER)
 
 ---
 
-AnEpicSnake is licenced under the GPLv3 licence.
+AnEpicSnake is licensed under the GPLv3 license.
 See the NOTICE.txt file for more information.
