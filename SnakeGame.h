@@ -93,6 +93,9 @@ private:
     SDL_Window* window;
     SDL_Renderer* renderer;
     
+    SDL_Texture* bgtx; //< Background texture
+    Uint32* bgpx; //< Background pixels
+    
     Texture titleTex;
     Texture gameoverTex;
     
@@ -113,8 +116,6 @@ private:
     
     bool started;
     bool quit;
-    
-    SDL_Rect bgp; //< Used to draw background pixels
 };
 
 #endif	/* SNAKEGAME_H */

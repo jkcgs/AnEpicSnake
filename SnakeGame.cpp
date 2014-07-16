@@ -35,6 +35,9 @@ SnakeGame::SnakeGame(int width, int height) {
     alive = true;
     turbo = false;
     
+    bgpx = new Uint32[winWidth * winHeight];
+    memset(bgpx, 255, winWidth * winHeight * sizeof(Uint32));
+    
     reset();
 }
 
@@ -48,8 +51,6 @@ void SnakeGame::reset() {
     squareSize = 10;
     food.w = squareSize;
     food.h = squareSize;
-    bgp.w = squareSize;
-    bgp.h = squareSize;
     points = 0;
     snake.reset();
     snake.setSize(squareSize);
@@ -82,6 +83,13 @@ int SnakeGame::initDisplay() {
         printf("Unable to create renderer. Error: %s", SDL_GetError());
         return 4;
     }
+    // used to draw with transparency
+    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+    
+    // Used to draw the background
+    bgtx = SDL_CreateTexture(renderer,
+        SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STATIC, winWidth, winHeight);
+    SDL_SetTextureBlendMode(bgtx, SDL_BLENDMODE_BLEND);
     
     // Start image background
     if(!titleTex.loadFromFile(renderer, "titlebg.png")) {
@@ -129,9 +137,6 @@ int SnakeGame::mainLoop() {
     
     SDL_Event e;
     quit = false;
-    
-    // used to draw with transparency
-    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
     
     // creates a timer to check when to move the snake
     Uint32 timeout = SDL_GetTicks() + ((1/snake.getSpeed())*1000);
@@ -199,15 +204,22 @@ void SnakeGame::drawBackground() {
     }
     
     // how much pretty squares can fit the window? c:
-    // ps: this is still taking too much cpu (by now)
     for(int i = 0; i < winHeight/squareSize; i++) {
         for(int j = 0; j < winWidth/squareSize; j++) {
-            SDL_SetRenderDrawColor(renderer, rand()%256, rand()%256, rand()%256, 180);
-            bgp.x = j*squareSize;
-            bgp.y = i*squareSize;
-            SDL_RenderFillRect(renderer, &bgp);
+            // Format: 0xAARRGGBB
+            int color = 0xB0000000 + (rand()%255 << 16) + (rand()%255 << 8) + rand()%255;
+            
+            // this loops draws a square of square size
+            for(int k = 0; k < squareSize; k++) {
+                for(int l = 0; l < squareSize; l++) {
+                    bgpx[(k+(10*i))*winWidth + (10*j) + l] = color;
+                }
+            }
         }
     }
+    
+    SDL_UpdateTexture(bgtx, NULL, bgpx, winWidth * sizeof(Uint32));
+    SDL_RenderCopy(renderer, bgtx, NULL, NULL);
 }
 
 void SnakeGame::draw() {
@@ -216,7 +228,7 @@ void SnakeGame::draw() {
     SDL_RenderClear(renderer);
 
     snake.draw(renderer);
-
+    
     if(epilepsy && (started || !alive)) {
         drawBackground(); // don't be epileptic
     }
@@ -304,18 +316,6 @@ void SnakeGame::drawNumber(int n, int x, int y, int pixelSize = 10, int separati
     } while (n > 0);
 }
 
-// bye bye!
-void SnakeGame::close() {
-    titleTex.free();
-    gameoverTex.free();
-    startBtn.free();
-    restartBtn.free();
-    SDL_DestroyWindow(window);
-    SDL_DestroyRenderer(renderer);
-    
-    SDL_Quit();
-}
-
 void SnakeGame::genFood() {
     do {
         food.x = (rand()%(winWidth/squareSize)) * squareSize;
@@ -384,4 +384,19 @@ void SnakeGame::handleEvents(SDL_Event* e) {
             turbo = e->type == SDL_KEYDOWN;
         }
     }
+}
+
+// bye bye!
+void SnakeGame::close() {
+    titleTex.free();
+    gameoverTex.free();
+    startBtn.free();
+    restartBtn.free();
+    
+    delete[] bgpx;
+    SDL_DestroyTexture(bgtx);
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
+    
+    SDL_Quit();
 }
