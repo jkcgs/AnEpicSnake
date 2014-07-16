@@ -4,7 +4,7 @@
  * 
  * Created on 28 de junio de 2014, 09:11 PM
  * 
- * AnEpicSnake v0.4
+ * AnEpicSnake v0.4.1
  * 
  * This file is part of AnEpicSnake, licenced under the GPLv3 licence.
  * See the NOTICE.txt file for more information.
@@ -72,7 +72,7 @@ int SnakeGame::initDisplay() {
         return 2;
     }
     
-    window = SDL_CreateWindow("KairosDev - AnEpicSnake v0.4", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, winWidth, winHeight, SDL_WINDOW_SHOWN);
+    window = SDL_CreateWindow("KairosDev - AnEpicSnake v0.4.1", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, winWidth, winHeight, SDL_WINDOW_SHOWN);
     if(window == NULL) {
         printf("Unable to create window. Error: %s", SDL_GetError());
         return 3;
@@ -92,19 +92,19 @@ int SnakeGame::initDisplay() {
     SDL_SetTextureBlendMode(bgtx, SDL_BLENDMODE_BLEND);
     
     // Start image background
-    if(!titleTex.loadFromFile(renderer, "titlebg.png")) {
+    if(!titleTex.loadFromFile(renderer, "res/titlebg.png")) {
         return 5;
     }
     titleTex.setPos(winWidth/2 - titleTex.getRect().w/2, winHeight/2 - titleTex.getRect().h/2);
     
     // Game over background
-    if(!gameoverTex.loadFromFile(renderer, "gameover.png")) {
+    if(!gameoverTex.loadFromFile(renderer, "res/gameover.png")) {
         return 6;
     }
     gameoverTex.setPos(winWidth/2 - gameoverTex.getRect().w/2, winHeight/2 - gameoverTex.getRect().h/2);
     
     // Start button
-    if(!startBtn.loadImage(renderer, "start.png")) {
+    if(!startBtn.loadImage(renderer, "res/start.png")) {
         return 7;
     }
     startBtn.setPos(winWidth/2 - startBtn.getRect().w/2, winHeight/2 + 80);
@@ -115,7 +115,7 @@ int SnakeGame::initDisplay() {
     startBtn.setClipState(Button::BTN_STATE_UP, 1);
     
     // Restart button
-    if(!restartBtn.loadImage(renderer, "restart.png")) {
+    if(!restartBtn.loadImage(renderer, "res/restart.png")) {
         return 8;
     }
     restartBtn.setPos(winWidth/2 - restartBtn.getRect().w/2, winHeight/2 + 112);

@@ -4,7 +4,7 @@
  *
  * Created on 13 de julio de 2014, 05:11 PM
  * 
- * AnEpicSnake v0.4
+ * AnEpicSnake v0.4.1
  * 
  * This file is part of AnEpicSnake, licenced under the GPLv3 licence.
  * See the NOTICE.txt file for more information.

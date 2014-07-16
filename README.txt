@@ -1,4 +1,4 @@
-AnEpicSnake v0.4
+AnEpicSnake v0.4.1
 A snake game that could give you epilepsy.
 
 To control the snake use WASD.
