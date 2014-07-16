@@ -4,7 +4,7 @@
  * 
  * Created on 28 de junio de 2014, 09:11 PM
  * 
- * AnEpicSnake v0.3
+ * AnEpicSnake v0.4
  * 
  * This file is part of AnEpicSnake, licenced under the GPLv3 licence.
  * See the NOTICE.txt file for more information.
@@ -72,7 +72,7 @@ int SnakeGame::initDisplay() {
         return 2;
     }
     
-    window = SDL_CreateWindow("KairosDev - AnEpicSnake v0.3", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, winWidth, winHeight, SDL_WINDOW_SHOWN);
+    window = SDL_CreateWindow("KairosDev - AnEpicSnake v0.4", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, winWidth, winHeight, SDL_WINDOW_SHOWN);
     if(window == NULL) {
         printf("Unable to create window. Error: %s", SDL_GetError());
         return 3;
