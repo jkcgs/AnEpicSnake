@@ -108,6 +108,11 @@ public:
      */
     SDL_Point getFirstPoint();
     
+    /**
+     * Moves the tongue to the right position.
+     */
+    void moveTongue();
+    
     bool isMoved();
     void setMoved(bool moved);
 private:
@@ -117,6 +122,8 @@ private:
     bool grow;
     bool moved;
     std::vector<SDL_Point> points;
+    
+    SDL_Rect tongue;
     
     SDL_Rect a, b; //< Used for eyes
     SDL_Rect p; //< Used when drawing the snake points

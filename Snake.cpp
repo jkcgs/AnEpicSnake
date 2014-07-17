@@ -54,6 +54,8 @@ void Snake::move() {
     points.reserve(points.size()+1);
     // Add the new position at the first place
     points.insert(points.begin(), n);
+    // Move the tongue with the new first point position
+    moveTongue();
     // The snake is now moved, this must be updated by direction changement
     moved = true;
 }
@@ -91,6 +93,34 @@ void Snake::draw(SDL_Renderer* renderer) {
     SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
     SDL_RenderFillRect(renderer, &a);
     SDL_RenderFillRect(renderer, &b);
+    SDL_RenderFillRect(renderer, &tongue);
+}
+
+void Snake::moveTongue() {
+    if(direction == UP || direction == DOWN) {
+        tongue.w = size * .2;
+        tongue.h = size / 2;
+        tongue.x = points[0].x * size + (size / 2) - (tongue.w / 2);
+    } else {
+        tongue.w = size / 2;
+        tongue.h = size * .2;
+        tongue.y = points[0].y * size + (size / 2) - (tongue.h / 2);
+    }
+    
+    switch(direction) {
+        case UP:
+            tongue.y = points[0].y * size - tongue.h;
+            break;
+        case DOWN:
+            tongue.y = points[0].y * size + size;
+            break;
+        case LEFT:
+            tongue.x = points[0].x * size - tongue.w;
+            break;
+        case RIGHT:
+            tongue.x = points[0].x * size + size;
+            break;
+    }
 }
 
 void Snake::reset() {
@@ -114,6 +144,8 @@ void Snake::reset() {
     points[2].x = 3; points[2].y = 5;
     points[3].x = 2; points[3].y = 5;
     points[4].x = 1; points[4].y = 5;
+    
+    moveTongue();
 }
 
 void Snake::setSize(int size) {
