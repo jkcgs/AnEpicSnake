@@ -331,21 +331,25 @@ void SnakeGame::handleEvents(SDL_Event* e) {
         {
             switch(e->key.keysym.sym) {
                 case SDLK_w:
+                case SDLK_UP:
                     if(snake.getDirection() != DOWN) {
                         snake.setDirection(UP);
                     }
                     break;
                 case SDLK_a:
+                case SDLK_LEFT:
                     if(snake.getDirection() != RIGHT) {
                         snake.setDirection(LEFT);
                     }
                     break;
                 case SDLK_s:
+                case SDLK_DOWN:
                     if(snake.getDirection() != UP) {
                         snake.setDirection(DOWN);
                     }
                     break;
                 case SDLK_d:
+                case SDLK_RIGHT:
                     if(snake.getDirection() != LEFT) {
                         snake.setDirection(RIGHT);
                     }
