@@ -9,6 +9,7 @@ To pause the game use RETURN key (a.k.a ENTER)
 AnEpicSnake is licensed under the GPLv3 license.
 See the NOTICE.txt file for more information.
 
+Thanks to [MADD!](https://twitter.com/MADDNPI) for SFX!
 
 Programmed using the SDL2 v2.0.3 library with SDL2_image v2.0.0. 
 I have built it on Windows 8.1 x64 using NetBeans, and compiled with mingw32
