@@ -439,6 +439,7 @@ void SnakeGame::close() {
     SDL_DestroyTexture(bgtx);
     
     Mix_FreeChunk(eatSound);
+    Mix_FreeChunk(dieSound);
     Mix_CloseAudio();
     
     SDL_DestroyRenderer(renderer);
