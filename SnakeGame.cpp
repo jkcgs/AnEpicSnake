@@ -141,6 +141,13 @@ int SnakeGame::init() {
     restartBtn.setClipState(Button::BTN_STATE_DOWN, 2);
     restartBtn.setClipState(Button::BTN_STATE_UP, 1);
     
+    SDL_Surface* icon = SDL_LoadBMP("res/icon.bmp");
+    if(icon == NULL) {
+        return ERROR_IMGFILE_LOAD;
+    } else {
+        SDL_SetWindowIcon(window, icon);
+    }
+    
     eatSound = Mix_LoadWAV("res/eat1.ogg");
     if(eatSound == NULL) {
         printf("Could not load sfx file. Error: %s", Mix_GetError());
