@@ -10,8 +10,7 @@
  * See the NOTICE.txt file for more information.
  */
 
-#include <SDL2/SDL_main.h>
-#include <SDL2/SDL.h>
+#include <SDL.h>
 #include <vector>
 
 #ifndef SNAKE_H

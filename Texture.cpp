@@ -10,7 +10,7 @@
  * See the NOTICE.txt file for more information.
  */
 
-#include <SDL2/SDL_render.h>
+#include <SDL.h>
 
 #include "Texture.h"
 

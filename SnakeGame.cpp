@@ -15,6 +15,16 @@
 #include <math.h>
 #include <cmath>
 
+enum ErrorLevel {
+    ERROR_SDL_INIT = 1,
+    ERROR_IMG_INIT,
+    ERROR_CREATE_WIN,
+    ERROR_CREATE_REN,
+    ERROR_MIXER_INIT,
+    ERROR_IMGFILE_LOAD,
+    ERROR_SFXFILE_LOAD
+};
+
 unsigned char numbers[] = {
     0xF0, 0x90, 0x90, 0x90, 0xF0, //0
     0x20, 0x60, 0x20, 0x20, 0x70, //1
@@ -60,28 +70,27 @@ void SnakeGame::reset() {
     genFood();
 }
 
-
-int SnakeGame::initDisplay() {
+int SnakeGame::init() {
     if(SDL_Init(SDL_INIT_VIDEO) != 0) {
-        return 1;
+        return ERROR_SDL_INIT;
     }
     
     int imgFlags = IMG_INIT_PNG;
     if(!(IMG_Init( imgFlags ) & imgFlags)) {
         printf("Unable to init SDL2_image. Error: %s\n", IMG_GetError());
-        return 2;
+        return ERROR_IMG_INIT;
     }
     
     window = SDL_CreateWindow("KairosDev - AnEpicSnake v0.5-dev", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, winWidth, winHeight, SDL_WINDOW_SHOWN);
     if(window == NULL) {
         printf("Unable to create window. Error: %s", SDL_GetError());
-        return 3;
+        return ERROR_CREATE_WIN;
     }
     
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_PRESENTVSYNC);
     if(renderer == NULL) {
         printf("Unable to create renderer. Error: %s", SDL_GetError());
-        return 4;
+        return ERROR_CREATE_REN;
     }
     // used to draw with transparency
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
@@ -91,21 +100,28 @@ int SnakeGame::initDisplay() {
         SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STATIC, winWidth, winHeight);
     SDL_SetTextureBlendMode(bgtx, SDL_BLENDMODE_BLEND);
     
+    
+    // Initialize SDL_mixer
+    if( Mix_OpenAudio( 22050, MIX_DEFAULT_FORMAT, 2, 4096 ) == -1 )
+    {
+        return ERROR_MIXER_INIT;    
+    }
+    
     // Start image background
     if(!titleTex.loadFromFile(renderer, "res/titlebg.png")) {
-        return 5;
+        return ERROR_IMGFILE_LOAD;
     }
     titleTex.setPos(winWidth/2 - titleTex.getRect().w/2, winHeight/2 - titleTex.getRect().h/2);
     
     // Game over background
     if(!gameoverTex.loadFromFile(renderer, "res/gameover.png")) {
-        return 6;
+        return ERROR_IMGFILE_LOAD;
     }
     gameoverTex.setPos(winWidth/2 - gameoverTex.getRect().w/2, winHeight/2 - gameoverTex.getRect().h/2);
     
     // Start button
     if(!startBtn.loadImage(renderer, "res/start.png")) {
-        return 7;
+        return ERROR_IMGFILE_LOAD;
     }
     startBtn.setPos(winWidth/2 - startBtn.getRect().w/2, winHeight/2 + 80);
     startBtn.setupClipStates(3);
@@ -116,7 +132,7 @@ int SnakeGame::initDisplay() {
     
     // Restart button
     if(!restartBtn.loadImage(renderer, "res/restart.png")) {
-        return 8;
+        return ERROR_IMGFILE_LOAD;
     }
     restartBtn.setPos(winWidth/2 - restartBtn.getRect().w/2, winHeight/2 + 112);
     restartBtn.setupClipStates(3);
@@ -125,14 +141,19 @@ int SnakeGame::initDisplay() {
     restartBtn.setClipState(Button::BTN_STATE_DOWN, 2);
     restartBtn.setClipState(Button::BTN_STATE_UP, 1);
     
+    eatSound = Mix_LoadWAV("res/eat1.ogg");
+    if(eatSound == NULL) {
+        return ERROR_SFXFILE_LOAD;
+    }
+    
     return 0;
 }
 
 int SnakeGame::mainLoop() {
-    int init = initDisplay();
+    int initLevel = init();
     
-    if(init != 0) {
-        return init;
+    if(initLevel != 0) {
+        return initLevel;
     }
     
     SDL_Event e;
@@ -179,6 +200,7 @@ int SnakeGame::mainLoop() {
                 genFood();
                 snake.setGrow(true);
                 snake.setSpeed(snake.getSpeed()+.3); // moar fun
+                Mix_PlayChannel(-1, eatSound, 0); // yay!
             }
         } else if(alive && startBtn.getState() == Button::BTN_STATE_UP) {
             startBtn.setState(Button::BTN_STATE_NORMAL);
@@ -399,6 +421,10 @@ void SnakeGame::close() {
     
     delete[] bgpx;
     SDL_DestroyTexture(bgtx);
+    
+    Mix_FreeChunk(eatSound);
+    Mix_CloseAudio();
+    
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     

@@ -10,8 +10,9 @@
  * See the NOTICE.txt file for more information.
  */
 
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
+#include <SDL.h>
+#include <SDL_image.h>
+#include <SDL_mixer.h>
 #include <stdlib.h>
 #include <string>
 
@@ -44,7 +45,7 @@ public:
      * @return 0 if everything started OK, 1 if could not initiate SDL,
      * 2 if could not create window, and 3 if could not create SDL renderer.
      */
-    int initDisplay();
+    int init();
     /**
      * Generates a new position for the food
      */
@@ -95,6 +96,8 @@ private:
     
     SDL_Texture* bgtx; //< Background texture
     Uint32* bgpx; //< Background pixels
+    
+    Mix_Chunk* eatSound;
     
     Texture titleTex;
     Texture gameoverTex;
