@@ -44,6 +44,7 @@ SnakeGame::SnakeGame(int width, int height) {
     started = false;
     alive = true;
     turbo = false;
+    squareSize = 10;
     
     bgpx = new Uint32[winWidth * winHeight];
     memset(bgpx, 255, winWidth * winHeight * sizeof(Uint32));
@@ -58,7 +59,6 @@ SnakeGame::~SnakeGame() {
 void SnakeGame::reset() {
     epilepsy = true;
     
-    squareSize = 10;
     food.w = squareSize;
     food.h = squareSize;
     points = 0;
