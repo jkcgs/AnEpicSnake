@@ -143,6 +143,13 @@ int SnakeGame::init() {
     
     eatSound = Mix_LoadWAV("res/eat1.ogg");
     if(eatSound == NULL) {
+        printf("Could not load sfx file. Error: %s", Mix_GetError());
+        return ERROR_SFXFILE_LOAD;
+    }
+    
+    dieSound = Mix_LoadWAV("res/die1.ogg");
+    if(dieSound == NULL) {
+        printf("Could not load sfx file. Error: %s", Mix_GetError());
         return ERROR_SFXFILE_LOAD;
     }
     
@@ -191,6 +198,7 @@ int SnakeGame::mainLoop() {
                     snake.selfCrashed()) {
                 started = false; // set that game has not started to stop moving
                 alive = false;
+                Mix_PlayChannel(-1, dieSound, 0);
                 // player will continue the game if he press ENTER
             } 
 

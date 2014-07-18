@@ -98,6 +98,7 @@ private:
     Uint32* bgpx; //< Background pixels
     
     Mix_Chunk* eatSound;
+    Mix_Chunk* dieSound;
     
     Texture titleTex;
     Texture gameoverTex;
