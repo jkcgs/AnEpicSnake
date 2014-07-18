@@ -205,6 +205,7 @@ int SnakeGame::mainLoop() {
                     snake.selfCrashed()) {
                 started = false; // set that game has not started to stop moving
                 alive = false;
+                turbo = false;
                 Mix_PlayChannel(-1, dieSound, 0);
                 // player will continue the game if he press ENTER
             } 
