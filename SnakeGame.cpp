@@ -14,6 +14,8 @@
 #include <stdio.h>
 #include <math.h>
 #include <cmath>
+#include <string>
+#include <sstream>
 
 enum ErrorLevel {
     ERROR_SDL_INIT = 1,
@@ -37,6 +39,14 @@ unsigned char numbers[] = {
     0xF0, 0x90, 0xF0, 0x90, 0xF0, //8
     0xF0, 0x90, 0xF0, 0x10, 0xF0, //9
 };
+
+// TEMPORAL
+std::string convertInt(int number)
+{
+   std::stringstream ss;//create a stringstream
+   ss << number;//add number to the stream
+   return ss.str();//return a string with the contents of the stream
+}
 
 SnakeGame::SnakeGame(int width, int height) {
     winWidth = width;
@@ -148,16 +158,17 @@ int SnakeGame::init() {
         SDL_SetWindowIcon(window, icon);
     }
     
-    eatSound = Mix_LoadWAV("res/eat1.ogg");
-    if(eatSound == NULL) {
-        printf("Could not load sfx file. Error: %s", Mix_GetError());
-        return ERROR_SFXFILE_LOAD;
-    }
-    
-    dieSound = Mix_LoadWAV("res/die1.ogg");
-    if(dieSound == NULL) {
-        printf("Could not load sfx file. Error: %s", Mix_GetError());
-        return ERROR_SFXFILE_LOAD;
+    for(int i = 0; i < 5; i++) {
+        std::string eatpath, deathpath;
+        eatpath = std::string("res/eat") + convertInt(i+1) + ".ogg";
+        deathpath = std::string("res/die") + convertInt(i+1) + ".ogg";
+        eatSFX[i] = Mix_LoadWAV(eatpath.c_str());
+        deathSFX[i] = Mix_LoadWAV(deathpath.c_str());
+        
+        if(eatSFX[i] == NULL || deathSFX[i] == NULL) {
+            printf("Could not load sfx file. Error: %s\n", Mix_GetError());
+            return ERROR_SFXFILE_LOAD;
+        }
     }
     
     return 0;
@@ -206,7 +217,7 @@ int SnakeGame::mainLoop() {
                 started = false; // set that game has not started to stop moving
                 alive = false;
                 turbo = false;
-                Mix_PlayChannel(-1, dieSound, 0);
+                Mix_PlayChannel(-1, deathSFX[rand()%5], 0);
                 // player will continue the game if he press ENTER
             } 
 
@@ -216,7 +227,7 @@ int SnakeGame::mainLoop() {
                 genFood();
                 snake.setGrow(true);
                 snake.setSpeed(snake.getSpeed()+.3); // moar fun
-                Mix_PlayChannel(-1, eatSound, 0); // yay!
+                Mix_PlayChannel(-1, eatSFX[rand()%5], 0); // yay!
             }
         } else if(alive && startBtn.getState() == Button::BTN_STATE_UP) {
             startBtn.setState(Button::BTN_STATE_NORMAL);
@@ -438,8 +449,11 @@ void SnakeGame::close() {
     delete[] bgpx;
     SDL_DestroyTexture(bgtx);
     
-    Mix_FreeChunk(eatSound);
-    Mix_FreeChunk(dieSound);
+    for(int i = 0; i < 5; i++) {
+        Mix_FreeChunk(eatSFX[i]);
+        Mix_FreeChunk(deathSFX[i]);
+    }
+    
     Mix_CloseAudio();
     
     SDL_DestroyRenderer(renderer);

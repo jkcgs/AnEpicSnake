@@ -97,8 +97,8 @@ private:
     SDL_Texture* bgtx; //< Background texture
     Uint32* bgpx; //< Background pixels
     
-    Mix_Chunk* eatSound;
-    Mix_Chunk* dieSound;
+    Mix_Chunk* eatSFX[5];
+    Mix_Chunk* deathSFX[5];
     
     Texture titleTex;
     Texture gameoverTex;
