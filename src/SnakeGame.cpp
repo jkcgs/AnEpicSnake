@@ -59,9 +59,9 @@ SnakeGame::SnakeGame(int width, int height) {
     bgpx = new Uint32[winWidth * winHeight];
     memset(bgpx, 255, winWidth * winHeight * sizeof(Uint32));
 
-	SDL_Color white = {255, 255, 255, 255};
-	food.setSize(squareSize);
-	food.setColor(white);
+    SDL_Color white = {255, 255, 255, 255};
+    food.setSize(squareSize);
+    food.setColor(white);
     
     reset();
 }
@@ -77,7 +77,7 @@ void SnakeGame::reset() {
     snake.reset();
     snake.setSize(squareSize);
     snake.setSpeed(10);
-	food.generate(&snake, winWidth, winHeight);
+    food.generate(&snake, winWidth, winHeight);
     paused = false;
     quit = false;
 }
@@ -285,7 +285,7 @@ void SnakeGame::draw() {
     }
 
     // you must have some food or you could die
-	food.draw(renderer);
+    food.draw(renderer);
     
     // Draw points
     SDL_SetRenderDrawColor(renderer, turbo ? 100 : 255, 255, 255, 150);
