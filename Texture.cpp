@@ -10,8 +10,6 @@
  * See the NOTICE.txt file for more information.
  */
 
-#include <SDL.h>
-
 #include "Texture.h"
 
 Texture::Texture() {
