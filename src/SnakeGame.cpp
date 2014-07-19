@@ -58,6 +58,10 @@ SnakeGame::SnakeGame(int width, int height) {
     
     bgpx = new Uint32[winWidth * winHeight];
     memset(bgpx, 255, winWidth * winHeight * sizeof(Uint32));
+
+	SDL_Color white = {255, 255, 255, 255};
+	food.setSize(squareSize);
+	food.setColor(white);
     
     reset();
 }
@@ -69,15 +73,13 @@ SnakeGame::~SnakeGame() {
 void SnakeGame::reset() {
     epilepsy = true;
     
-    food.w = squareSize;
-    food.h = squareSize;
     points = 0;
     snake.reset();
     snake.setSize(squareSize);
     snake.setSpeed(10);
+	food.generate(&snake, winWidth, winHeight);
     paused = false;
     quit = false;
-    genFood();
 }
 
 int SnakeGame::init() {
@@ -222,9 +224,9 @@ int SnakeGame::mainLoop() {
             } 
 
             // have you touched the food? it's like eat it
-            if(snake.collides(&food)) {
+            if(snake.collides(&food.getRect())) {
                 points++;
-                genFood();
+                food.generate(&snake, winWidth, winHeight);
                 snake.setGrow(true);
                 snake.setSpeed(snake.getSpeed()+.3); // moar fun
                 Mix_PlayChannel(-1, eatSFX[rand()%5], 0); // yay!
@@ -283,8 +285,7 @@ void SnakeGame::draw() {
     }
 
     // you must have some food or you could die
-    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-    SDL_RenderFillRect(renderer, &food);
+	food.draw(renderer);
     
     // Draw points
     SDL_SetRenderDrawColor(renderer, turbo ? 100 : 255, 255, 255, 150);
@@ -363,13 +364,6 @@ void SnakeGame::drawNumber(int n, int x, int y, int pixelSize = 10, int separati
         n /= 10; // =/
         k--;
     } while (n > 0);
-}
-
-void SnakeGame::genFood() {
-    do {
-        food.x = (rand()%(winWidth/squareSize)) * squareSize;
-        food.y = (rand()%(winHeight/squareSize)) * squareSize;
-    } while(snake.collides(&food));
 }
 
 void SnakeGame::handleEvents(SDL_Event* e) {

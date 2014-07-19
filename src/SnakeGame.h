@@ -18,6 +18,7 @@
 
 #include "Snake.h"
 #include "Button.h"
+#include "Food.h"
 
 #ifndef SNAKEGAME_H
 #define SNAKEGAME_H
@@ -46,10 +47,6 @@ public:
      * 2 if could not create window, and 3 if could not create SDL renderer.
      */
     int init();
-    /**
-     * Generates a new position for the food
-     */
-    void genFood();
     /**
      * Update the game conditions depending on the keys pressing
      * @param e
@@ -107,7 +104,7 @@ private:
     Button restartBtn;
     
     Snake snake;
-    SDL_Rect food;
+    Food food;
     bool paused;
     bool alive;
     bool epilepsy;
