@@ -11,8 +11,7 @@ See the NOTICE.txt file for more information.
 
 Thanks to [MADD!](https://twitter.com/MADDNPI) for SFX!
 
-Programmed using the SDL2 v2.0.3 library with SDL2_image v2.0.0. 
-I have built it on Windows 8.1 x64 using NetBeans, and compiled with mingw32
-using -mwindows flag, and -lmingw32 -lSDL2main -lSDL2 -lSDL2_image compiler flags.
+Programmed using the SDL2 v2.0.3 library with SDL2_image v2.0.0 and SDL2_mixer 2.0.0. 
+I have built it on Windows 8.1 x64 using VS2013 (project included).
 
 You should be able to compile it on linux and/or mac with mentioned libraries.
