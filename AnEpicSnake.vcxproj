@@ -127,20 +127,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Button.h" />
-    <ClInclude Include="resource.h" />
-    <ClInclude Include="Snake.h" />
-    <ClInclude Include="SnakeGame.h" />
-    <ClInclude Include="Texture.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="Button.cpp" />
-    <ClCompile Include="Main.cpp" />
-    <ClCompile Include="Snake.cpp" />
-    <ClCompile Include="SnakeGame.cpp" />
-    <ClCompile Include="Texture.cpp" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="README.md" />
     <None Include="res\die1.ogg" />
     <None Include="res\die2.ogg" />
@@ -155,19 +141,35 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="app.ico" />
+    <Image Include="res\app.ico" />
     <Image Include="res\gameover.png" />
     <Image Include="res\icon.bmp" />
     <Image Include="res\restart.png" />
     <Image Include="res\start.png" />
     <Image Include="res\titlebg.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="Resource.rc" />
+    <Image Include="src\app.ico" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="LICENSE.txt" />
     <Text Include="NOTICE.txt" />
     <Text Include="README.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\Button.h" />
+    <ClInclude Include="src\resource.h" />
+    <ClInclude Include="src\Snake.h" />
+    <ClInclude Include="src\SnakeGame.h" />
+    <ClInclude Include="src\Texture.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\Button.cpp" />
+    <ClCompile Include="src\Main.cpp" />
+    <ClCompile Include="src\Snake.cpp" />
+    <ClCompile Include="src\SnakeGame.cpp" />
+    <ClCompile Include="src\Texture.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="src\Resource.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
