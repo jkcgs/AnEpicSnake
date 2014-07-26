@@ -269,7 +269,7 @@ void SnakeGame::draw() {
     
     // Draw points
     SDL_SetRenderDrawColor(renderer, turbo ? 100 : 255, 255, 255, 150);
-    drawNumber(points, squareSize, squareSize, squareSize / 2, 0);
+    drawChar(std::to_string(points), squareSize, squareSize, squareSize / 2);
 
     if(paused) {
         drawPause();
@@ -324,26 +324,61 @@ void SnakeGame::drawPause() {
     }
 }
 
-void SnakeGame::drawNumber(int n, int x, int y, int pixelSize = 10, int separation = 10) {
-    // log10(0) = -Infinity, so I give k an Snickers
-    int k = n == 0 ? 0 : log10(n); // better?
-    SDL_Rect pixel = {0, 0, pixelSize, pixelSize};
-    
-    do {
-        // Numbers are drawn rtl (if the number is 123, 3 is drawn first, then 2, and finnaly 1)        
-        for(int i = 0; i < 5; i++) {
-            for(int j = 0; j < 8; j++) {
-                if((numbers[(n % 10)*5 + i] & (0x80 >> j)) != 0) {
-                    pixel.x = (pixelSize * j) + x + (separation*pixelSize*k + pixelSize*5*k);
-                    pixel.y = (pixelSize * i) + y;
-                    SDL_RenderFillRect(renderer, &pixel);
-                }
+void SnakeGame::drawChar(int n, int x, int y, int size = 10) {
+    if (n < 0 || n > 9) {
+        if (n >= 'A' && n <= 'Z') {
+            n -= 55;
+        }
+        else if (n >= 'a' && n <= 'z') {
+            n -= 87;
+        }
+        else if (n >= '0' && n <= '9') {
+            n -= 48;
+        }
+        else { // 
+            switch (n) {
+                case ' ':
+                    n = 36; break;
+                case '-':
+                    n = 37; break;
+                case '(':
+                    n = 38; break;
+                case ')':
+                    n = 39; break;
+                case '\'':
+                    n = 40; break;
+                case '!':
+                    n = 41; break;
+                default:
+                    n = (sizeof(chars) / sizeof(uint32_t)) - 1;
             }
         }
-        
-        n /= 10; // =/
-        k--;
-    } while (n > 0);
+    }
+
+    SDL_Rect pixel = { 0, 0, size, size };
+    for (int i = 4, k = 0; i >= 0; i--, k++) {
+        uint8_t byte = ((chars[n] & 0xf << 4 * i) >> 4 * i);
+        for (int j = 4; j < 8; j++) {
+            if ((byte & (0x80 >> j)) != 0) {
+                pixel.x = (size * j) + x;
+                pixel.y = (size * k) + y;
+                SDL_RenderFillRect(renderer, &pixel);
+            }
+        }
+    }
+}
+
+void SnakeGame::drawChar(std::string str, int x, int y, int size = 10) {
+    for (int i = 0, j = 0; i < str.size(); i++, j++) {
+        // push a new line
+        if (str.at(i) == '\n') {
+            j = -1; // j will back to 0 on the loop
+            y += size * 5 + size;
+        }
+        else {
+            drawChar(str.at(i), (x + (size * j * 5) + size), y, size);
+        }
+    }
 }
 
 void SnakeGame::handleEvents(SDL_Event* e) {
