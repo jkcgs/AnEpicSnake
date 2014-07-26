@@ -270,6 +270,8 @@ void SnakeGame::draw() {
     // Draw points
     SDL_SetRenderDrawColor(renderer, turbo ? 100 : 255, 255, 255, 150);
     drawChar(std::to_string(points), squareSize, squareSize, squareSize / 2);
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 100);
+    drawChar("dev version, hang on bitches!", squareSize, winHeight - 20, 3);
 
     if(paused) {
         drawPause();
@@ -337,20 +339,14 @@ void SnakeGame::drawChar(int n, int x, int y, int size = 10) {
         }
         else { // 
             switch (n) {
-                case ' ':
-                    n = 36; break;
-                case '-':
-                    n = 37; break;
-                case '(':
-                    n = 38; break;
-                case ')':
-                    n = 39; break;
-                case '\'':
-                    n = 40; break;
-                case '!':
-                    n = 41; break;
-                default:
-                    n = (sizeof(chars) / sizeof(uint32_t)) - 1;
+                case ' ': n = 36; break;
+                case '-': n = 37; break;
+                case '(': n = 38; break;
+                case ')': n = 39; break;
+                case '\'': n = 40; break;
+                case ',': n = 41; break;
+                case '!': n = 42; break;
+                default: n = (sizeof(chars) / sizeof(uint32_t)) - 1;
             }
         }
     }
