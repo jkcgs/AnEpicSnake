@@ -144,8 +144,8 @@ int SnakeGame::init() {
     
     for(int i = 0; i < 5; i++) {
         std::string eatpath, deathpath;
-        eatpath = std::string("res/eat") + std::to_string(i+1) + ".ogg";
-        deathpath = std::string("res/die") + std::to_string(i+1) + ".ogg";
+        eatpath = "res/eat" + std::to_string(i+1) + ".ogg";
+        deathpath = "res/die" + std::to_string(i+1) + ".ogg";
         eatSFX[i] = Mix_LoadWAV(eatpath.c_str());
         deathSFX[i] = Mix_LoadWAV(deathpath.c_str());
         
