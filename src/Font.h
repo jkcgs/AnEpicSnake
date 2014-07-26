@@ -8,6 +8,10 @@
 * See the NOTICE.txt file for more information.
 */
 
+#pragma once
+#ifndef _FONT_H_
+#define _FONT_H_
+
 uint32_t chars[] = {
     0xFBD9F, 0x26227, 0xF1F8F, 0xF1F1F, 0x99F11, 0xF8F1F, 0xF8F9F, 0xF1244, 0xF9F9F, 0xF9F1F, //0-9
     0xF9F99, 0xE9E9E, 0xF888F, 0xE999E, 0xF8F8F, 0xF8F88, 0xF8B9F, 0x99F99, 0xE444E, 0xF222E, //A-J
@@ -23,3 +27,5 @@ uint32_t chars[] = {
     0x44404, // !
     0xF1704  // ?
 };
+
+#endif _FONT_H_

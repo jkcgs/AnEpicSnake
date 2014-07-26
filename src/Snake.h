@@ -10,11 +10,10 @@
  * See the NOTICE.txt file for more information.
  */
 
-#include <vector>
-#include <SDL.h>
-
 #ifndef SNAKE_H
 #define	SNAKE_H
+
+#include "stdafx.h"
 
 enum Direction {
     UP,

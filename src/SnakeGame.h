@@ -10,18 +10,14 @@
  * See the NOTICE.txt file for more information.
  */
 
-#include <SDL.h>
-#include <SDL_image.h>
-#include <SDL_mixer.h>
-#include <stdlib.h>
-#include <string>
+#ifndef SNAKEGAME_H
+#define SNAKEGAME_H
+
+#include "stdafx.h"
 
 #include "Snake.h"
 #include "Button.h"
 #include "Food.h"
-
-#ifndef SNAKEGAME_H
-#define SNAKEGAME_H
 
 /**
  * This controls the main game system for teh win (no, not Windows only).

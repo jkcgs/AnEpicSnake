@@ -1,5 +1,20 @@
+/*
+* File:   Food.h
+* Author: Jonathan Gutiérrez
+*
+* Created on 26 de julio de 2014, 04:21 PM
+*
+* AnEpicSnake v0.5-dev
+*
+* This file is part of AnEpicSnake, licenced under the GPLv3 licence.
+* See the NOTICE.txt file for more information.
+*/
+
 #pragma once
-#include <SDL.h>
+#ifndef _FOOD_H_
+#define _FOOD_H_
+
+#include "stdafx.h"
 #include "Snake.h"
 
 class Food {
@@ -25,3 +40,4 @@ private:
     SDL_Color color;
 };
 
+#endif // _FOOD_H_

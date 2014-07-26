@@ -10,8 +10,8 @@
  * See the NOTICE.txt file for more information.
  */
 
+#include "stdafx.h"
 #include "SnakeGame.h"
-#include <vector>
 
 int main(int argc, char *argv[]) {
     bool wide = false;
@@ -28,4 +28,3 @@ int main(int argc, char *argv[]) {
 
     return game->mainLoop();
 }
-

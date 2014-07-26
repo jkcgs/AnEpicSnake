@@ -10,10 +10,9 @@
  * See the NOTICE.txt file for more information.
  */
 
+#include "stdafx.h"
 #include "SnakeGame.h"
 #include "Font.h"
-#include <stdio.h>
-#include <string>
 
 enum ErrorLevel {
     ERROR_SDL_INIT = 1,

@@ -1,5 +1,17 @@
+/*
+* File:   Food.cpp
+* Author: Jonathan Gutiérrez
+*
+* Created on 26 de julio de 2014, 04:21 PM
+*
+* AnEpicSnake v0.5-dev
+*
+* This file is part of AnEpicSnake, licenced under the GPLv3 licence.
+* See the NOTICE.txt file for more information.
+*/
+
+#include "stdafx.h"
 #include "Food.h"
-#include <stdlib.h>
 
 Food::Food() {
     SDL_Rect r = {0, 0, 10, 10};

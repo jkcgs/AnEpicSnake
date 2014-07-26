@@ -10,6 +10,7 @@
  * See the NOTICE.txt file for more information.
  */
 
+#include "stdafx.h"
 #include "Button.h"
 
 Button::Button() {
