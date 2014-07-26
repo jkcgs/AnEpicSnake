@@ -28,14 +28,6 @@ enum ErrorLevel {
     ERROR_SFXFILE_LOAD
 };
 
-// TEMPORAL
-std::string convertInt(int number)
-{
-   std::stringstream ss;//create a stringstream
-   ss << number;//add number to the stream
-   return ss.str();//return a string with the contents of the stream
-}
-
 SnakeGame::SnakeGame(int width, int height) {
     winWidth = width;
     winHeight = height;
@@ -150,8 +142,8 @@ int SnakeGame::init() {
     
     for(int i = 0; i < 5; i++) {
         std::string eatpath, deathpath;
-        eatpath = std::string("res/eat") + convertInt(i+1) + ".ogg";
-        deathpath = std::string("res/die") + convertInt(i+1) + ".ogg";
+        eatpath = std::string("res/eat") + std::to_string(i+1) + ".ogg";
+        deathpath = std::string("res/die") + std::to_string(i+1) + ".ogg";
         eatSFX[i] = Mix_LoadWAV(eatpath.c_str());
         deathSFX[i] = Mix_LoadWAV(deathpath.c_str());
         
