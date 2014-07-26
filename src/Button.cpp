@@ -95,6 +95,13 @@ void Button::setupClipStates(int positions) {
     }
 }
 
+void Button::setClipStates(int posNormal, int posHover, int posDown, int posUp) {
+    setClipState(Button::BTN_STATE_NORMAL, posNormal);
+    setClipState(Button::BTN_STATE_HOVER, posHover);
+    setClipState(Button::BTN_STATE_DOWN, posDown);
+    setClipState(Button::BTN_STATE_UP, posUp);
+}
+
 void Button::setClipState(State state, int position) {
     // "Move" the clip (up-down) to the desired position
     this->stateTextureClips[state].y = this->texture.getRect().h * position;

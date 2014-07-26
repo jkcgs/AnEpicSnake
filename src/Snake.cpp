@@ -31,22 +31,14 @@ void Snake::move() {
     SDL_Point n;
     switch(direction) {
         case UP:
-            n.x = points[0].x;
-            n.y = points[0].y - 1;
-            break;
-        case RIGHT:
-            n.x = points[0].x + 1;
-            n.y = points[0].y;
-            break;
         case DOWN:
             n.x = points[0].x;
-            n.y = points[0].y + 1;
+            n.y = points[0].y + (direction == DOWN ? 1 : -1);
             break;
         case LEFT:
-        default:
-            n.x = points[0].x - 1;
+        case RIGHT:
+            n.x = points[0].x + (direction == RIGHT ? 1 : -1);
             n.y = points[0].y;
-            break;
             
     }
 

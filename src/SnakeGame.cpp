@@ -13,10 +13,7 @@
 #include "SnakeGame.h"
 #include "Font.h"
 #include <stdio.h>
-#include <math.h>
-#include <cmath>
 #include <string>
-#include <sstream>
 
 enum ErrorLevel {
     ERROR_SDL_INIT = 1,
@@ -73,7 +70,8 @@ int SnakeGame::init() {
         return ERROR_IMG_INIT;
     }
     
-    window = SDL_CreateWindow("KairosDev - AnEpicSnake v0.5-dev", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, winWidth, winHeight, SDL_WINDOW_SHOWN);
+    window = SDL_CreateWindow("KairosDev - AnEpicSnake v0.5-dev", 
+        SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, winWidth, winHeight, SDL_WINDOW_SHOWN);
     if(window == NULL) {
         printf("Unable to create window. Error: %s", SDL_GetError());
         return ERROR_CREATE_WIN;
@@ -94,61 +92,52 @@ int SnakeGame::init() {
     drawChar("loading...", 10, winHeight - 30, 5);
     SDL_RenderPresent(renderer);
     
+    // Add an icon to the window
+    SDL_Surface* icon = SDL_LoadBMP("res/icon.bmp");
+    if (icon == NULL) {
+        return ERROR_IMGFILE_LOAD;
+    }
+    else {
+        SDL_SetWindowIcon(window, icon);
+        SDL_FreeSurface(icon);
+    }
+
     // Used to draw the background
     bgtx = SDL_CreateTexture(renderer,
         SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STATIC, winWidth, winHeight);
     SDL_SetTextureBlendMode(bgtx, SDL_BLENDMODE_BLEND);
-    
-    
+
     // Initialize SDL_mixer
-    if( Mix_OpenAudio( 22050, MIX_DEFAULT_FORMAT, 2, 512 ) == -1 )
-    {
+    if( Mix_OpenAudio( 22050, MIX_DEFAULT_FORMAT, 2, 512 ) == -1 ) {
         return ERROR_MIXER_INIT;    
     }
     
-    // Start image background
-    if(!titleTex.loadFromFile(renderer, "res/titlebg.png")) {
+    // Background load check
+    if(!titleTex.loadFromFile(renderer, "res/titlebg.png") ||
+       !gameoverTex.loadFromFile(renderer, "res/gameover.png") ||
+       !startBtn.loadImage(renderer, "res/start.png") ||
+       !restartBtn.loadImage(renderer, "res/restart.png")) 
+    {
         return ERROR_IMGFILE_LOAD;
     }
+
+    // Title image position
     titleTex.setPos(winWidth/2 - titleTex.getRect().w/2, winHeight/2 - titleTex.getRect().h/2);
-    
-    // Game over background
-    if(!gameoverTex.loadFromFile(renderer, "res/gameover.png")) {
-        return ERROR_IMGFILE_LOAD;
-    }
+
+    // Gameover image position
     gameoverTex.setPos(winWidth/2 - gameoverTex.getRect().w/2, winHeight/2 - gameoverTex.getRect().h/2);
-    
-    // Start button
-    if(!startBtn.loadImage(renderer, "res/start.png")) {
-        return ERROR_IMGFILE_LOAD;
-    }
+
+    // Start button setup
     startBtn.setPos(winWidth/2 - startBtn.getRect().w/2, winHeight/2 + 80);
     startBtn.setupClipStates(3);
-    startBtn.setClipState(Button::BTN_STATE_NORMAL, 0);
-    startBtn.setClipState(Button::BTN_STATE_HOVER, 1);
-    startBtn.setClipState(Button::BTN_STATE_DOWN, 2);
-    startBtn.setClipState(Button::BTN_STATE_UP, 1);
-    
-    // Restart button
-    if(!restartBtn.loadImage(renderer, "res/restart.png")) {
-        return ERROR_IMGFILE_LOAD;
-    }
+    startBtn.setClipStates(0, 1, 2, 1);
+
+    // Restart button setup
     restartBtn.setPos(winWidth/2 - restartBtn.getRect().w/2, winHeight/2 + 112);
     restartBtn.setupClipStates(3);
-    restartBtn.setClipState(Button::BTN_STATE_NORMAL, 0);
-    restartBtn.setClipState(Button::BTN_STATE_HOVER, 1);
-    restartBtn.setClipState(Button::BTN_STATE_DOWN, 2);
-    restartBtn.setClipState(Button::BTN_STATE_UP, 1);
-    
-    // Add an icon to the window
-    SDL_Surface* icon = SDL_LoadBMP("res/icon.bmp");
-    if(icon == NULL) {
-        return ERROR_IMGFILE_LOAD;
-    } else {
-        SDL_SetWindowIcon(window, icon);
-    }
-    SDL_FreeSurface(icon);
-    
+    restartBtn.setClipStates(0, 1, 2, 1);
+
+    // SFX Load
     for(int i = 0; i < 5; i++) {
         std::string eatpath, deathpath;
         eatpath = "res/eat" + std::to_string(i+1) + ".ogg";
@@ -318,11 +307,19 @@ void SnakeGame::drawPause() {
     Uint16 lwidth = 20; // bars width
     Uint16 lheight = 60; // bars height
     Uint8 sep = 20; // separation between bars
-    // first point for pause icon
-    SDL_Point pos = {winWidth/2 - lwidth - sep/2, winHeight/2 - lheight};
-    
-    SDL_Rect r1 = {pos.x, pos.y, lwidth, lheight}; // rect for bar 1
-    SDL_Rect r2 = {r1.x + lwidth + sep, r1.y, lwidth, lheight}; // rect for bar 2
+
+    SDL_Rect r1 = { // rect for bar 1
+        winWidth / 2 - lwidth - sep / 2, 
+        winHeight / 2 - lheight, 
+        lwidth, 
+        lheight 
+    }; 
+    SDL_Rect r2 = { // rect for bar 2
+        r1.x + lwidth + sep, 
+        r1.y, 
+        lwidth, 
+        lheight
+    };
     
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, pauseFade);
     
@@ -338,7 +335,9 @@ void SnakeGame::drawPause() {
 }
 
 void SnakeGame::drawChar(int n, int x, int y, int size = 10) {
+    // If the int n is a number out of 0 and 9, it must be mapped to the characters font
     if (n < 0 || n > 9) {
+        // Map the int n to the right character on the font
         if (n >= 'A' && n <= 'Z') {
             n -= 55;
         }
@@ -378,7 +377,8 @@ void SnakeGame::drawChar(int n, int x, int y, int size = 10) {
 
 void SnakeGame::drawChar(std::string str, int x, int y, int size = 10) {
     for (int i = 0, j = 0; i < str.size(); i++, j++) {
-        // push a new line
+        // push a new line, move the characters back to the x start coordinate
+        // and move them all down a line
         if (str.at(i) == '\n') {
             j = -1; // j will back to 0 on the loop
             y += size * 5 + size;

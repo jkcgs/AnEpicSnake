@@ -81,6 +81,11 @@ public:
      * @param position The position of the state clip, based on previous setup.
      */
     void setClipState(State state, int position);
+
+    // Sets a position for all the states clips, based on the division from the amount of
+    // positions available on the texture. As the available positions are not stored from 
+    // setup, the passed value for position is not checked. The positions start from zero.
+    void setClipStates(int posNormal, int posHover, int posDown, int posUp);
     
     bool isDisplayed();
     void setDisplayed(bool displayed);
