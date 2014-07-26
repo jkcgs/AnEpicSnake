@@ -360,7 +360,7 @@ void SnakeGame::drawChar(int n, int x, int y, int size = 10) {
         uint8_t byte = ((chars[n] & 0xf << 4 * i) >> 4 * i);
         for (int j = 4; j < 8; j++) {
             if ((byte & (0x80 >> j)) != 0) {
-                pixel.x = (size * j) + x;
+                pixel.x = (size * (j-4)) + x;
                 pixel.y = (size * k) + y;
                 SDL_RenderFillRect(renderer, &pixel);
             }
@@ -376,7 +376,11 @@ void SnakeGame::drawChar(std::string str, int x, int y, int size = 10) {
             y += size * 5 + size;
         }
         else {
-            drawChar(str.at(i), (x + (size * j * 5) + size), y, size);
+            // x will be: the starting position, 
+            // plus the separation from the character position number, 
+            // plus a separation space, based on the square size
+            // the 5 means the 4 squares from the font plus one square as a separation
+            drawChar(str.at(i), (x + (size * 5 * j)), y, size);
         }
     }
 }
