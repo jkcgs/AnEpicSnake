@@ -1,3 +1,13 @@
+/*
+* File:   Font.h
+* Author: Jonathan Gutiérrez
+*
+* AnEpicSnake v0.5-dev
+*
+* This file is part of AnEpicSnake, licenced under the GPLv3 licence.
+* See the NOTICE.txt file for more information.
+*/
+
 unsigned char numbers[] = {
     0xF0, 0x90, 0x90, 0x90, 0xF0, //0
     0x20, 0x60, 0x20, 0x20, 0x70, //1

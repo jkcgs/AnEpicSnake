@@ -1,0 +1,120 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\Button.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Food.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Snake.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\SnakeGame.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Texture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\src\Button.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Font.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Food.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Snake.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\SnakeGame.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Texture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\src\app.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\res\gameover.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\res\icon.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\res\restart.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\res\start.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\res\titlebg.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\src\Resource.aps">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\res\die1.ogg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\res\die2.ogg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\res\die3.ogg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\res\die4.ogg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\res\die5.ogg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\res\eat1.ogg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\res\eat2.ogg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\res\eat3.ogg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\res\eat4.ogg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\res\eat5.ogg">
+      <Filter>Resource Files</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\src\Resource.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>
