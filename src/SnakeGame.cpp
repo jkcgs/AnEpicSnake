@@ -185,9 +185,15 @@ int SnakeGame::mainLoop() {
             if(e.type == SDL_QUIT) {
                 quit = true;
             }
-            handleEvents(&e);
-            startBtn.handleEvent(&e);
-            restartBtn.handleEvent(&e);
+            else {
+                handleEvents(&e);
+                startBtn.handleEvent(&e);
+                restartBtn.handleEvent(&e);
+            }
+        }
+
+        if (quit) {
+            break;
         }
         // --- END EVENTS ---
         
@@ -200,11 +206,7 @@ int SnakeGame::mainLoop() {
             }
 
             // Check if player have crashed to reset the snake
-            if(alive && started &&
-                    snake.getFirstPoint().x < 0 || snake.getFirstPoint().y < 0 || 
-                    snake.getFirstPoint().x*squareSize >= winWidth || 
-                    snake.getFirstPoint().y*squareSize >= winHeight ||
-                    snake.selfCrashed()) {
+            if(alive && started && hasCrashed()) {
                 started = false; // set that game has not started to stop moving
                 alive = false;
                 turbo = false;
@@ -456,6 +458,13 @@ void SnakeGame::handleEvents(SDL_Event* e) {
             turbo = e->type == SDL_KEYDOWN;
         }
     }
+}
+
+bool SnakeGame::hasCrashed() {
+    return snake.getFirstPoint().x < 0 || snake.getFirstPoint().y < 0 ||
+        snake.getFirstPoint().x*squareSize >= winWidth ||
+        snake.getFirstPoint().y*squareSize >= winHeight ||
+        snake.selfCrashed();
 }
 
 // bye bye!

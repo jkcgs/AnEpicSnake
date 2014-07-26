@@ -81,6 +81,10 @@ public:
      * @return A return code, 0 is OK, anything else is bad.
      */
     int mainLoop();
+
+    // Determines if the player has crashed
+    bool hasCrashed();
+
     /**
      * Resets the game.
      */
