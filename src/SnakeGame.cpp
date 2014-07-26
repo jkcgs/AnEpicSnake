@@ -86,6 +86,13 @@ int SnakeGame::init() {
     }
     // used to draw with transparency
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+
+    // loading "screen"
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    SDL_RenderClear(renderer);
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+    drawChar("loading...", 10, winHeight - 30, 5);
+    SDL_RenderPresent(renderer);
     
     // Used to draw the background
     bgtx = SDL_CreateTexture(renderer,
@@ -347,7 +354,8 @@ void SnakeGame::drawChar(int n, int x, int y, int size = 10) {
                 case ')': n = 39; break;
                 case '\'': n = 40; break;
                 case ',': n = 41; break;
-                case '!': n = 42; break;
+                case '.': n = 42; break;
+                case '!': n = 43; break;
                 default: n = (sizeof(chars) / sizeof(uint32_t)) - 1;
             }
         }
