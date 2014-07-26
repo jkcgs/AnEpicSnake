@@ -133,12 +133,14 @@ int SnakeGame::init() {
     restartBtn.setClipState(Button::BTN_STATE_DOWN, 2);
     restartBtn.setClipState(Button::BTN_STATE_UP, 1);
     
+    // Add an icon to the window
     SDL_Surface* icon = SDL_LoadBMP("res/icon.bmp");
     if(icon == NULL) {
         return ERROR_IMGFILE_LOAD;
     } else {
         SDL_SetWindowIcon(window, icon);
     }
+    SDL_FreeSurface(icon);
     
     for(int i = 0; i < 5; i++) {
         std::string eatpath, deathpath;
@@ -287,7 +289,7 @@ void SnakeGame::draw() {
         startBtn.setDisplayed(false);
     }
 
-    // game over place
+    // gameover place
     if(!alive) {
         if(!restartBtn.isDisplayed()) {
             restartBtn.setDisplayed(true);
