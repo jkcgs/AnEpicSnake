@@ -80,6 +80,7 @@ int SnakeGame::init() {
     if( Mix_OpenAudio( 22050, MIX_DEFAULT_FORMAT, 2, 512 ) == -1 ) {
         return ERROR_MIXER_INIT;    
     }
+    Mix_Volume(-1, 50); // Low the volume to the game
     
     // Background load check
     if(!titleTex.loadFromFile(Mgr.Renderer(), "res/titlebg.png") ||
