@@ -87,14 +87,25 @@ public:
     //************************************
     bool SetWindowIcon(std::string icon_path);
 
+    //************************************
+    // This method redraws the magical background.
+    //************************************
+    void RedrawRainbowBg();
+
     int getSquareSize() const { return squareSize; }
     void setSquareSize(int val) { squareSize = val; }
 
     SDL_Window* Window();
     SDL_Renderer* Renderer();
 private:
-    int squareSize;
     SDL_Window* window;
     SDL_Renderer* renderer;
+
+    int width; // The window width
+    int height; // The window height
+    int squareSize; // The square size for squares matrix
+
+    SDL_Texture* bgtx; // Background texture
+    Uint32* bgpx; // Background pixels
 };
 

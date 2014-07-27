@@ -12,6 +12,8 @@
 WinManager::WinManager()
 {
     squareSize = 10;
+    width = 0;
+    height = 0;
 }
 
 
@@ -22,6 +24,9 @@ WinManager::~WinManager()
 
 int WinManager::init(int width, int height, std::string title = "KairosDev Window")
 {
+    this->width = width;
+    this->height = height;
+
     if (SDL_Init(SDL_INIT_VIDEO) != 0) {
         return 1;
     }
@@ -39,16 +44,17 @@ int WinManager::init(int width, int height, std::string title = "KairosDev Windo
         return 3;
     }
 
-    // used to draw with transparency
+    // Used to draw with transparency
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-    return 0;
-}
 
-void WinManager::close()
-{
-    SDL_DestroyWindow(window);
-    SDL_DestroyRenderer(renderer);
-    SDL_Quit();
+    // Used to draw the background
+    bgpx = new Uint32[width * height];
+    memset(bgpx, 255, width * height * sizeof(Uint32));
+    bgtx = SDL_CreateTexture(renderer,
+        SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STATIC, width, height);
+    SDL_SetTextureBlendMode(bgtx, SDL_BLENDMODE_BLEND);
+
+    return 0;
 }
 
 void WinManager::DrawSquare(int x, int y, SDL_Color color)
@@ -114,4 +120,40 @@ bool WinManager::SetWindowIcon(std::string icon_path)
     }
 
     return true;
+}
+
+void WinManager::RedrawRainbowBg()
+{
+
+    if (renderer == NULL) {
+        return;
+    }
+
+    // how much pretty squares can fit the window? c:
+    for (int i = 0; i < height / squareSize; i++) {
+        for (int j = 0; j < width / squareSize; j++) {
+            // Format: 0xAARRGGBB
+            int color = 0xB0000000 + (rand() % 255 << 16) + (rand() % 255 << 8) + rand() % 255;
+
+            // this loops draws a square of square size
+            for (int k = 0; k < squareSize; k++) {
+                for (int l = 0; l < squareSize; l++) {
+                    bgpx[(k + (10 * i))*width + (10 * j) + l] = color;
+                }
+            }
+        }
+    }
+
+    SDL_UpdateTexture(bgtx, NULL, bgpx, width * sizeof(Uint32));
+    SDL_RenderCopy(renderer, bgtx, NULL, NULL);
+}
+
+void WinManager::close()
+{
+    delete[] bgpx;
+    SDL_DestroyTexture(bgtx);
+
+    SDL_DestroyWindow(window);
+    SDL_DestroyRenderer(renderer);
+    SDL_Quit();
 }

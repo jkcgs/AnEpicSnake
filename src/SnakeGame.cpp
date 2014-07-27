@@ -31,13 +31,12 @@ SnakeGame::SnakeGame(int width, int height) {
     alive = true;
     turbo = false;
     squareSize = 10;
-    
-    bgpx = new Uint32[winWidth * winHeight];
-    memset(bgpx, 255, winWidth * winHeight * sizeof(Uint32));
 
     food.setSize(squareSize);
     food.setColor(c_white);
-    
+
+    Mgr.setSquareSize(squareSize);
+
     reset();
 }
 
@@ -78,11 +77,6 @@ int SnakeGame::init() {
     
     // Add an icon to the window
     Mgr.SetWindowIcon("res/icon.bmp");
-
-    // Used to draw the background
-    bgtx = SDL_CreateTexture(Mgr.Renderer(),
-        SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STATIC, winWidth, winHeight);
-    SDL_SetTextureBlendMode(bgtx, SDL_BLENDMODE_BLEND);
 
     // Initialize SDL_mixer
     if( Mix_OpenAudio( 22050, MIX_DEFAULT_FORMAT, 2, 512 ) == -1 ) {
@@ -205,31 +199,6 @@ int SnakeGame::mainLoop() {
     return 0;
 }
 
-// is good for you
-void SnakeGame::drawBackground() {
-    if(Mgr.Renderer() == NULL) {
-        return;
-    }
-    
-    // how much pretty squares can fit the window? c:
-    for(int i = 0; i < winHeight/squareSize; i++) {
-        for(int j = 0; j < winWidth/squareSize; j++) {
-            // Format: 0xAARRGGBB
-            int color = 0xB0000000 + (rand()%255 << 16) + (rand()%255 << 8) + rand()%255;
-            
-            // this loops draws a square of square size
-            for(int k = 0; k < squareSize; k++) {
-                for(int l = 0; l < squareSize; l++) {
-                    bgpx[(k+(10*i))*winWidth + (10*j) + l] = color;
-                }
-            }
-        }
-    }
-    
-    SDL_UpdateTexture(bgtx, NULL, bgpx, winWidth * sizeof(Uint32));
-    SDL_RenderCopy(Mgr.Renderer(), bgtx, NULL, NULL);
-}
-
 void SnakeGame::draw() {
     // Clear screen
     Mgr.ClearRenderer(c_black);
@@ -237,7 +206,7 @@ void SnakeGame::draw() {
     snake.draw(Mgr.Renderer());
     
     if(epilepsy && (started || !alive)) {
-        drawBackground(); // don't be epileptic
+        Mgr.RedrawRainbowBg(); // don't be epileptic
     }
 
     // you must have some food or you could die
@@ -448,9 +417,6 @@ void SnakeGame::close() {
     gameoverTex.free();
     startBtn.free();
     restartBtn.free();
-    
-    delete[] bgpx;
-    SDL_DestroyTexture(bgtx);
     
     for(int i = 0; i < 5; i++) {
         Mix_FreeChunk(eatSFX[i]);

@@ -54,10 +54,6 @@ public:
      */
     void draw();
     /**
-     * Draws a beautiful and epilepsic background for you
-     */
-    void drawBackground();
-    /**
      * Draws a pixeled-style character 
      * @param n The char equivalent int or a one-digit number (0-9)
      * @param x The X position for the first digit
@@ -99,9 +95,6 @@ public:
     
 private:
     WinManager Mgr;
-    
-    SDL_Texture* bgtx; //< Background texture
-    Uint32* bgpx; //< Background pixels
     
     Mix_Chunk* eatSFX[5];
     Mix_Chunk* deathSFX[5];
