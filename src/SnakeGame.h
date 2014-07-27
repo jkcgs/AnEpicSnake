@@ -54,22 +54,6 @@ public:
      */
     void draw();
     /**
-     * Draws a pixeled-style character 
-     * @param n The char equivalent int or a one-digit number (0-9)
-     * @param x The X position for the first digit
-     * @param y The Y position for the first digit
-     * @param size The size of each square of the numbers' font
-     */
-    void drawChar(int n, int x, int y, int size);
-    /**
-    * Draws a pixeled-style string with compatible characters
-    * @param str The string to draw (that includes 0-9, a-z, A-Z, and the characters: ( ) - ! ? '
-    * @param x The X position for the first character
-    * @param y The Y position for the first character
-    * @param size The size of each square of the characters' font
-    */
-    void drawChar(std::string str, int x, int y, int size);
-    /**
      * Starts the main game process
      * @return A return code, 0 is OK, anything else is bad.
      */

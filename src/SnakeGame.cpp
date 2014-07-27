@@ -12,7 +12,6 @@
 
 #include "stdafx.h"
 #include "SnakeGame.h"
-#include "Font.h"
 
 enum ErrorLevel {
     ERROR_SDL_INIT = 1,
@@ -71,8 +70,7 @@ int SnakeGame::init() {
 
     // loading "screen"
     Mgr.ClearRenderer(c_black);
-    Mgr.SetRenderColor(c_white);
-    drawChar("loading...", 10, winHeight - 30, 5);
+    Mgr.DrawChar("loading...", 10, winHeight - 30, 5, c_white);
     Mgr.UpdateRenderer();
     
     // Add an icon to the window
@@ -214,9 +212,8 @@ void SnakeGame::draw() {
     
     // Draw points
     SDL_SetRenderDrawColor(Mgr.Renderer(), turbo ? 100 : 255, 255, 255, 150);
-    drawChar(std::to_string(points), squareSize, squareSize, squareSize / 2);
-    SDL_SetRenderDrawColor(Mgr.Renderer(), 255, 255, 255, 100);
-    drawChar("dev version, hang on bitches!", squareSize, winHeight - 20, 3);
+    Mgr.DrawChar(std::to_string(points), squareSize, squareSize, squareSize / 2);
+    Mgr.DrawChar("dev version, hang on bitches!", squareSize, winHeight - 20, 3, c_alpha(c_white, 100));
 
     if(paused) {
         drawPause();
@@ -266,7 +263,7 @@ void SnakeGame::drawPause() {
         lheight
     };
     
-    SDL_SetRenderDrawColor(Mgr.Renderer(), 255, 255, 255, pauseFade);
+    Mgr.SetRenderColor(c_alpha(c_white, pauseFade));
     
     // Draw the bars
 
@@ -277,63 +274,6 @@ void SnakeGame::drawPause() {
     pauseFade -= 5;
     if(pauseFade < 50) {
         pauseFade = 255;
-    }
-}
-
-void SnakeGame::drawChar(int n, int x, int y, int size = 10) {
-    // If the int n is a number out of 0 and 9, it must be mapped to the characters font
-    if (n < 0 || n > 9) {
-        // Map the int n to the right character on the font
-        if (n >= 'A' && n <= 'Z') {
-            n -= 55;
-        }
-        else if (n >= 'a' && n <= 'z') {
-            n -= 87;
-        }
-        else if (n >= '0' && n <= '9') {
-            n -= 48;
-        }
-        else { // 
-            switch (n) {
-                case ' ': n = 36; break;
-                case '-': n = 37; break;
-                case '(': n = 38; break;
-                case ')': n = 39; break;
-                case '\'': n = 40; break;
-                case ',': n = 41; break;
-                case '.': n = 42; break;
-                case '!': n = 43; break;
-                default: n = (sizeof(chars) / sizeof(uint32_t)) - 1;
-            }
-        }
-    }
-
-    SDL_Rect pixel = { 0, 0, size, size };
-    for (int i = 4, k = 0; i >= 0; i--, k++) {
-        uint8_t byte = ((chars[n] & 0xf << 4 * i) >> 4 * i);
-        for (int j = 4; j < 8; j++) {
-            if ((byte & (0x80 >> j)) != 0) {
-                Mgr.DrawSquare((size * (j - 4)) + x, (size * k) + y, size);
-            }
-        }
-    }
-}
-
-void SnakeGame::drawChar(std::string str, int x, int y, int size = 10) {
-    for (int i = 0, j = 0; i < str.size(); i++, j++) {
-        // push a new line, move the characters back to the x start coordinate
-        // and move them all down a line
-        if (str.at(i) == '\n') {
-            j = -1; // j will back to 0 on the loop
-            y += size * 5 + size;
-        }
-        else {
-            // x will be: the starting position, 
-            // plus the separation from the character position number, 
-            // plus a separation space, based on the square size
-            // the 5 means the 4 squares from the font plus one square as a separation
-            drawChar(str.at(i), (x + (size * 5 * j)), y, size);
-        }
     }
 }
 

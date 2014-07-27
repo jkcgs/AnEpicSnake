@@ -92,6 +92,35 @@ public:
     //************************************
     void RedrawRainbowBg();
 
+    //************************************
+    // Draws a pixeled-style character
+    // Parameter: int n The char equivalent int or a one-digit number (0-9)
+    // Parameter: int x The X position for the first digit
+    // Parameter: int y The Y position for the first digit
+    // Parameter: int size The size of each square of the numbers' font
+    //************************************
+    void DrawChar(int n, int x, int y, int size);
+
+    //************************************
+    // Draws a pixeled-style string with compatible characters
+    // Parameter: std::string str The string to draw (that includes 0-9, a-z, A-Z, and the characters: ( ) - ! ? '
+    // Parameter: int x The X position for the first character
+    // Parameter: int y The Y position for the first character
+    // Parameter: int size The size of each square of the characters' font
+    //************************************
+    void DrawChar(std::string str, int x, int y, int size);
+
+
+    //************************************
+    // Draws a pixeled-style string with compatible characters
+    // Parameter: std::string str The string to draw (that includes 0-9, a-z, A-Z, and the characters: ( ) - ! ? '
+    // Parameter: int x The X position for the first character
+    // Parameter: int y The Y position for the first character
+    // Parameter: int size The size of each square of the characters' font
+    // Parameter: SDL_Color color The color of the text
+    //************************************
+    void DrawChar(std::string str, int x, int y, int size, SDL_Color color);
+
     int getSquareSize() const { return squareSize; }
     void setSquareSize(int val) { squareSize = val; }
 

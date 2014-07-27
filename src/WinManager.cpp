@@ -7,6 +7,7 @@
 * See the NOTICE.txt file for more information.
 */
 #include "stdafx.h"
+#include "Font.h"
 #include "WinManager.h"
 
 WinManager::WinManager()
@@ -124,7 +125,6 @@ bool WinManager::SetWindowIcon(std::string icon_path)
 
 void WinManager::RedrawRainbowBg()
 {
-
     if (renderer == NULL) {
         return;
     }
@@ -147,6 +147,68 @@ void WinManager::RedrawRainbowBg()
     SDL_UpdateTexture(bgtx, NULL, bgpx, width * sizeof(Uint32));
     SDL_RenderCopy(renderer, bgtx, NULL, NULL);
 }
+void WinManager::DrawChar(int n, int x, int y, int size = 10) {
+    // If the int n is a number out of 0 and 9, it must be mapped to the characters font
+    if (n < 0 || n > 9) {
+        // Map the int n to the right character on the font
+        if (n >= 'A' && n <= 'Z') {
+            n -= 55;
+        }
+        else if (n >= 'a' && n <= 'z') {
+            n -= 87;
+        }
+        else if (n >= '0' && n <= '9') {
+            n -= 48;
+        }
+        else { // 
+            switch (n) {
+                case ' ': n = 36; break;
+                case '-': n = 37; break;
+                case '(': n = 38; break;
+                case ')': n = 39; break;
+                case '\'': n = 40; break;
+                case ',': n = 41; break;
+                case '.': n = 42; break;
+                case '!': n = 43; break;
+                default: n = (sizeof(chars) / sizeof(uint32_t)) - 1;
+            }
+        }
+    }
+
+    for (int i = 4, k = 0; i >= 0; i--, k++) {
+        uint8_t byte = ((chars[n] & 0xf << 4 * i) >> 4 * i);
+        for (int j = 4; j < 8; j++) {
+            if ((byte & (0x80 >> j)) != 0) {
+                DrawSquare((size * (j - 4)) + x, (size * k) + y, size);
+            }
+        }
+    }
+}
+
+void WinManager::DrawChar(std::string str, int x, int y, int size = 10) {
+    for (int i = 0, j = 0; i < str.size(); i++, j++) {
+        // push a new line, move the characters back to the x start coordinate
+        // and move them all down a line
+        if (str.at(i) == '\n') {
+            j = -1; // j will back to 0 on the loop
+            y += size * 5 + size;
+        }
+        else {
+            // x will be: the starting position, 
+            // plus the separation from the character position number, 
+            // plus a separation space, based on the square size
+            // the 5 means the 4 squares from the font plus one square as a separation
+            DrawChar(str.at(i), (x + (size * 5 * j)), y, size);
+        }
+    }
+}
+
+void WinManager::DrawChar(std::string str, int x, int y, int size, SDL_Color color)
+{
+    SetRenderColor(color);
+    DrawChar(str, x, y, size);
+}
+
 
 void WinManager::close()
 {
