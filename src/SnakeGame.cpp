@@ -216,7 +216,7 @@ void SnakeGame::draw() {
     Mgr.DrawChar("dev version, hang on bitches!", squareSize, winHeight - 20, 3, c_alpha(c_white, 100));
 
     if(paused) {
-        drawPause();
+        Mgr.DrawPause();
     }
 
     if(!started && alive) {
@@ -241,40 +241,6 @@ void SnakeGame::draw() {
     }
     
     Mgr.UpdateRenderer();
-}
-
-
-void SnakeGame::drawPause() {
-    // Pause icon properties
-    Uint16 lwidth = 20; // bars width
-    Uint16 lheight = 60; // bars height
-    Uint8 sep = 20; // separation between bars
-
-    SDL_Rect r1 = { // rect for bar 1
-        winWidth / 2 - lwidth - sep / 2, 
-        winHeight / 2 - lheight, 
-        lwidth, 
-        lheight 
-    }; 
-    SDL_Rect r2 = { // rect for bar 2
-        r1.x + lwidth + sep, 
-        r1.y, 
-        lwidth, 
-        lheight
-    };
-    
-    Mgr.SetRenderColor(c_alpha(c_white, pauseFade));
-    
-    // Draw the bars
-
-    SDL_RenderFillRect(Mgr.Renderer(), &r1);
-    SDL_RenderFillRect(Mgr.Renderer(), &r2);
-    
-    // Display pause with a fade
-    pauseFade -= 5;
-    if(pauseFade < 50) {
-        pauseFade = 255;
-    }
 }
 
 void SnakeGame::handleEvents(SDL_Event* e) {

@@ -72,11 +72,6 @@ public:
      */
     void close();
     
-    /**
-     * Draws the pause icon
-     */
-    void drawPause();
-    
 private:
     WinManager Mgr;
     

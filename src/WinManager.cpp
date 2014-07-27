@@ -15,6 +15,7 @@ WinManager::WinManager()
     squareSize = 10;
     width = 0;
     height = 0;
+    pauseFade = 255;
 }
 
 
@@ -218,4 +219,40 @@ void WinManager::close()
     SDL_DestroyWindow(window);
     SDL_DestroyRenderer(renderer);
     SDL_Quit();
+}
+
+void WinManager::DrawPause(bool fade_animation)
+{
+    // Pause icon properties
+    Uint16 lwidth = 20; // bars width
+    Uint16 lheight = 60; // bars height
+    Uint8 sep = 20; // separation between bars
+
+    SDL_Rect r1 = { // rect for bar 1
+        width / 2 - lwidth - sep / 2,
+        height / 2 - lheight,
+        lwidth,
+        lheight
+    };
+    SDL_Rect r2 = { // rect for bar 2
+        r1.x + lwidth + sep,
+        r1.y,
+        lwidth,
+        lheight
+    };
+
+    SetRenderColor(c_alpha(c_white, pauseFade));
+
+    // Draw the bars
+
+    SDL_RenderFillRect(renderer, &r1);
+    SDL_RenderFillRect(renderer, &r2);
+
+    // Display pause with a fade
+    if (fade_animation) {
+        pauseFade -= 5;
+        if (pauseFade < 50) {
+            pauseFade = 255;
+        }
+    }
 }

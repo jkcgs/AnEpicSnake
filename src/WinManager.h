@@ -110,7 +110,6 @@ public:
     //************************************
     void DrawChar(std::string str, int x, int y, int size);
 
-
     //************************************
     // Draws a pixeled-style string with compatible characters
     // Parameter: std::string str The string to draw (that includes 0-9, a-z, A-Z, and the characters: ( ) - ! ? '
@@ -120,6 +119,12 @@ public:
     // Parameter: SDL_Color color The color of the text
     //************************************
     void DrawChar(std::string str, int x, int y, int size, SDL_Color color);
+
+    //************************************
+    // Draws a pause icon in the screen's center with an fade animation
+    // Parameter: bool fade_animation Enables or disables the fade animation
+    //************************************
+    void DrawPause(bool fade_animation = true);
 
     int getSquareSize() const { return squareSize; }
     void setSquareSize(int val) { squareSize = val; }
@@ -133,6 +138,8 @@ private:
     int width; // The window width
     int height; // The window height
     int squareSize; // The square size for squares matrix
+
+    int pauseFade; // Used to animate the fade icon
 
     SDL_Texture* bgtx; // Background texture
     Uint32* bgpx; // Background pixels
