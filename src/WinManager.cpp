@@ -24,7 +24,7 @@ WinManager::~WinManager()
     close();
 }
 
-int WinManager::init(int width, int height, std::string title = "KairosDev Window")
+int WinManager::Init(int width, int height, std::string title = "KairosDev Window")
 {
     this->width = width;
     this->height = height;

@@ -56,7 +56,7 @@ void SnakeGame::reset() {
 }
 
 int SnakeGame::init() {
-    int mginit = Mgr.init(winWidth, winHeight, "KairosDev - AnEpicSnake v0.5-dev");
+    int mginit = Mgr.Init(winWidth, winHeight, "KairosDev - AnEpicSnake v0.5-dev");
 
     if(mginit != 0) {
         return ERROR_SDL_INIT;

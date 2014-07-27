@@ -23,7 +23,7 @@ public:
     // Parameter: std::string title 
     // Returns: If the initialization failed will return a number > 0, else, 0 is returned.
     //************************************
-    int init(int width, int height, std::string title);
+    int Init(int width, int height, std::string title);
 
     //************************************
     // Frees the memory used by the window and the renderer
