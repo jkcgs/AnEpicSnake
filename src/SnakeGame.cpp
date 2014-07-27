@@ -211,8 +211,9 @@ void SnakeGame::draw() {
     food.draw(Mgr.Renderer());
     
     // Draw points
-    SDL_SetRenderDrawColor(Mgr.Renderer(), turbo ? 100 : 255, 255, 255, 150);
-    Mgr.DrawChar(std::to_string(points), squareSize, squareSize, squareSize / 2);
+    Mgr.DrawChar(std::to_string(points), squareSize, squareSize, squareSize / 2, c_alpha(turbo?c_cyan:c_white, 150));
+
+    // Temporal message
     Mgr.DrawChar("dev version, hang on bitches!", squareSize, winHeight - 20, 3, c_alpha(c_white, 100));
 
     if(paused) {
