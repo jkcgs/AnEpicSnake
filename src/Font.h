@@ -4,7 +4,7 @@
 *
 * AnEpicSnake v0.5-dev
 *
-* This file is part of AnEpicSnake, licenced under the GPLv3 licence.
+* This file is part of AnEpicSnake, licensed under the GPLv3 license.
 * See the NOTICE.txt file for more information.
 */
 

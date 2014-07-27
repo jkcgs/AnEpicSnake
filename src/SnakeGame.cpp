@@ -6,7 +6,7 @@
  * 
  * AnEpicSnake v0.5-dev
  * 
- * This file is part of AnEpicSnake, licenced under the GPLv3 licence.
+ * This file is part of AnEpicSnake, licensed under the GPLv3 license.
  * See the NOTICE.txt file for more information.
  */
 
@@ -35,9 +35,8 @@ SnakeGame::SnakeGame(int width, int height) {
     bgpx = new Uint32[winWidth * winHeight];
     memset(bgpx, 255, winWidth * winHeight * sizeof(Uint32));
 
-    SDL_Color white = {255, 255, 255, 255};
     food.setSize(squareSize);
-    food.setColor(white);
+    food.setColor(c_white);
     
     reset();
 }
@@ -59,7 +58,9 @@ void SnakeGame::reset() {
 }
 
 int SnakeGame::init() {
-    if(SDL_Init(SDL_INIT_VIDEO) != 0) {
+    int mginit = Mgr.init(winWidth, winHeight, "KairosDev - AnEpicSnake v0.5-dev");
+
+    if(mginit != 0) {
         return ERROR_SDL_INIT;
     }
     
@@ -68,41 +69,18 @@ int SnakeGame::init() {
         printf("Unable to init SDL2_image. Error: %s\n", IMG_GetError());
         return ERROR_IMG_INIT;
     }
-    
-    window = SDL_CreateWindow("KairosDev - AnEpicSnake v0.5-dev", 
-        SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, winWidth, winHeight, SDL_WINDOW_SHOWN);
-    if(window == NULL) {
-        printf("Unable to create window. Error: %s", SDL_GetError());
-        return ERROR_CREATE_WIN;
-    }
-    
-    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_PRESENTVSYNC);
-    if(renderer == NULL) {
-        printf("Unable to create renderer. Error: %s", SDL_GetError());
-        return ERROR_CREATE_REN;
-    }
-    // used to draw with transparency
-    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 
     // loading "screen"
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-    SDL_RenderClear(renderer);
-    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+    Mgr.ClearRenderer(c_black);
+    Mgr.SetRenderColor(c_white);
     drawChar("loading...", 10, winHeight - 30, 5);
-    SDL_RenderPresent(renderer);
+    Mgr.UpdateRenderer();
     
     // Add an icon to the window
-    SDL_Surface* icon = SDL_LoadBMP("res/icon.bmp");
-    if (icon == NULL) {
-        return ERROR_IMGFILE_LOAD;
-    }
-    else {
-        SDL_SetWindowIcon(window, icon);
-        SDL_FreeSurface(icon);
-    }
+    Mgr.SetWindowIcon("res/icon.bmp");
 
     // Used to draw the background
-    bgtx = SDL_CreateTexture(renderer,
+    bgtx = SDL_CreateTexture(Mgr.Renderer(),
         SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STATIC, winWidth, winHeight);
     SDL_SetTextureBlendMode(bgtx, SDL_BLENDMODE_BLEND);
 
@@ -112,10 +90,10 @@ int SnakeGame::init() {
     }
     
     // Background load check
-    if(!titleTex.loadFromFile(renderer, "res/titlebg.png") ||
-       !gameoverTex.loadFromFile(renderer, "res/gameover.png") ||
-       !startBtn.loadImage(renderer, "res/start.png") ||
-       !restartBtn.loadImage(renderer, "res/restart.png")) 
+    if(!titleTex.loadFromFile(Mgr.Renderer(), "res/titlebg.png") ||
+       !gameoverTex.loadFromFile(Mgr.Renderer(), "res/gameover.png") ||
+       !startBtn.loadImage(Mgr.Renderer(), "res/start.png") ||
+       !restartBtn.loadImage(Mgr.Renderer(), "res/restart.png")) 
     {
         return ERROR_IMGFILE_LOAD;
     }
@@ -229,7 +207,7 @@ int SnakeGame::mainLoop() {
 
 // is good for you
 void SnakeGame::drawBackground() {
-    if(renderer == NULL) {
+    if(Mgr.Renderer() == NULL) {
         return;
     }
     
@@ -249,27 +227,26 @@ void SnakeGame::drawBackground() {
     }
     
     SDL_UpdateTexture(bgtx, NULL, bgpx, winWidth * sizeof(Uint32));
-    SDL_RenderCopy(renderer, bgtx, NULL, NULL);
+    SDL_RenderCopy(Mgr.Renderer(), bgtx, NULL, NULL);
 }
 
 void SnakeGame::draw() {
     // Clear screen
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-    SDL_RenderClear(renderer);
+    Mgr.ClearRenderer(c_black);
 
-    snake.draw(renderer);
+    snake.draw(Mgr.Renderer());
     
     if(epilepsy && (started || !alive)) {
         drawBackground(); // don't be epileptic
     }
 
     // you must have some food or you could die
-    food.draw(renderer);
+    food.draw(Mgr.Renderer());
     
     // Draw points
-    SDL_SetRenderDrawColor(renderer, turbo ? 100 : 255, 255, 255, 150);
+    SDL_SetRenderDrawColor(Mgr.Renderer(), turbo ? 100 : 255, 255, 255, 150);
     drawChar(std::to_string(points), squareSize, squareSize, squareSize / 2);
-    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 100);
+    SDL_SetRenderDrawColor(Mgr.Renderer(), 255, 255, 255, 100);
     drawChar("dev version, hang on bitches!", squareSize, winHeight - 20, 3);
 
     if(paused) {
@@ -280,8 +257,8 @@ void SnakeGame::draw() {
         if(!startBtn.isDisplayed()) {
             startBtn.setDisplayed(true);
         }
-        titleTex.draw(renderer);
-        startBtn.draw(renderer);
+        titleTex.draw(Mgr.Renderer());
+        startBtn.draw(Mgr.Renderer());
     } else if(startBtn.isDisplayed()) {
         startBtn.setDisplayed(false);
     }
@@ -291,13 +268,13 @@ void SnakeGame::draw() {
         if(!restartBtn.isDisplayed()) {
             restartBtn.setDisplayed(true);
         }
-        gameoverTex.draw(renderer);
-        restartBtn.draw(renderer);
+        gameoverTex.draw(Mgr.Renderer());
+        restartBtn.draw(Mgr.Renderer());
     } else if(restartBtn.isDisplayed()) {
         restartBtn.setDisplayed(false);
     }
     
-    SDL_RenderPresent(renderer);
+    Mgr.UpdateRenderer();
 }
 
 
@@ -320,11 +297,12 @@ void SnakeGame::drawPause() {
         lheight
     };
     
-    SDL_SetRenderDrawColor(renderer, 255, 255, 255, pauseFade);
+    SDL_SetRenderDrawColor(Mgr.Renderer(), 255, 255, 255, pauseFade);
     
     // Draw the bars
-    SDL_RenderFillRect(renderer, &r1);
-    SDL_RenderFillRect(renderer, &r2);
+
+    SDL_RenderFillRect(Mgr.Renderer(), &r1);
+    SDL_RenderFillRect(Mgr.Renderer(), &r2);
     
     // Display pause with a fade
     pauseFade -= 5;
@@ -366,9 +344,7 @@ void SnakeGame::drawChar(int n, int x, int y, int size = 10) {
         uint8_t byte = ((chars[n] & 0xf << 4 * i) >> 4 * i);
         for (int j = 4; j < 8; j++) {
             if ((byte & (0x80 >> j)) != 0) {
-                pixel.x = (size * (j-4)) + x;
-                pixel.y = (size * k) + y;
-                SDL_RenderFillRect(renderer, &pixel);
+                Mgr.DrawSquare((size * (j - 4)) + x, (size * k) + y, size);
             }
         }
     }
@@ -483,8 +459,5 @@ void SnakeGame::close() {
     
     Mix_CloseAudio();
     
-    SDL_DestroyRenderer(renderer);
-    SDL_DestroyWindow(window);
-    
-    SDL_Quit();
+    Mgr.close();
 }

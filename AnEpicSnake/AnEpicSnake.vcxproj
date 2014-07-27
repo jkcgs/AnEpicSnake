@@ -105,7 +105,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>E:\Documentos\Development Sources\SDL2_full\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PrecompiledHeader>Create</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -139,14 +139,17 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\src\Button.cpp" />
+    <ClCompile Include="..\src\Color.cpp" />
     <ClCompile Include="..\src\Food.cpp" />
     <ClCompile Include="..\src\Main.cpp" />
     <ClCompile Include="..\src\Snake.cpp" />
     <ClCompile Include="..\src\SnakeGame.cpp" />
     <ClCompile Include="..\src\Texture.cpp" />
+    <ClCompile Include="..\src\WinManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\Button.h" />
+    <ClInclude Include="..\src\Color.h" />
     <ClInclude Include="..\src\Font.h" />
     <ClInclude Include="..\src\Food.h" />
     <ClInclude Include="..\src\resource.h" />
@@ -154,6 +157,7 @@
     <ClInclude Include="..\src\SnakeGame.h" />
     <ClInclude Include="..\src\stdafx.h" />
     <ClInclude Include="..\src\Texture.h" />
+    <ClInclude Include="..\src\WinManager.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\res\gameover.png" />

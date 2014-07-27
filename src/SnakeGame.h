@@ -5,8 +5,8 @@
  * Created on 28 de junio de 2014, 09:11 PM
  * 
  * AnEpicSnake v0.5-dev
- * 
- * This file is part of AnEpicSnake, licenced under the GPLv3 licence.
+ *
+ * This file is part of AnEpicSnake, licensed under the GPLv3 license.
  * See the NOTICE.txt file for more information.
  */
 
@@ -18,6 +18,7 @@
 #include "Snake.h"
 #include "Button.h"
 #include "Food.h"
+#include "WinManager.h"
 
 /**
  * This controls the main game system for teh win (no, not Windows only).
@@ -97,8 +98,7 @@ public:
     void drawPause();
     
 private:
-    SDL_Window* window;
-    SDL_Renderer* renderer;
+    WinManager Mgr;
     
     SDL_Texture* bgtx; //< Background texture
     Uint32* bgpx; //< Background pixels
