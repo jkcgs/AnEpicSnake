@@ -18,7 +18,6 @@ WinManager::WinManager()
     pauseFade = 255;
 }
 
-
 WinManager::~WinManager()
 {
     close();
@@ -59,6 +58,12 @@ int WinManager::Init(int width, int height, std::string title = "KairosDev Windo
     return 0;
 }
 
+void WinManager::DrawSquare(int x, int y, int size)
+{
+    SDL_Rect rect = { x, y, size, size };
+    SDL_RenderFillRect(renderer, &rect);
+}
+
 void WinManager::DrawSquare(int x, int y, SDL_Color color)
 {
     SDL_Rect rect = {x * squareSize, y * squareSize, squareSize, squareSize};
@@ -68,15 +73,8 @@ void WinManager::DrawSquare(int x, int y, SDL_Color color)
 
 void WinManager::DrawSquare(int x, int y, SDL_Color color, int size = 10)
 {
-    SDL_Rect rect = { x, y, size, size };
     SetRenderColor(color);
-    SDL_RenderFillRect(renderer, &rect);
-}
-
-void WinManager::DrawSquare(int x, int y, int size)
-{
-    SDL_Rect rect = { x, y, size, size };
-    SDL_RenderFillRect(renderer, &rect);
+    DrawSquare(x, y, size);
 }
 
 void WinManager::UpdateRenderer()
@@ -210,17 +208,6 @@ void WinManager::DrawChar(std::string str, int x, int y, int size, SDL_Color col
     DrawChar(str, x, y, size);
 }
 
-
-void WinManager::close()
-{
-    delete[] bgpx;
-    SDL_DestroyTexture(bgtx);
-
-    SDL_DestroyWindow(window);
-    SDL_DestroyRenderer(renderer);
-    SDL_Quit();
-}
-
 void WinManager::DrawPause(bool fade_animation)
 {
     // Pause icon properties
@@ -255,4 +242,14 @@ void WinManager::DrawPause(bool fade_animation)
             pauseFade = 255;
         }
     }
+}
+
+void WinManager::close()
+{
+    delete[] bgpx;
+    SDL_DestroyTexture(bgtx);
+
+    SDL_DestroyWindow(window);
+    SDL_DestroyRenderer(renderer);
+    SDL_Quit();
 }
