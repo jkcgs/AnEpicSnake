@@ -13,16 +13,6 @@
 #include "stdafx.h"
 #include "SnakeGame.h"
 
-enum ErrorLevel {
-    ERROR_SDL_INIT = 1,
-    ERROR_IMG_INIT,
-    ERROR_CREATE_WIN,
-    ERROR_CREATE_REN,
-    ERROR_MIXER_INIT,
-    ERROR_IMGFILE_LOAD,
-    ERROR_SFXFILE_LOAD
-};
-
 SnakeGame::SnakeGame(int width, int height) {
     winWidth = width;
     winHeight = height;
@@ -33,6 +23,8 @@ SnakeGame::SnakeGame(int width, int height) {
 
     food.setSize(squareSize);
     food.setColor(c_white);
+    specialFood.setSize(squareSize);
+    specialFood.setColor(c_red);
 
     Mgr.setSquareSize(squareSize);
 
@@ -55,17 +47,13 @@ void SnakeGame::reset() {
     quit = false;
 }
 
-int SnakeGame::init() {
+bool SnakeGame::init()
+{
     int mginit = Mgr.Init(winWidth, winHeight, "KairosDev - AnEpicSnake v0.5-dev");
 
     if(mginit != 0) {
-        return ERROR_SDL_INIT;
-    }
-    
-    int imgFlags = IMG_INIT_PNG;
-    if(!(IMG_Init( imgFlags ) & imgFlags)) {
-        printf("Unable to init SDL2_image. Error: %s\n", IMG_GetError());
-        return ERROR_IMG_INIT;
+        printf("Could not initiate the window system.\n");
+        return false;
     }
 
     // loading "screen"
@@ -73,28 +61,39 @@ int SnakeGame::init() {
     Mgr.DrawChar("loading...", 10, winHeight - 30, 5, c_white);
     Mgr.UpdateRenderer();
     
-    // Add an icon to the window
-    Mgr.SetWindowIcon("res/icon.bmp");
-
+    int imgFlags = IMG_INIT_PNG;
+    if(!(IMG_Init( imgFlags ) & imgFlags)) {
+        printf("Unable to init SDL2_image. Error: %s\n", IMG_GetError());
+        return false;
+    }
     // Initialize SDL_mixer
     if( Mix_OpenAudio( 22050, MIX_DEFAULT_FORMAT, 2, 512 ) == -1 ) {
-        return ERROR_MIXER_INIT;    
+        return false;    
     }
-    Mix_Volume(-1, 50); // Low the volume to the game
-    
     // Background load check
     if(!titleTex.loadFromFile(Mgr.Renderer(), "res/titlebg.png") ||
        !gameoverTex.loadFromFile(Mgr.Renderer(), "res/gameover.png") ||
        !startBtn.loadImage(Mgr.Renderer(), "res/start.png") ||
        !restartBtn.loadImage(Mgr.Renderer(), "res/restart.png")) 
     {
-        return ERROR_IMGFILE_LOAD;
+        printf("One or more image files could not be loaded.\n");
+        return false;
     }
 
-    // Title image position
-    titleTex.setPos(winWidth/2 - titleTex.getRect().w/2, winHeight/2 - titleTex.getRect().h/2);
+    // SFX Load
+    eatSFX = Mix_LoadWAV("res/eat.ogg");
+    deathSFX = Mix_LoadWAV("res/die.ogg");
 
-    // Gameover image position
+    if (eatSFX == NULL || deathSFX == NULL) {
+        printf("Could not load SFX file. Error: %s\n", Mix_GetError());
+        return false;
+    }
+
+    Mgr.SetWindowIcon("res/icon.bmp"); // Add an icon to the window
+    Mix_Volume(-1, 50); // Low the volume to the game
+    
+    // Title and gameover image position
+    titleTex.setPos(winWidth/2 - titleTex.getRect().w/2, winHeight/2 - titleTex.getRect().h/2);
     gameoverTex.setPos(winWidth/2 - gameoverTex.getRect().w/2, winHeight/2 - gameoverTex.getRect().h/2);
 
     // Start button setup
@@ -107,23 +106,12 @@ int SnakeGame::init() {
     restartBtn.setupClipStates(3);
     restartBtn.setClipStates(0, 1, 2, 1);
 
-    // SFX Load
-    eatSFX = Mix_LoadWAV("res/eat.ogg");
-    deathSFX = Mix_LoadWAV("res/die.ogg");
-
-    if (eatSFX == NULL || deathSFX == NULL) {
-        printf("Could not load sfx file. Error: %s\n", Mix_GetError());
-        return ERROR_SFXFILE_LOAD;
-    }
-    
-    return 0;
+    return true;
 }
 
-int SnakeGame::mainLoop() {
-    int initLevel = init();
-    
-    if(initLevel != 0) {
-        return initLevel;
+int SnakeGame::mainLoop() {    
+    if (!init()) {
+        return 1;
     }
     
     SDL_Event e;

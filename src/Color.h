@@ -11,5 +11,5 @@
 #pragma once
 #include "stdafx.h"
 
-extern const SDL_Color c_black, c_white, c_cyan;
+extern const SDL_Color c_black, c_white, c_cyan, c_red;
 extern const SDL_Color c_alpha(SDL_Color color, int alpha);

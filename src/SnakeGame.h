@@ -40,10 +40,9 @@ public:
     
     /**
      * Initiate the SDL system
-     * @return 0 if everything started OK, 1 if could not initiate SDL,
-     * 2 if could not create window, and 3 if could not create SDL renderer.
+     * @return bool This depends that if the game was correctly initiated.
      */
-    int init();
+    bool init();
     /**
      * Update the game conditions depending on the keys pressing
      * @param e
@@ -86,6 +85,7 @@ private:
     
     Snake snake;
     Food food;
+    Food specialFood;
     bool paused;
     bool alive;
     bool epilepsy;

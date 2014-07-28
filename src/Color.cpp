@@ -12,6 +12,7 @@
 const SDL_Color c_black = { 0, 0, 0, 255 };
 const SDL_Color c_white = { 255, 255, 255, 255 };
 const SDL_Color c_cyan = { 100, 255, 255, 255 };
+const SDL_Color c_red = { 255, 0, 0, 255 };
 const SDL_Color c_alpha(SDL_Color color, int alpha) {
     color.a = alpha;
     return color;
