@@ -108,17 +108,12 @@ int SnakeGame::init() {
     restartBtn.setClipStates(0, 1, 2, 1);
 
     // SFX Load
-    for(int i = 0; i < 5; i++) {
-        std::string eatpath, deathpath;
-        eatpath = "res/eat" + std::to_string(i+1) + ".ogg";
-        deathpath = "res/die" + std::to_string(i+1) + ".ogg";
-        eatSFX[i] = Mix_LoadWAV(eatpath.c_str());
-        deathSFX[i] = Mix_LoadWAV(deathpath.c_str());
-        
-        if(eatSFX[i] == NULL || deathSFX[i] == NULL) {
-            printf("Could not load sfx file. Error: %s\n", Mix_GetError());
-            return ERROR_SFXFILE_LOAD;
-        }
+    eatSFX = Mix_LoadWAV("res/eat.ogg");
+    deathSFX = Mix_LoadWAV("res/die.ogg");
+
+    if (eatSFX == NULL || deathSFX == NULL) {
+        printf("Could not load sfx file. Error: %s\n", Mix_GetError());
+        return ERROR_SFXFILE_LOAD;
     }
     
     return 0;
@@ -167,7 +162,7 @@ int SnakeGame::mainLoop() {
                 started = false; // set that game has not started to stop moving
                 alive = false;
                 turbo = false;
-                Mix_PlayChannel(-1, deathSFX[rand()%5], 0);
+                Mix_PlayChannel(-1, deathSFX, 0);
                 // player will continue the game if he press ENTER
             } 
 
@@ -177,7 +172,7 @@ int SnakeGame::mainLoop() {
                 food.generate(&snake, winWidth, winHeight);
                 snake.setGrow(true);
                 snake.setSpeed(snake.getSpeed()+.3); // moar fun
-                Mix_PlayChannel(-1, eatSFX[rand()%5], 0); // yay!
+                Mix_PlayChannel(-1, eatSFX, 0); // yay!
             }
         } else if(alive && startBtn.getState() == Button::BTN_STATE_UP) {
             startBtn.setState(Button::BTN_STATE_NORMAL);
@@ -328,10 +323,8 @@ void SnakeGame::close() {
     startBtn.free();
     restartBtn.free();
     
-    for(int i = 0; i < 5; i++) {
-        Mix_FreeChunk(eatSFX[i]);
-        Mix_FreeChunk(deathSFX[i]);
-    }
+    Mix_FreeChunk(eatSFX);
+    Mix_FreeChunk(deathSFX);
     
     Mix_CloseAudio();
     

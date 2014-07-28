@@ -75,8 +75,8 @@ public:
 private:
     WinManager Mgr;
     
-    Mix_Chunk* eatSFX[5];
-    Mix_Chunk* deathSFX[5];
+    Mix_Chunk* eatSFX;
+    Mix_Chunk* deathSFX;
     
     Texture titleTex;
     Texture gameoverTex;
