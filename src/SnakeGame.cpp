@@ -146,8 +146,6 @@ int SnakeGame::mainLoop() {
             }
             else {
                 handleEvents(&e);
-                startBtn.handleEvent(&e);
-                restartBtn.handleEvent(&e);
             }
         }
 
@@ -246,6 +244,10 @@ void SnakeGame::draw() {
 }
 
 void SnakeGame::handleEvents(SDL_Event* e) {
+    // Button handling
+    startBtn.handleEvent(e);
+    restartBtn.handleEvent(e);
+
     // Keydown-only handling
     if(e->type == SDL_KEYDOWN) {
         // Moves the snake on the desired direction, but you can't go back.
