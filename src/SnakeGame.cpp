@@ -44,7 +44,6 @@ void SnakeGame::reset() {
     snake.setSpeed(10);
     food.generate(&snake, winWidth, winHeight);
     paused = false;
-    quit = false;
 }
 
 bool SnakeGame::init()
