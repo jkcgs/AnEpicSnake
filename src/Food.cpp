@@ -16,7 +16,7 @@
 Food::Food() {
     SDL_Rect r = {0, 0, 10, 10};
     this->rect = r;
-    special = false;
+    type = TYPE_NORMAL;
 }
 
 Food::~Food() { }
@@ -46,17 +46,19 @@ void Food::setSize(int size) {
     this->rect.h = size;
 }
 
-bool Food::isSpecial() {
-    return special;
-}
-
-void Food::setSpecial(bool special) {
-    this->special = special;
-}
-
 SDL_Color Food::getColor() {
     return color;
 }
 void Food::setColor(SDL_Color color) {
     this->color = color;
+}
+
+FoodType Food::getType()
+{
+    return type;
+}
+
+void Food::setType(FoodType type)
+{
+    this->type = type;
 }

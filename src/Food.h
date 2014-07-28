@@ -14,6 +14,14 @@
 #ifndef _FOOD_H_
 #define _FOOD_H_
 
+enum FoodType {
+    TYPE_NORMAL,
+    TYPE_5POINTS,
+    TYPE_SPEED_UP,
+    TYPE_SPEED_DOWN,
+    TYPE_TOTAL
+};
+
 #include "stdafx.h"
 #include "Snake.h"
 
@@ -30,14 +38,15 @@ public:
     SDL_Rect getRect();
     int getSize();
     void setSize(int size);
-    bool isSpecial();
-    void setSpecial(bool special);
     SDL_Color getColor();
     void setColor(SDL_Color color);
+    FoodType getType();
+    void setType(FoodType type);
 private:
-    bool special;
     SDL_Rect rect;
     SDL_Color color;
+
+    FoodType type;
 };
 
 #endif // _FOOD_H_

@@ -130,7 +130,7 @@ int SnakeGame::mainLoop() {
     quit = false;
     
     // creates a timer to check when to move the snake
-    Uint32 timeout = SDL_GetTicks() + ((1/snake.getSpeed())*1000);
+    Uint32 timeout = SDL_GetTicks() + (1000/snake.getSpeed());
     
     while(!quit) {
         // --- START UPDATES ---
