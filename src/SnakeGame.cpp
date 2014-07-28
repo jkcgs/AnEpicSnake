@@ -61,15 +61,18 @@ bool SnakeGame::init()
     Mgr.DrawChar("loading...", 10, winHeight - 30, 5, c_white);
     Mgr.UpdateRenderer();
     
+    // Initialize image system
     int imgFlags = IMG_INIT_PNG;
     if(!(IMG_Init( imgFlags ) & imgFlags)) {
         printf("Unable to init SDL2_image. Error: %s\n", IMG_GetError());
         return false;
     }
-    // Initialize SDL_mixer
+
+    // Initialize sound system
     if( Mix_OpenAudio( 22050, MIX_DEFAULT_FORMAT, 2, 512 ) == -1 ) {
         return false;    
     }
+
     // Background load check
     if(!titleTex.loadFromFile(Mgr.Renderer(), "res/titlebg.png") ||
        !gameoverTex.loadFromFile(Mgr.Renderer(), "res/gameover.png") ||
@@ -115,7 +118,7 @@ int SnakeGame::mainLoop() {
     }
     
     SDL_Event e;
-    quit = false;
+    bool quit = false;
     
     // creates a timer to check when to move the snake
     Uint32 timeout = SDL_GetTicks() + (1000/snake.getSpeed());

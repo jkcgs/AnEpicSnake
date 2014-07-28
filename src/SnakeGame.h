@@ -97,7 +97,6 @@ private:
     Uint8 pauseFade;
     
     bool started;
-    bool quit;
 };
 
 #endif	/* SNAKEGAME_H */
