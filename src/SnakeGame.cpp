@@ -236,7 +236,7 @@ void SnakeGame::handleEvents(SDL_Event* e) {
     // Keydown-only handling
     if(e->type == SDL_KEYDOWN) {
         // Moves the snake on the desired direction, but you can't go back.
-        if(!paused && snake.isMoved())
+        if(!paused && alive && snake.isMoved())
         {
             switch(e->key.keysym.sym) {
                 case SDLK_w:
