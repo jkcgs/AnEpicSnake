@@ -73,11 +73,12 @@ bool SnakeGame::init()
     }
 
     // Background load check
-    if(!titleTex.loadFromFile(Mgr.Renderer(), "res/titlebg.png") ||
-       !gameoverTex.loadFromFile(Mgr.Renderer(), "res/gameover.png") ||
-       !startBtn.loadImage(Mgr.Renderer(), "res/start.png") ||
-       !restartBtn.loadImage(Mgr.Renderer(), "res/restart.png")) 
-    {
+    if(!(
+        titleTex.loadFromFile(Mgr.Renderer(), "res/titlebg.png") &&
+        gameoverTex.loadFromFile(Mgr.Renderer(), "res/gameover.png") &&
+        startBtn.loadImage(Mgr.Renderer(), "res/start.png") &&
+        restartBtn.loadImage(Mgr.Renderer(), "res/restart.png")
+    )) {
         printf("One or more image files could not be loaded.\n");
         return false;
     }
@@ -164,10 +165,14 @@ int SnakeGame::mainLoop() {
                 snake.setSpeed(snake.getSpeed()+.3); // moar fun
                 Mix_PlayChannel(-1, eatSFX, 0); // yay!
             }
-        } else if(alive && startBtn.getState() == Button::BTN_STATE_UP) {
+        }
+
+        if(startBtn.isDisplayed() && startBtn.getState() == Button::BTN_STATE_UP) {
             startBtn.setState(Button::BTN_STATE_NORMAL);
             started = true;
-        } else if(!alive && restartBtn.getState() == Button::BTN_STATE_UP) {
+        }
+
+        if(restartBtn.isDisplayed() && restartBtn.getState() == Button::BTN_STATE_UP) {
             restartBtn.setState(Button::BTN_STATE_NORMAL);
             started = true;
             alive = true;
