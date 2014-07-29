@@ -76,6 +76,7 @@ private:
     
     Mix_Chunk* eatSFX;
     Mix_Chunk* deathSFX;
+    Mix_Music* music;
     
     Texture titleTex;
     Texture gameoverTex;
@@ -90,6 +91,7 @@ private:
     bool alive;
     bool epilepsy;
     bool turbo;
+    bool playMusic;
     int winWidth;
     int winHeight;
     int squareSize;

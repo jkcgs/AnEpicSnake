@@ -19,6 +19,7 @@ SnakeGame::SnakeGame(int width, int height) {
     started = false;
     alive = true;
     turbo = false;
+    playMusic = false;
     squareSize = 10;
 
     food.setSize(squareSize);
@@ -69,6 +70,7 @@ bool SnakeGame::init()
 
     // Initialize sound system
     if( Mix_OpenAudio( 22050, MIX_DEFAULT_FORMAT, 2, 512 ) == -1 ) {
+        printf("Could not start SDL_mixer system. Error: %s", Mix_GetError());
         return false;    
     }
 
@@ -86,8 +88,10 @@ bool SnakeGame::init()
     // SFX Load
     eatSFX = Mix_LoadWAV("res/eat.ogg");
     deathSFX = Mix_LoadWAV("res/die.ogg");
+    // Music load
+    music = Mix_LoadMUS("res/music.ogg");
 
-    if (eatSFX == NULL || deathSFX == NULL) {
+    if (eatSFX == NULL || deathSFX == NULL || music == NULL) {
         printf("Could not load SFX file. Error: %s\n", Mix_GetError());
         return false;
     }
@@ -167,16 +171,28 @@ int SnakeGame::mainLoop() {
             }
         }
 
+        // Click on start button
         if(startBtn.isDisplayed() && startBtn.getState() == Button::BTN_STATE_UP) {
             startBtn.setState(Button::BTN_STATE_NORMAL);
             started = true;
+            playMusic = true;
         }
 
+        // Click on restart button
         if(restartBtn.isDisplayed() && restartBtn.getState() == Button::BTN_STATE_UP) {
             restartBtn.setState(Button::BTN_STATE_NORMAL);
             started = true;
             alive = true;
             reset(); // move the food
+        }
+
+        if (playMusic) {
+            if (Mix_PlayingMusic() == 0) {
+                Mix_PlayMusic(music, -1);
+            }
+        }
+        else {
+            Mix_HaltMusic();
         }
         
         // --- END UPDATES ---
@@ -320,6 +336,7 @@ void SnakeGame::close() {
     
     Mix_FreeChunk(eatSFX);
     Mix_FreeChunk(deathSFX);
+    Mix_FreeMusic(music);
     
     Mix_CloseAudio();
     
