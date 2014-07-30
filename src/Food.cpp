@@ -16,7 +16,7 @@
 Food::Food() {
     SDL_Rect r = {0, 0, 10, 10};
     this->rect = r;
-    type = TYPE_NORMAL;
+    effect = EFFECT_NONE;
     visible = true;
 }
 
@@ -56,12 +56,7 @@ void Food::setColor(SDL_Color color) {
     this->color = color;
 }
 
-FoodType Food::getType()
+void Food::setRandomEffect()
 {
-    return type;
-}
-
-void Food::setType(FoodType type)
-{
-    this->type = type;
+    effect = (Effect) ((rand() % (EFFECT_TOTAL - 1)) + 1);
 }

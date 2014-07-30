@@ -14,12 +14,12 @@
 #ifndef _FOOD_H_
 #define _FOOD_H_
 
-enum FoodType {
-    TYPE_NORMAL,
-    TYPE_5POINTS,
-    TYPE_SPEED_UP,
-    TYPE_SPEED_DOWN,
-    TYPE_TOTAL
+enum Effect {
+    EFFECT_NONE,
+    EFFECT_5POINTS,
+    EFFECT_SPEED_UP,
+    EFFECT_SPEED_DOWN,
+    EFFECT_TOTAL
 };
 
 #include "stdafx.h"
@@ -33,22 +33,27 @@ public:
     // Generates a new position for food on the specified range
     // (window size)
     void generate(int max_x, int max_y, Snake* snake, Food* otherFood = NULL);
+
+    // Draws the food into the renderer
     void draw(SDL_Renderer* renderer);
+
+    // Sets a random effect to the food, not including EFFECT_NONE
+    void setRandomEffect();
 
     SDL_Rect getRect();
     int getSize();
     void setSize(int size);
     SDL_Color getColor();
     void setColor(SDL_Color color);
-    FoodType getType();
-    void setType(FoodType type);
+    Effect getEffect() const { return effect; }
+    void setEffect(Effect val) { effect = val; }
     bool isVisible() const { return visible; }
     void setVisible(bool val) { visible = val; }
 private:
     SDL_Rect rect;
     SDL_Color color;
 
-    FoodType type;
+    Effect effect;
     bool visible;
 };
 

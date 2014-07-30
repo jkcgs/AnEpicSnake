@@ -47,6 +47,7 @@ void SnakeGame::reset() {
     food.generate(winWidth, winHeight, &snake);
     specialFood.generate(winWidth, winWidth, &snake, &food);
     specialFood.setVisible(false);
+    specialFood.setRandomEffect();
     paused = false;
 }
 
@@ -353,8 +354,17 @@ void SnakeGame::handleEvents(SDL_Event* e) {
         }
 
         // Not-so-hidden background toggle
-        if(e->key.keysym.sym == SDLK_e && started && !paused) {
+        if (e->key.keysym.sym == SDLK_e && started && !paused) {
             epilepsy = !epilepsy;
+        }
+
+        // Sound toggle
+        if (e->key.keysym.sym == SDLK_q && started) {
+            playMusic = !playMusic;
+
+            // Update the music status to the button
+            Uint8 st = playMusic ? 0 : 1;
+            soundBtn.setClipStates(st, st, st, st);
         }
     }
     
