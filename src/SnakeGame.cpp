@@ -19,7 +19,7 @@ SnakeGame::SnakeGame(int width, int height) {
     started = false;
     alive = true;
     turbo = false;
-    playMusic = false;
+    playMusic = true;
     squareSize = 10;
 
     food.setSize(squareSize);
@@ -199,11 +199,19 @@ int SnakeGame::mainLoop() {
             }
         }
 
+        if (started && playMusic) {
+            if (Mix_PlayingMusic() == 0) {
+                Mix_PlayMusic(music, -1);
+            }
+        }
+        else if (Mix_PlayingMusic() != 0) {
+            Mix_HaltMusic();
+        }
+
         // Click on start button
         if(startBtn.isDisplayed() && startBtn.getState() == Button::BTN_STATE_UP) {
             startBtn.setState(Button::BTN_STATE_NORMAL);
             started = true;
-            playMusic = true;
         }
 
         // Click on restart button
@@ -214,24 +222,10 @@ int SnakeGame::mainLoop() {
             reset(); // move the food
         }
 
-        if (started && soundBtn.getState() == Button::BTN_STATE_UP) {
-            soundBtn.setState(Button::BTN_STATE_NORMAL);
-            playMusic = !playMusic;
-
-            // Update the music status to the button
-            Uint8 st = playMusic ? 0 : 1;
-            soundBtn.setClipStates(st, st, st, st);
+        if (soundBtn.getState() == Button::BTN_STATE_UP) {
+            toggleMusic();
         }
 
-        if (playMusic) {
-            if (Mix_PlayingMusic() == 0) {
-                Mix_PlayMusic(music, -1);
-            }
-        }
-        else {
-            Mix_HaltMusic();
-        }
-        
         // --- END UPDATES ---
         draw();
     }
@@ -359,12 +353,8 @@ void SnakeGame::handleEvents(SDL_Event* e) {
         }
 
         // Sound toggle
-        if (e->key.keysym.sym == SDLK_q && started) {
-            playMusic = !playMusic;
-
-            // Update the music status to the button
-            Uint8 st = playMusic ? 0 : 1;
-            soundBtn.setClipStates(st, st, st, st);
+        if (e->key.keysym.sym == SDLK_q) {
+            toggleMusic();
         }
     }
     
@@ -383,6 +373,15 @@ bool SnakeGame::hasCrashed() {
         snake.getFirstPoint().x*squareSize >= winWidth ||
         snake.getFirstPoint().y*squareSize >= winHeight ||
         snake.selfCrashed();
+}
+
+void SnakeGame::toggleMusic() {
+    soundBtn.setState(Button::BTN_STATE_NORMAL);
+    playMusic = !playMusic;
+
+    // Update the music status to the button
+    Uint8 st = playMusic ? 0 : 1;
+    soundBtn.setClipStates(st, st, st, st);
 }
 
 // bye bye!

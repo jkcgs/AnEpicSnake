@@ -61,6 +61,9 @@ public:
     // Determines if the player has crashed
     bool hasCrashed();
 
+    // Toggles the music on-off, and updates the sound button
+    void toggleMusic();
+
     /**
      * Resets the game.
      */
