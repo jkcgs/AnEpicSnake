@@ -173,7 +173,7 @@ int SnakeGame::mainLoop() {
             } 
 
             // have you touched the food? it's like eat it
-            if(snake.collides(&food.getRect())) {
+            if(snake.collidesWithHead(&food.getRect())) {
                 food.generate(winWidth, winHeight, &snake);
                 snake.setGrow(true);
                 snakeSpeed += .3; // moar fun
@@ -188,7 +188,7 @@ int SnakeGame::mainLoop() {
                 if (!specialFood.isVisible()) {
                     specialFood.setVisible(true);
                 }
-                else if (snake.collides(&specialFood.getRect())) {
+                else if (snake.collidesWithHead(&specialFood.getRect())) {
                     // TODO: Use special type
                     points += 5;
                     specialDelay = rand() % 20 + 10;

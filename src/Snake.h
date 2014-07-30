@@ -64,7 +64,7 @@ public:
 
     //************************************
     // Checks of a point is on the same point than other of the snake
-    // Returns: bool A boolean that checks the collition state
+    // Returns: bool A boolean that checks the coalition state
     // Parameter: SDL_Rect* rect The point to verify if collides with the snake
     //************************************
     bool collides(SDL_Rect* rect);
@@ -79,6 +79,13 @@ public:
     // Moves the tongue to the right position.
     //************************************
     void moveTongue();
+
+    //************************************
+    // Checks if a rect collides with the snake's head
+    // Parameter: SDL_Rect* rect
+    // Returns: bool A boolean that checks the coalition state
+    //************************************
+    bool collidesWithHead(SDL_Rect* rect);
     
     Direction getDirection() const { return direction; }
     void setDirection(Direction val) { direction = val; }

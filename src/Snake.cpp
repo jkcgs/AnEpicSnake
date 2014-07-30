@@ -175,6 +175,10 @@ bool Snake::collides(SDL_Rect* rect) {
 }
 
 SDL_Point Snake::getFirstPoint() {
-    // gets the heado of the snake
+    // gets the head of the snake
     return points[0];
+}
+
+bool Snake::collidesWithHead(SDL_Rect* rect) {
+    return (points[0].x*size == rect->x && points[0].y*size == rect->y);
 }
