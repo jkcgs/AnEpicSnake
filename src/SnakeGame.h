@@ -84,6 +84,7 @@ private:
     
     Button startBtn;
     Button restartBtn;
+    Button soundBtn;
     
     Snake snake;
     Food food;

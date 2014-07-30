@@ -82,7 +82,8 @@ bool SnakeGame::init()
         titleTex.loadFromFile(Mgr.Renderer(), "res/titlebg.png") &&
         gameoverTex.loadFromFile(Mgr.Renderer(), "res/gameover.png") &&
         startBtn.loadImage(Mgr.Renderer(), "res/start.png") &&
-        restartBtn.loadImage(Mgr.Renderer(), "res/restart.png")
+        restartBtn.loadImage(Mgr.Renderer(), "res/restart.png") &&
+        soundBtn.loadImage(Mgr.Renderer(), "res/soundicon.png")
     )) {
         printf("One or more image files could not be loaded.\n");
         return false;
@@ -116,6 +117,11 @@ bool SnakeGame::init()
     restartBtn.setPos(winWidth/2 - restartBtn.getRect().w/2, winHeight/2 + 112);
     restartBtn.setupClipStates(3);
     restartBtn.setClipStates(0, 1, 2, 1);
+
+    // Sound button setup
+    soundBtn.setPos(winWidth - soundBtn.getRect().w - 20, 20);
+    soundBtn.setupClipStates(2);
+    soundBtn.setClipStates(0, 0, 0, 0);
 
     return true;
 }
@@ -207,6 +213,15 @@ int SnakeGame::mainLoop() {
             reset(); // move the food
         }
 
+        if (started && soundBtn.getState() == Button::BTN_STATE_UP) {
+            soundBtn.setState(Button::BTN_STATE_NORMAL);
+            playMusic = !playMusic;
+
+            // Update the music status to the button
+            Uint8 st = playMusic ? 0 : 1;
+            soundBtn.setClipStates(st, st, st, st);
+        }
+
         if (playMusic) {
             if (Mix_PlayingMusic() == 0) {
                 Mix_PlayMusic(music, -1);
@@ -227,6 +242,7 @@ void SnakeGame::draw() {
     // Clear screen
     Mgr.ClearRenderer(c_black);
 
+    soundBtn.draw(Mgr.Renderer());
     snake.draw(Mgr.Renderer());
     
     if(epilepsy && (started || !alive)) {
@@ -245,7 +261,11 @@ void SnakeGame::draw() {
 
     // Debug to know when this will appear
     if (started) {
-        Mgr.DrawChar(std::to_string(specialDelay), winWidth - (specialDelay < 10 ? 20 : 45) - 10, 10, 5, c_alpha(c_white, 150));
+        Mgr.DrawChar(
+            std::to_string(specialDelay), 
+            winWidth - (specialDelay < 10 ? 12 : 27) - soundBtn.getRect().w - 30, 
+            20, 3, c_alpha(c_white, 150)
+        );
     }
 
     if(paused) {
@@ -280,6 +300,7 @@ void SnakeGame::handleEvents(SDL_Event* e) {
     // Button handling
     startBtn.handleEvent(e);
     restartBtn.handleEvent(e);
+    soundBtn.handleEvent(e);
 
     // Keydown-only handling
     if(e->type == SDL_KEYDOWN) {
