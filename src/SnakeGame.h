@@ -95,11 +95,11 @@ private:
     bool epilepsy;
     bool turbo;
     bool playMusic;
-    int winWidth;
-    int winHeight;
-    int squareSize;
-    int points;
-    double snakeSpeed; // The real snake speed, used to set turbo and more effects
+    Uint16 winWidth;
+    Uint16 winHeight;
+    Uint8 squareSize;
+    Uint16 points; // Player points. No one will reach 65535 points, but who knows.
+    double snakeSpeed; // The real snake speed, used to set turbo and more effects.
     Uint8 pauseFade;
     
     bool started;
