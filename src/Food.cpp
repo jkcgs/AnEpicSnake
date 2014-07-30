@@ -17,20 +17,23 @@ Food::Food() {
     SDL_Rect r = {0, 0, 10, 10};
     this->rect = r;
     type = TYPE_NORMAL;
+    visible = true;
 }
 
 Food::~Food() { }
 
-void Food::generate(Snake* snake, int max_x, int max_y) {
+void Food::generate(int max_x, int max_y, Snake* snake, Food* otherFood) {
     do {
         this->rect.x = (rand() % ((max_x + 1) / getSize())) * getSize();
         this->rect.y = (rand() % ((max_y + 1) / getSize())) * getSize();
-    } while (snake->collides(&this->rect));
+    } while (snake->collides(&this->rect) || (otherFood != NULL && snake->collides(&otherFood->getRect())));
 }
 
 void Food::draw(SDL_Renderer* renderer) {
-    SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
-    SDL_RenderFillRect(renderer, &rect);
+    if (visible) {
+        SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
+        SDL_RenderFillRect(renderer, &rect);
+    }
 }
 
 SDL_Rect Food::getRect() {

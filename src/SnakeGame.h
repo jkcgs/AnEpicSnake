@@ -76,6 +76,7 @@ private:
     
     Mix_Chunk* eatSFX;
     Mix_Chunk* deathSFX;
+    Mix_Chunk* specialSFX;
     Mix_Music* music;
     
     Texture titleTex;
@@ -87,6 +88,7 @@ private:
     Snake snake;
     Food food;
     Food specialFood;
+    Uint8 specialDelay;
     bool paused;
     bool alive;
     bool epilepsy;

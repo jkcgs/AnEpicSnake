@@ -18,9 +18,6 @@
     <ClCompile Include="..\src\Button.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\Food.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -39,15 +36,15 @@
     <ClCompile Include="..\src\Color.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\Food.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\Button.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Font.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Food.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\src\resource.h">
@@ -69,6 +66,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Color.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Food.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -96,34 +96,16 @@
     <None Include="..\src\Resource.aps">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="..\res\die1.ogg">
+    <None Include="..\res\die.ogg">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="..\res\die2.ogg">
+    <None Include="..\res\eat.ogg">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="..\res\die3.ogg">
+    <None Include="..\res\music.ogg">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="..\res\die4.ogg">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="..\res\die5.ogg">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="..\res\eat1.ogg">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="..\res\eat2.ogg">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="..\res\eat3.ogg">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="..\res\eat4.ogg">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="..\res\eat5.ogg">
+    <None Include="..\res\special.ogg">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

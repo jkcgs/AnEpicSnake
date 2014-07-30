@@ -40,10 +40,13 @@ void SnakeGame::reset() {
     epilepsy = true;
     
     points = 0;
+    specialDelay = rand() % 20 + 20;
     snake.reset();
     snake.setSize(squareSize);
     snake.setSpeed(10);
-    food.generate(&snake, winWidth, winHeight);
+    food.generate(winWidth, winHeight, &snake);
+    specialFood.generate(winWidth, winWidth, &snake, &food);
+    specialFood.setVisible(false);
     paused = false;
 }
 
@@ -88,11 +91,12 @@ bool SnakeGame::init()
     // SFX Load
     eatSFX = Mix_LoadWAV("res/eat.ogg");
     deathSFX = Mix_LoadWAV("res/die.ogg");
+    specialSFX = Mix_LoadWAV("res/special.ogg");
     // Music load
     music = Mix_LoadMUS("res/music.ogg");
 
-    if (eatSFX == NULL || deathSFX == NULL || music == NULL) {
-        printf("Could not load SFX file. Error: %s\n", Mix_GetError());
+    if (eatSFX == NULL || deathSFX == NULL || specialSFX == NULL || music == NULL) {
+        printf("Could not load sound file. Error: %s\n", Mix_GetError());
         return false;
     }
 
@@ -163,11 +167,28 @@ int SnakeGame::mainLoop() {
 
             // have you touched the food? it's like eat it
             if(snake.collides(&food.getRect())) {
-                points++;
-                food.generate(&snake, winWidth, winHeight);
+                food.generate(winWidth, winHeight, &snake);
                 snake.setGrow(true);
                 snake.setSpeed(snake.getSpeed()+.3); // moar fun
                 Mix_PlayChannel(-1, eatSFX, 0); // yay!
+                points++;
+                if (specialDelay > 0) {
+                    specialDelay--;
+                }
+            }
+
+            if (specialDelay == 0) {
+                if (!specialFood.isVisible()) {
+                    specialFood.setVisible(true);
+                }
+                else if (snake.collides(&specialFood.getRect())) {
+                    // TODO: Use special type
+                    points += 5;
+                    specialDelay = rand() % 20 + 10;
+                    specialFood.generate(winWidth, winHeight, &snake, &food);
+                    specialFood.setVisible(false);
+                    Mix_PlayChannel(-1, specialSFX, 0);
+                }
             }
         }
 
@@ -214,12 +235,18 @@ void SnakeGame::draw() {
 
     // you must have some food or you could die
     food.draw(Mgr.Renderer());
+    specialFood.draw(Mgr.Renderer());
     
     // Draw points
     Mgr.DrawChar(std::to_string(points), squareSize, squareSize, squareSize / 2, c_alpha(turbo?c_cyan:c_white, 150));
 
     // Temporal message
     Mgr.DrawChar("dev version, hang on bitches!", squareSize, winHeight - 20, 3, c_alpha(c_white, 100));
+
+    // Debug to know when this will appear
+    if (started) {
+        Mgr.DrawChar(std::to_string(specialDelay), winWidth - (specialDelay < 10 ? 20 : 45) - 10, 10, 5, c_alpha(c_white, 150));
+    }
 
     if(paused) {
         Mgr.DrawPause();
@@ -336,6 +363,7 @@ void SnakeGame::close() {
     
     Mix_FreeChunk(eatSFX);
     Mix_FreeChunk(deathSFX);
+    Mix_FreeChunk(specialSFX);
     Mix_FreeMusic(music);
     
     Mix_CloseAudio();

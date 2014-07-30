@@ -32,7 +32,7 @@ public:
 
     // Generates a new position for food on the specified range
     // (window size)
-    void generate(Snake* snake, int max_x, int max_y);
+    void generate(int max_x, int max_y, Snake* snake, Food* otherFood = NULL);
     void draw(SDL_Renderer* renderer);
 
     SDL_Rect getRect();
@@ -42,11 +42,14 @@ public:
     void setColor(SDL_Color color);
     FoodType getType();
     void setType(FoodType type);
+    bool isVisible() const { return visible; }
+    void setVisible(bool val) { visible = val; }
 private:
     SDL_Rect rect;
     SDL_Color color;
 
     FoodType type;
+    bool visible;
 };
 
 #endif // _FOOD_H_

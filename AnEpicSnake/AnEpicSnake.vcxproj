@@ -125,7 +125,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>D:\Jonathan\Mis documentos\Development Sources\SDL2_full\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PrecompiledHeader>Create</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -168,16 +168,10 @@
     <Image Include="..\src\app.ico" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\res\die1.ogg" />
-    <None Include="..\res\die2.ogg" />
-    <None Include="..\res\die3.ogg" />
-    <None Include="..\res\die4.ogg" />
-    <None Include="..\res\die5.ogg" />
-    <None Include="..\res\eat1.ogg" />
-    <None Include="..\res\eat2.ogg" />
-    <None Include="..\res\eat3.ogg" />
-    <None Include="..\res\eat4.ogg" />
-    <None Include="..\res\eat5.ogg" />
+    <None Include="..\res\die.ogg" />
+    <None Include="..\res\eat.ogg" />
+    <None Include="..\res\music.ogg" />
+    <None Include="..\res\special.ogg" />
     <None Include="..\src\Resource.aps" />
   </ItemGroup>
   <ItemGroup>
