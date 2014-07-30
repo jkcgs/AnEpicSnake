@@ -108,32 +108,12 @@ void Button::setClipState(State state, int position) {
     this->stateTextureClips[state].y = this->texture.getRect().h * position;
 }
 
-bool Button::isDisplayed() {
-    return this->displayed;
-}
-
-Button::State Button::getState() {
-    return state;
-}
-
-void Button::setState(State state) {
-    this->state = state;
-}
-
-void Button::setDisplayed(bool displayed) {
-    this->displayed = displayed;
-}
-
-void Button::setPos(int x, int y) {
-    texture.setPos(x, y);
-}
-
 SDL_Rect Button::getRect() {
     return texture.getRect();
 }
 
-void Button::setTexture(Texture texture) {
-    this->texture = texture;
+void Button::setPos(int x, int y) {
+    texture.setPos(x, y);
 }
 
 void Button::setSize(int w, int h) {

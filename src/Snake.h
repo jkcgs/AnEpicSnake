@@ -34,85 +34,62 @@ public:
     Snake();
     ~Snake();
     
-    /**
-     * Reset the position, speed and length of the snake.
-     */
+    //************************************
+    // Reset the position, speed and length of the snake.
+    //************************************
     void reset();
     
-    /**
-     * Draw the snake in a rendered
-     * @param renderer The SDL renderer to draw the snake
-     */
+    //************************************
+    // Draw the snake in a rendered
+    // Parameter: SDL_Renderer* renderer The SDL renderer to draw the snake
+    //************************************
     void draw(SDL_Renderer* renderer);
     
-    /**
-     * Performs the default movement of the snake, depending on the direction
-     */
+    //************************************
+    // Performs the default movement of the snake, depending on the direction
+    //************************************
     void move();
     
-    /**
-     * Checks if the snake self crashed
-     * @return A bool that represents the self-crash status
-     */
+    //************************************
+    // Checks if the snake self crashed
+    // Returns: bool A bool that represents the self-crash status
+    //************************************
     bool selfCrashed();
-    
-    /**
-     * Set the actual direction of the snake
-     * @param dir A Direction parameter (UP, DOWN, LEFT, RIGHT)
-     */
-    void setDirection(Direction dir);
-    
-    /**
-     * Returns the actual direction of the snake
-     * @return The actual direction of the snake
-     */
-    Direction getDirection();
-    
-    /**
-     * Sets the size of each square of the snake
-     * @param size The size for each square of the snake
-     */
-    void setSize(int size);
-    /**
-     * Returns the length (how much squares) is the snake
-     * @return The length of the snake
-     */
+
+    //************************************
+    // Returns the length (how much squares) is the snake
+    // Returns: int The length of the snake
+    //************************************
     int length();
-    /**
-     * Checks of a point is on the same point than other of the snake
-     * @param point The point to verify if collides with the snake
-     * @return A boolean that checks the collition state
-     */
+
+    //************************************
+    // Checks of a point is on the same point than other of the snake
+    // Returns: bool A boolean that checks the collition state
+    // Parameter: SDL_Rect* rect The point to verify if collides with the snake
+    //************************************
     bool collides(SDL_Rect* rect);
-    /**
-     * Returns the actual speed of the snake
-     * @return The actual speed of the snake in squares/seconds
-     */
-    double getSpeed();
-    /**
-     * Sets the speed of the snake
-     * @param speed The speed to set to the snake
-     */
-    void setSpeed(double speed);
-    /**
-     * Sets if the snake will grow on move (will not loose the last square on
-     * move)
-     * @param grow The boolean that defines if snakw will grow or on move.
-     */
-    void setGrow(bool grow);
-    /**
-     * Returns the first point (the head) of the snake.
-     * @return The first SDL_Point of the snake.
-     */
+
+    //************************************
+    // Returns the first point of the snake, aka the head
+    // Returns: SDL_Point The first point of the snake
+    //************************************
     SDL_Point getFirstPoint();
     
-    /**
-     * Moves the tongue to the right position.
-     */
+    //************************************
+    // Moves the tongue to the right position.
+    //************************************
     void moveTongue();
     
-    bool isMoved();
-    void setMoved(bool moved);
+    Direction getDirection() const { return direction; }
+    void setDirection(Direction val) { direction = val; }
+    double getSpeed() const { return speed; }
+    void setSpeed(double val) { speed = val; }
+    int getSize() const { return size; }
+    void setSize(int size);
+    bool isGrow() const { return grow; }
+    void setGrow(bool val) { grow = val; }
+    bool isMoved() const { return moved; }
+    void setMoved(bool val) { moved = val; }
 private:
     Direction direction;
     double speed;
@@ -123,8 +100,8 @@ private:
     
     SDL_Rect tongue;
     
-    SDL_Rect a, b; //< Used for eyes
-    SDL_Rect p; //< Used when drawing the snake points
+    SDL_Rect a, b; // Used for eyes
+    SDL_Rect p; // Used when drawing the snake points
 };
 
 #endif	/* SNAKE_H */

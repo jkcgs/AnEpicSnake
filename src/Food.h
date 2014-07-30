@@ -30,21 +30,38 @@ public:
     Food();
     ~Food();
 
+    //************************************
     // Generates a new position for food on the specified range
     // (window size)
+    //************************************
     void generate(int max_x, int max_y, Snake* snake, Food* otherFood = NULL);
 
+    //************************************
     // Draws the food into the renderer
+    //************************************
     void draw(SDL_Renderer* renderer);
 
+    //************************************
     // Sets a random effect to the food, not including EFFECT_NONE
+    //************************************
     void setRandomEffect();
 
-    SDL_Rect getRect();
+    //************************************
+    // Gets the actual size of the food
+    // Returns: int The size of the food (it's a square, it returns the width)
+    //************************************
     int getSize();
+
+    //************************************
+    // Sets the size of the square
+    // Parameter: int size The width an height value for the food's square
+    //************************************
     void setSize(int size);
-    SDL_Color getColor();
-    void setColor(SDL_Color color);
+
+    SDL_Rect getRect() const { return rect; }
+    void setRect(SDL_Rect val) { rect = val; }
+    SDL_Color getColor() const { return color; }
+    void setColor(SDL_Color val) { color = val; }
     Effect getEffect() const { return effect; }
     void setEffect(Effect val) { effect = val; }
     bool isVisible() const { return visible; }
@@ -52,7 +69,6 @@ public:
 private:
     SDL_Rect rect;
     SDL_Color color;
-
     Effect effect;
     bool visible;
 };

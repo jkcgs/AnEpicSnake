@@ -47,6 +47,7 @@ public:
     // Parameter: int size The size for the square
     //************************************
     void DrawSquare(int x, int y, int size);
+
     //************************************
     // Draws a square on the desired position, square matrix independent.
     // Parameter: int x The x position on the renderer;

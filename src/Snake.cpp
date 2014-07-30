@@ -174,38 +174,7 @@ bool Snake::collides(SDL_Rect* rect) {
     return false;
 }
 
-double Snake::getSpeed() {
-    return speed;
-}
-
-void Snake::setSpeed(double speed) {
-    this->speed = speed;
-}
-
-void Snake::setDirection(Direction dir) {
-    direction = dir;
-    
-    // Snake must be changed of direction only when moved
-    moved = false;
-}
-
-Direction Snake::getDirection() {
-    return direction;
-}
-
 SDL_Point Snake::getFirstPoint() {
     // gets the heado of the snake
     return points[0];
-}
-
-void Snake::setGrow(bool grow) {
-    this->grow = grow;
-}
-
-void Snake::setMoved(bool moved) {
-    this->moved = moved;
-}
-
-bool Snake::isMoved() {
-    return moved;
 }

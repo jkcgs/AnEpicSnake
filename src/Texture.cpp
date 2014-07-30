@@ -72,26 +72,6 @@ void Texture::setPos(int x, int y) {
     rect.y = y;
 }
 
-void Texture::setClip(SDL_Rect clip) {
-    this->clip = clip;
-}
-
-SDL_Rect Texture::getClip() {
-    return clip;
-}
-
-SDL_Rect Texture::getRect() {
-    return rect;
-}
-
-SDL_Texture* Texture::getTexture() {
-    return texture;
-}
-
-void Texture::setTexture(SDL_Texture* texture) {
-    this->texture = texture;
-}
-
 void Texture::setSize(int w, int h) {
     this->rect.w = w;
     this->rect.h = h;

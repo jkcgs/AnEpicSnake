@@ -30,48 +30,56 @@
  */
 class SnakeGame {
 public:
-    /**
-     * Initiates the game with window size values
-     * @param width The game window width
-     * @param height The game window height
-     */
+    //************************************
+    // Initiates the game with window size values
+    // Parameter: int width The game window width
+    // Parameter: int height The game window height
+    //************************************
     SnakeGame(int width, int height);
     ~SnakeGame();
     
-    /**
-     * Initiate the SDL system
-     * @return bool This depends that if the game was correctly initiated.
-     */
+    //************************************
+    // Initiate the SDL system
+    // Returns:   bool This depends that if the game was correctly initiated.
+    //************************************
     bool init();
-    /**
-     * Update the game conditions depending on the keys pressing
-     * @param e
-     */
+
+    //************************************
+    // Update the game conditions depending on the keys pressing
+    // Parameter: SDL_Event* e The event object to handle
+    //************************************
     void handleEvents(SDL_Event* e);
-    /**
-     * Draws all the stuff
-     */
+
+    //************************************
+    // Draws all the stuff
+    //************************************
     void draw();
-    /**
-     * Starts the main game process
-     * @return A return code, 0 is OK, anything else is bad.
-     */
+
+    //************************************
+    // Starts the main game process
+    // Returns:   int A return code, 0 is OK, anything else is bad.
+    //************************************
     int mainLoop();
 
+    //************************************
     // Determines if the player has crashed
+    // Returns:   bool true or false, depending on if the snake has crashed
+    //************************************
     bool hasCrashed();
 
+    //************************************
     // Toggles the music on-off, and updates the sound button
+    //************************************
     void toggleMusic();
 
-    /**
-     * Resets the game.
-     */
+    //************************************
+    // Resets the game.
+    //************************************
     void reset();
     
-    /**
-     * Stop everything, free memory, and close the program.
-     */
+    //************************************
+    // Stop everything, free used memory, and close the program.
+    //************************************
     void close();
     
 private:

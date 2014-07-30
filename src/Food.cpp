@@ -36,10 +36,6 @@ void Food::draw(SDL_Renderer* renderer) {
     }
 }
 
-SDL_Rect Food::getRect() {
-    return rect;
-}
-
 int Food::getSize() {
     return rect.w;
 }
@@ -47,13 +43,6 @@ int Food::getSize() {
 void Food::setSize(int size) {
     this->rect.w = size;
     this->rect.h = size;
-}
-
-SDL_Color Food::getColor() {
-    return color;
-}
-void Food::setColor(SDL_Color color) {
-    this->color = color;
 }
 
 void Food::setRandomEffect()
