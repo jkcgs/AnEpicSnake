@@ -55,7 +55,7 @@ void Snake::move() {
 
 void Snake::draw(SDL_Renderer* renderer) {
     // Draw each point of the square
-    for(int i = 0; i < points.size(); i++) {
+    for(Uint16 i = 0; i < points.size(); i++) {
         p.x = points[i].x*size;
         p.y = points[i].y*size;
         SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
@@ -91,12 +91,12 @@ void Snake::draw(SDL_Renderer* renderer) {
 
 void Snake::moveTongue() {
     if(direction == UP || direction == DOWN) {
-        tongue.w = size * .2;
+        tongue.w = size / 8;
         tongue.h = size / 2;
         tongue.x = points[0].x * size + (size / 2) - (tongue.w / 2);
     } else {
         tongue.w = size / 2;
-        tongue.h = size * .2;
+        tongue.h = size / 8;
         tongue.y = points[0].y * size + (size / 2) - (tongue.h / 2);
     }
     
@@ -126,7 +126,7 @@ void Snake::reset() {
     
     p.w = size;
     p.h = size;
-    a.w = size * .2;
+    a.w = size / 8;
     a.h = a.w;
     b.w = a.w;
     b.h = a.w;
@@ -150,7 +150,7 @@ void Snake::setSize(int size) {
 bool Snake::selfCrashed() {
     // if the head is at the same place of some point of the snake, it have
     // self crashed
-    for(int i = 1; i < points.size(); i++) {
+    for(Uint16 i = 1; i < points.size(); i++) {
         if(points[0].x == points[i].x && points[0].y == points[i].y) {
             return true;
         }
@@ -160,12 +160,12 @@ bool Snake::selfCrashed() {
 }
 
 int Snake::length() {
-    return points.size();
+    return (int) points.size();
 }
 
 bool Snake::collides(SDL_Rect* rect) {
     // checks if some point is at the same place of some point of the snake
-    for(int i = 0; i < points.size(); i++) {
+    for(Uint16 i = 0; i < points.size(); i++) {
         if(points[i].x*size == rect->x && points[i].y*size == rect->y) {
             return true;
         }
@@ -174,11 +174,11 @@ bool Snake::collides(SDL_Rect* rect) {
     return false;
 }
 
-float Snake::getSpeed() {
+double Snake::getSpeed() {
     return speed;
 }
 
-void Snake::setSpeed(float speed) {
+void Snake::setSpeed(double speed) {
     this->speed = speed;
 }
 

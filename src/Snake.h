@@ -88,12 +88,12 @@ public:
      * Returns the actual speed of the snake
      * @return The actual speed of the snake in squares/seconds
      */
-    float getSpeed();
+    double getSpeed();
     /**
      * Sets the speed of the snake
      * @param speed The speed to set to the snake
      */
-    void setSpeed(float speed);
+    void setSpeed(double speed);
     /**
      * Sets if the snake will grow on move (will not loose the last square on
      * move)
@@ -115,7 +115,7 @@ public:
     void setMoved(bool moved);
 private:
     Direction direction;
-    float speed;
+    double speed;
     int size;
     bool grow;
     bool moved;

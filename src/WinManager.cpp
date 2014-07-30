@@ -185,7 +185,7 @@ void WinManager::DrawChar(int n, int x, int y, int size = 10) {
 }
 
 void WinManager::DrawChar(std::string str, int x, int y, int size = 10) {
-    for (int i = 0, j = 0; i < str.size(); i++, j++) {
+    for (Uint16 i = 0, j = 0; i < str.size(); i++, j++) {
         // push a new line, move the characters back to the x start coordinate
         // and move them all down a line
         if (str.at(i) == '\n') {
