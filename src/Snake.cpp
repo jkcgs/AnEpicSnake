@@ -91,12 +91,12 @@ void Snake::draw(SDL_Renderer* renderer) {
 
 void Snake::moveTongue() {
     if(direction == UP || direction == DOWN) {
-        tongue.w = size / 8;
+        tongue.w = size / 5;
         tongue.h = size / 2;
         tongue.x = points[0].x * size + (size / 2) - (tongue.w / 2);
     } else {
         tongue.w = size / 2;
-        tongue.h = size / 8;
+        tongue.h = size / 5;
         tongue.y = points[0].y * size + (size / 2) - (tongue.h / 2);
     }
     
@@ -126,7 +126,7 @@ void Snake::reset() {
     
     p.w = size;
     p.h = size;
-    a.w = size / 8;
+    a.w = size / 5;
     a.h = a.w;
     b.w = a.w;
     b.h = a.w;
