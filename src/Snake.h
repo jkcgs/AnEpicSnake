@@ -86,7 +86,7 @@ public:
     bool collides(SDL_Rect* rect);
     /**
      * Returns the actual speed of the snake
-     * @return The actual speed of the snake
+     * @return The actual speed of the snake in squares/seconds
      */
     float getSpeed();
     /**

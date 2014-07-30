@@ -40,10 +40,11 @@ void SnakeGame::reset() {
     epilepsy = true;
     
     points = 0;
+    snakeSpeed = 10; // Initial speed
     specialDelay = rand() % 20 + 20;
     snake.reset();
     snake.setSize(squareSize);
-    snake.setSpeed(10);
+    snake.setSpeed(snakeSpeed);
     food.generate(winWidth, winHeight, &snake);
     specialFood.generate(winWidth, winWidth, &snake, &food);
     specialFood.setVisible(false);
@@ -136,7 +137,7 @@ int SnakeGame::mainLoop() {
     bool quit = false;
     
     // creates a timer to check when to move the snake
-    Uint32 timeout = SDL_GetTicks() + (1000/snake.getSpeed());
+    double timeout = 1000/snake.getSpeed() + SDL_GetTicks();
     
     while(!quit) {
         // --- START UPDATES ---
@@ -157,10 +158,10 @@ int SnakeGame::mainLoop() {
         
         if(started) {
             // Move when speed says you can move
-            if(SDL_TICKS_PASSED(SDL_GetTicks(), timeout) && !paused) {
+            if (!paused && ((timeout - SDL_GetTicks()) <= 0)) {
                 snake.move();
-                // with turbo, speed is x 2
-                timeout = SDL_GetTicks() + ((1/(snake.getSpeed()*(turbo ? 2 : 1)))*1000);
+                snake.setSpeed(snakeSpeed * (turbo ? 2 : 1)); // with turbo, speed is x 2
+                timeout = 1000/snake.getSpeed() + SDL_GetTicks(); 
             }
 
             // Check if player have crashed to reset the snake
@@ -169,14 +170,13 @@ int SnakeGame::mainLoop() {
                 alive = false;
                 turbo = false;
                 Mix_PlayChannel(-1, deathSFX, 0);
-                // player will continue the game if he press ENTER
             } 
 
             // have you touched the food? it's like eat it
             if(snake.collides(&food.getRect())) {
                 food.generate(winWidth, winHeight, &snake);
                 snake.setGrow(true);
-                snake.setSpeed(snake.getSpeed()+.3); // moar fun
+                snakeSpeed += .3; // moar fun
                 Mix_PlayChannel(-1, eatSFX, 0); // yay!
                 points++;
                 if (specialDelay > 0) {

@@ -99,6 +99,7 @@ private:
     int winHeight;
     int squareSize;
     int points;
+    double snakeSpeed; // The real snake speed, used to set turbo and more effects
     Uint8 pauseFade;
     
     bool started;
