@@ -100,7 +100,9 @@ private:
     Snake snake;
     Food food;
     Food specialFood;
-    Uint8 specialDelay;
+    Uint8 specialCountdown;
+    Effect specialEffect;
+    Uint32 specialTimeout;
     bool paused;
     bool alive;
     bool epilepsy;

@@ -41,7 +41,7 @@ void SnakeGame::reset() {
     
     points = 0;
     snakeSpeed = 10; // Initial speed
-    specialDelay = rand() % 20 + 20;
+    specialCountdown = rand() % 20 + 20;
     snake.reset();
     snake.setSize(squareSize);
     snake.setSpeed(snakeSpeed);
@@ -49,6 +49,8 @@ void SnakeGame::reset() {
     specialFood.generate(winWidth, winWidth, &snake, &food);
     specialFood.setVisible(false);
     specialFood.setRandomEffect();
+    specialEffect = Effect::EFFECT_NONE;
+    specialTimeout = 0;
     paused = false;
 }
 
@@ -137,7 +139,7 @@ int SnakeGame::mainLoop() {
     bool quit = false;
     
     // creates a timer to check when to move the snake
-    double timeout = 1000/snake.getSpeed() + SDL_GetTicks();
+    double speedTimeout = 1000/snake.getSpeed() + SDL_GetTicks();
     
     while(!quit) {
         // --- START UPDATES ---
@@ -158,10 +160,26 @@ int SnakeGame::mainLoop() {
         
         if(started) {
             // Move when speed says you can move
-            if (!paused && ((timeout - SDL_GetTicks()) <= 0)) {
+            if (!paused && speedTimeout <= SDL_GetTicks()) {
                 snake.move();
-                snake.setSpeed(snakeSpeed * (turbo ? 2 : 1)); // with turbo, speed is x 2
-                timeout = 1000/snake.getSpeed() + SDL_GetTicks(); 
+
+                double speedMult = 1;
+                if (turbo) {
+                    speedMult *= 2;
+                }
+
+                if (specialEffect != EFFECT_NONE && specialTimeout > SDL_GetTicks()) {
+                    if (specialEffect == EFFECT_SPEED_UP) {
+                        speedMult *= 2;
+                    }
+                    
+                    if (specialEffect == EFFECT_SPEED_DOWN) {
+                        speedMult /= 2;
+                    }
+                }
+
+                snake.setSpeed(snakeSpeed * speedMult); // with turbo, speed is x 2
+                speedTimeout = 1000 / snake.getSpeed() + SDL_GetTicks();
             }
 
             // Check if player have crashed to reset the snake
@@ -179,24 +197,34 @@ int SnakeGame::mainLoop() {
                 snakeSpeed += .3; // moar fun
                 Mix_PlayChannel(-1, eatSFX, 0); // yay!
                 points++;
-                if (specialDelay > 0) {
-                    specialDelay--;
+                if (specialCountdown > 0) {
+                    specialCountdown--;
                 }
             }
 
-            if (specialDelay == 0) {
+            if (specialCountdown == 0) {
                 if (!specialFood.isVisible()) {
                     specialFood.setVisible(true);
+                    specialFood.setRandomEffect();
                 }
                 else if (snake.collidesWithHead(&specialFood.getRect())) {
-                    // TODO: Use special type
-                    points += 5;
-                    specialDelay = rand() % 20 + 10;
+                    specialEffect = specialFood.getEffect();
+                    if (specialEffect == EFFECT_5POINTS) {
+                        points += 5;
+                        specialTimeout = SDL_GetTicks() + 4000;
+                    }
+                    if (specialEffect == EFFECT_SPEED_UP || 
+                        specialEffect == EFFECT_SPEED_DOWN) {
+                        specialTimeout = SDL_GetTicks() + 10000;
+                    }
+                    
+                    specialCountdown = rand() % 20 + 10;
                     specialFood.generate(winWidth, winHeight, &snake, &food);
                     specialFood.setVisible(false);
                     Mix_PlayChannel(-1, specialSFX, 0);
                 }
             }
+
         }
 
         if (started && playMusic) {
@@ -252,13 +280,35 @@ void SnakeGame::draw() {
     Mgr.DrawChar(std::to_string(points), squareSize, squareSize, squareSize / 2, c_alpha(turbo?c_cyan:c_white, 150));
 
     // Temporal message
-    Mgr.DrawChar("dev version, hang on bitches!", squareSize, winHeight - 20, 3, c_alpha(c_white, 100));
+    Mgr.DrawChar("dev version!", winWidth - 200, winHeight - 20, 3, c_alpha(c_white, 100));
+
+    if (alive) {
+        // If special is enabled
+        Uint32 actualTicks = SDL_GetTicks();
+        if (specialEffect != EFFECT_NONE && specialTimeout > actualTicks) {
+            std::string effectName;
+            switch (specialEffect)
+            {
+                case EFFECT_5POINTS: effectName = "+5 points"; break;
+                case EFFECT_SPEED_UP: effectName = "speed up"; break;
+                case EFFECT_SPEED_DOWN: effectName = "slow down"; break;
+                default: effectName = "special effect active";
+            }
+
+            if (specialEffect == EFFECT_SPEED_UP || 
+                specialEffect == EFFECT_SPEED_DOWN) {
+                effectName += " - " + std::to_string((specialTimeout - SDL_GetTicks()) / 1000 + 1);
+            }
+
+            Mgr.DrawChar(effectName, squareSize, winHeight - 20, 3, c_alpha(c_white, 100));
+        }
+    }
 
     // Debug to know when this will appear
     if (started) {
         Mgr.DrawChar(
-            std::to_string(specialDelay), 
-            winWidth - (specialDelay < 10 ? 12 : 27) - soundBtn.getRect().w - 30, 
+            std::to_string(specialCountdown), 
+            winWidth - (specialCountdown < 10 ? 12 : 27) - soundBtn.getRect().w - 30, 
             20, 3, c_alpha(c_white, 150)
         );
     }
@@ -328,6 +378,8 @@ void SnakeGame::handleEvents(SDL_Event* e) {
                     }
                     break;
             }
+
+            snake.setMoved(false);
         }
 
         // Check if ENTER key was pressed

@@ -163,12 +163,13 @@ void WinManager::DrawChar(int n, int x, int y, int size = 10) {
             switch (n) {
                 case ' ': n = 36; break;
                 case '-': n = 37; break;
-                case '(': n = 38; break;
-                case ')': n = 39; break;
-                case '\'': n = 40; break;
-                case ',': n = 41; break;
-                case '.': n = 42; break;
-                case '!': n = 43; break;
+                case '+': n = 38; break;
+                case '(': n = 39; break;
+                case ')': n = 40; break;
+                case '\'': n = 41; break;
+                case ',': n = 42; break;
+                case '.': n = 43; break;
+                case '!': n = 44; break;
                 default: n = (sizeof(chars) / sizeof(uint32_t)) - 1;
             }
         }
