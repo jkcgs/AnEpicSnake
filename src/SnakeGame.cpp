@@ -41,7 +41,7 @@ void SnakeGame::reset() {
     
     points = 0;
     snakeSpeed = 10; // Initial speed
-    specialCountdown = rand() % 20 + 20;
+    specialCountdown = 1;// rand() % 20 + 20;
     snake.reset();
     snake.setSize(squareSize);
     snake.setSpeed(snakeSpeed);
@@ -96,11 +96,12 @@ bool SnakeGame::init()
     // SFX Load
     eatSFX = Mix_LoadWAV("res/eat.ogg");
     deathSFX = Mix_LoadWAV("res/die.ogg");
-    specialSFX = Mix_LoadWAV("res/special.ogg");
+    specialSFX1 = Mix_LoadWAV("res/special1.ogg");
+    specialSFX2 = Mix_LoadWAV("res/special2.ogg");
     // Music load
     music = Mix_LoadMUS("res/music.ogg");
 
-    if (eatSFX == NULL || deathSFX == NULL || specialSFX == NULL || music == NULL) {
+    if (eatSFX == NULL || deathSFX == NULL || specialSFX1 == NULL || music == NULL) {
         printf("Could not load sound file. Error: %s\n", Mix_GetError());
         return false;
     }
@@ -209,19 +210,26 @@ int SnakeGame::mainLoop() {
                 }
                 else if (snake.collidesWithHead(&specialFood.getRect())) {
                     specialEffect = specialFood.getEffect();
-                    if (specialEffect == EFFECT_5POINTS) {
-                        points += 5;
-                        specialTimeout = SDL_GetTicks() + 4000;
-                    }
-                    if (specialEffect == EFFECT_SPEED_UP || 
-                        specialEffect == EFFECT_SPEED_DOWN) {
-                        specialTimeout = SDL_GetTicks() + 10000;
+                    switch (specialEffect) {
+                        case EFFECT_SPEED_UP:
+                            specialTimeout = SDL_GetTicks() + 10000;
+                            Mix_PlayChannel(-1, specialSFX1, 0);
+                            break;
+                        case EFFECT_SPEED_DOWN:
+                            specialTimeout = SDL_GetTicks() + 5000;
+                            Mix_PlayChannel(-1, specialSFX2, 0);
+                            break;
+                        case EFFECT_5POINTS:
+                        default:
+                            points += 5;
+                            specialTimeout = SDL_GetTicks() + 4000;
+                            Mix_PlayChannel(-1, specialSFX1, 0);
+
                     }
                     
-                    specialCountdown = rand() % 20 + 10;
+                    specialCountdown = (rand() % 10) + 10;
                     specialFood.generate(winWidth, winHeight, &snake, &food);
                     specialFood.setVisible(false);
-                    Mix_PlayChannel(-1, specialSFX, 0);
                 }
             }
 
@@ -280,7 +288,7 @@ void SnakeGame::draw() {
     Mgr.DrawChar(std::to_string(points), squareSize, squareSize, squareSize / 2, c_alpha(turbo?c_cyan:c_white, 150));
 
     // Temporal message
-    Mgr.DrawChar("dev version!", winWidth - 200, winHeight - 20, 3, c_alpha(c_white, 100));
+    Mgr.DrawChar("dev version!", winWidth - 190, winHeight - 20, 3, c_alpha(c_white, 100));
 
     if (alive) {
         // If special is enabled
@@ -445,7 +453,8 @@ void SnakeGame::close() {
     
     Mix_FreeChunk(eatSFX);
     Mix_FreeChunk(deathSFX);
-    Mix_FreeChunk(specialSFX);
+    Mix_FreeChunk(specialSFX1);
+    Mix_FreeChunk(specialSFX2);
     Mix_FreeMusic(music);
     
     Mix_CloseAudio();

@@ -87,7 +87,8 @@ private:
     
     Mix_Chunk* eatSFX;
     Mix_Chunk* deathSFX;
-    Mix_Chunk* specialSFX;
+    Mix_Chunk* specialSFX1;
+    Mix_Chunk* specialSFX2;
     Mix_Music* music;
     
     Texture titleTex;
