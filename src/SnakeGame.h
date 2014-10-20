@@ -19,6 +19,7 @@
 #include "Button.h"
 #include "Food.h"
 #include "WinManager.h"
+#include "KeySequence.h"
 
 /**
  * This controls the main game system for teh win (no, not Windows only).
@@ -109,6 +110,7 @@ private:
     bool epilepsy;
     bool turbo;
     bool playMusic;
+    bool seqok;
     Uint16 winWidth;
     Uint16 winHeight;
     Uint8 squareSize;

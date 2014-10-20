@@ -81,6 +81,7 @@
       <AdditionalLibraryDirectories>E:\Documentos\Development Sources\SDL2_full\lib_x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>SDL2main.lib;SDL2.lib;SDL2_image.lib;SDL2_mixer.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Windows</SubSystem>
+      <OutputFile>$(ProjectDir)..\$(ConfigurationName)\$(Platform)\$(TargetFileName)</OutputFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -92,9 +93,10 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>E:\Documentos\Development Sources\SDL2_full\lib_x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>E:\Documentos\Development Sources\SDL2_full\lib_x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>SDL2main.lib;SDL2.lib;SDL2_image.lib;SDL2_mixer.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Windows</SubSystem>
+      <OutputFile>$(ProjectDir)..\$(ConfigurationName)\$(Platform)\$(TargetFileName)</OutputFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -141,6 +143,7 @@
     <ClCompile Include="..\src\Button.cpp" />
     <ClCompile Include="..\src\Color.cpp" />
     <ClCompile Include="..\src\Food.cpp" />
+    <ClCompile Include="..\src\KeySequence.cpp" />
     <ClCompile Include="..\src\Main.cpp" />
     <ClCompile Include="..\src\Snake.cpp" />
     <ClCompile Include="..\src\SnakeGame.cpp" />
@@ -152,6 +155,7 @@
     <ClInclude Include="..\src\Color.h" />
     <ClInclude Include="..\src\Font.h" />
     <ClInclude Include="..\src\Food.h" />
+    <ClInclude Include="..\src\KeySequence.h" />
     <ClInclude Include="..\src\resource.h" />
     <ClInclude Include="..\src\Snake.h" />
     <ClInclude Include="..\src\SnakeGame.h" />

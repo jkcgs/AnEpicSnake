@@ -19,7 +19,8 @@ SnakeGame::SnakeGame(int width, int height) {
     started = false;
     alive = true;
     turbo = false;
-    playMusic = true;
+    playMusic = false;
+    seqok = false;
     squareSize = 10;
 
     food.setSize(squareSize);
@@ -138,6 +139,14 @@ int SnakeGame::mainLoop() {
     
     SDL_Event e;
     bool quit = false;
+
+    // Now featuring some special sequence
+    std::vector<SDL_Keycode> a = { 
+        SDLK_UP, SDLK_UP, SDLK_DOWN, SDLK_DOWN, 
+        SDLK_LEFT, SDLK_RIGHT, SDLK_LEFT, SDLK_RIGHT,
+        SDLK_b, SDLK_a
+    };
+    KeySequence seq(a, 1000);
     
     // creates a timer to check when to move the snake
     double speedTimeout = 1000/snake.getSpeed() + SDL_GetTicks();
@@ -151,7 +160,14 @@ int SnakeGame::mainLoop() {
             }
             else {
                 handleEvents(&e);
+                if (!seqok) {
+                    seq.handleEvent(&e);
+                }
             }
+        }
+
+        if (!seqok && seq.isReady()) {
+            seqok = true;
         }
 
         if (quit) {
@@ -160,6 +176,7 @@ int SnakeGame::mainLoop() {
         // --- END EVENTS ---
         
         if(started) {
+
             // Move when speed says you can move
             if (!paused && speedTimeout <= SDL_GetTicks()) {
                 snake.move();
@@ -344,6 +361,10 @@ void SnakeGame::draw() {
         restartBtn.draw(Mgr.Renderer());
     } else if(restartBtn.isDisplayed()) {
         restartBtn.setDisplayed(false);
+    }
+
+    if (seqok) {
+        Mgr.DrawChar("Sequence ok", winWidth - 130, winHeight - 40, 2);
     }
     
     Mgr.UpdateRenderer();
