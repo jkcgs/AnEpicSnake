@@ -15,7 +15,6 @@ class KeySequence
 {
 public:
     KeySequence(std::vector<SDL_Keycode> sequence, Uint32 timeout, bool resetOnReady = false);
-    ~KeySequence();
 
     void handleEvent(SDL_Event* e);
     std::vector<SDL_Keycode> getSequence();
