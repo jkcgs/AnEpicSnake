@@ -185,11 +185,43 @@ void WinManager::DrawChar(int n, int x, int y, int size = 10) {
     }
 }
 
-void WinManager::DrawChar(std::string str, int x, int y, int size = 10) {
-    for (Uint16 i = 0, j = 0; i < str.size(); i++, j++) {
+void WinManager::DrawChar(std::string str, int x, int y, int size, int x_offset, int y_offset) {
+    int str_size = str.size();
+
+    int lines = 1;
+    for (Uint16 i = 0; i < str_size; i++) {
+        if (str[i] == '\n') {
+            lines++;
+        }
+    }
+
+    // Calculate the total width of the resulting (space_of_chars - spaces)
+    int total_width = (str_size * size * 4) + (str_size - 1) * size;
+    int total_height = (lines * 5) + (lines - 1) * size;
+
+    if (x == DRAWCHAR_MIDDLE) {
+        x = (width / 2) - (total_width / 2);
+    }
+    if (y == DRAWCHAR_MIDDLE) {
+        y = (height / 2) - (total_height / 2);
+    }
+
+    if (x == DRAWCHAR_RIGHT) {
+        x = width - total_width;
+    }
+
+    if (y == DRAWCHAR_BOTTOM) {
+        y = height - total_height;
+    }
+
+    // Move main coordinates by offset
+    x += x_offset;
+    y += y_offset;
+
+    for (Uint16 i = 0, j = 0; i < str_size; i++, j++) {
         // push a new line, move the characters back to the x start coordinate
         // and move them all down a line
-        if (str.at(i) == '\n') {
+        if (str[i] == '\n') {
             j = -1; // j will back to 0 on the loop
             y += size * 5 + size;
         }
@@ -198,7 +230,7 @@ void WinManager::DrawChar(std::string str, int x, int y, int size = 10) {
             // plus the separation from the character position number, 
             // plus a separation space, based on the square size
             // the 5 means the 4 squares from the font plus one square as a separation
-            DrawChar(str.at(i), (x + (size * 5 * j)), y, size);
+            DrawChar(str[i], (x + (size * 5 * j)), y, size);
         }
     }
 }

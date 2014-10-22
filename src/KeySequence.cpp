@@ -38,21 +38,16 @@ void KeySequence::handleEvent(SDL_Event* e)
     SDL_Keycode key = e->key.keysym.sym;
     int now = SDL_GetTicks();
 
-    if ((timeout == 0 || (now - lasttime) < timeout)) {
+    if ((timeout == 0 || (now - lasttime) < timeout) &&
+        key == sequence[lastkey + 1]) {
+        lastkey++;
         lasttime = now;
-        if (key == sequence[lastkey + 1]) {
-            lastkey++;
 
-            // Sequence finished?
-            if (lastkey == (sequence.size() - 1)) {
-                ready = true;
-                if (resetOnReady) {
-                    reset();
-                }
+        if (lastkey == (sequence.size() - 1)) {
+            ready = true;
+            if (resetOnReady) {
+                reset();
             }
-        }
-        else if (key == sequence[0]) {
-            lastkey = 0;
         }
     }
     else {
@@ -60,7 +55,8 @@ void KeySequence::handleEvent(SDL_Event* e)
 
         // If the key pressed is the first from the sequence, 
         // reset and retry
-        if (key == sequence[0]) {
+        if (key == sequence.at(0)) {
+            lasttime = now;
             handleEvent(e);
         }
     }

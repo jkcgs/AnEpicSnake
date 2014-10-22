@@ -331,10 +331,11 @@ void SnakeGame::draw() {
 
     // Debug to know when this will appear
     if (started) {
+        Mgr.SetRenderColor(c_alpha(c_white, 150));
         Mgr.DrawChar(
-            std::to_string(specialCountdown), 
-            winWidth - (specialCountdown < 10 ? 12 : 27) - soundBtn.getRect().w - 30, 
-            20, 3, c_alpha(c_white, 150)
+            std::to_string(specialCountdown),
+            DRAWCHAR_RIGHT,
+            20, 3, -(soundBtn.getRect().w + 30)
         );
     }
 

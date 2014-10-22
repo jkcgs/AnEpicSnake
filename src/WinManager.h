@@ -10,6 +10,12 @@
 #include "stdafx.h"
 #include "Color.h"
 
+enum DrawChar_Positions {
+    DRAWCHAR_MIDDLE,
+    DRAWCHAR_RIGHT,
+    DRAWCHAR_BOTTOM
+};
+
 class WinManager
 {
 public:
@@ -108,8 +114,10 @@ public:
     // Parameter: int x The X position for the first character
     // Parameter: int y The Y position for the first character
     // Parameter: int size The size of each square of the characters' font
+    // Parameter: int x_offset Move on X axis from final position
+    // Parameter: int y_offset Move on Y axis from final position
     //************************************
-    void DrawChar(std::string str, int x, int y, int size);
+    void DrawChar(std::string str, int x, int y, int size = 10, int x_offset = 0, int y_offset = 0);
 
     //************************************
     // Draws a pixeled-style string with compatible characters
