@@ -42,7 +42,7 @@ void SnakeGame::reset() {
     
     points = 0;
     snakeSpeed = 10; // Initial speed
-    specialCountdown = 1;// rand() % 20 + 20;
+    specialCountdown = 1;
     snake.reset();
     snake.setSize(squareSize);
     snake.setSpeed(snakeSpeed);
@@ -66,7 +66,8 @@ bool SnakeGame::init()
 
     // loading "screen"
     Mgr.ClearRenderer(c_black);
-    Mgr.DrawChar("loading...", 10, winHeight - 30, 5, c_white);
+    Mgr.SetRenderColor(c_white);
+    Mgr.DrawChar("loading...", 10, DRAWCHAR_BOTTOM, 5, 0, -10);
     Mgr.UpdateRenderer();
     
     // Initialize image system
@@ -305,7 +306,8 @@ void SnakeGame::draw() {
     Mgr.DrawChar(std::to_string(points), squareSize, squareSize, squareSize / 2, c_alpha(turbo?c_cyan:c_white, 150));
 
     // Temporal message
-    Mgr.DrawChar("dev version!", winWidth - 190, winHeight - 20, 3, c_alpha(c_white, 100));
+    Mgr.SetRenderColor(c_alpha(c_white, 100));
+    Mgr.DrawChar("dev version!", DRAWCHAR_RIGHT, DRAWCHAR_BOTTOM, 3, -10, -10);
 
     if (alive) {
         // If special is enabled
@@ -325,7 +327,8 @@ void SnakeGame::draw() {
                 effectName += " - " + std::to_string((specialTimeout - SDL_GetTicks()) / 1000 + 1);
             }
 
-            Mgr.DrawChar(effectName, squareSize, winHeight - 20, 3, c_alpha(c_white, 100));
+            Mgr.SetRenderColor(c_alpha(c_white, 100));
+            Mgr.DrawChar(effectName, squareSize, DRAWCHAR_BOTTOM, 3, 0, -10);
         }
     }
 
@@ -365,7 +368,7 @@ void SnakeGame::draw() {
     }
 
     if (seqok) {
-        Mgr.DrawChar("Sequence ok", winWidth - 130, winHeight - 40, 2);
+        Mgr.DrawChar("Sequence ok", DRAWCHAR_RIGHT, DRAWCHAR_BOTTOM, 2, -20, -30);
     }
     
     Mgr.UpdateRenderer();

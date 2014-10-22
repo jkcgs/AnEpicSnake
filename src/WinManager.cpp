@@ -197,7 +197,7 @@ void WinManager::DrawChar(std::string str, int x, int y, int size, int x_offset,
 
     // Calculate the total width of the resulting (space_of_chars - spaces)
     int total_width = (str_size * size * 4) + (str_size - 1) * size;
-    int total_height = (lines * 5) + (lines - 1) * size;
+    int total_height = (size * 5 * lines) + (lines - 1) * size;
 
     if (x == DRAWCHAR_MIDDLE) {
         x = (width / 2) - (total_width / 2);
