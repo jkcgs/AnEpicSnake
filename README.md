@@ -1,7 +1,7 @@
 AnEpicSnake
 ===========
 
-This is just an epic snake game. Don't play it if you're epileptic. Really..
+This is just an epic snake game. Don't play it if you're epileptic. Really.
 
 To control the snake use WASD.
 To pause the game use RETURN key (a.k.a ENTER)
